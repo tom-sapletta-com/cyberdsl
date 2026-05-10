@@ -1,0 +1,35 @@
+model:
+  name = "Społeczność-portowa"
+  steps = 16
+
+globals:
+  stress = 0.40       # stres ekonomiczny (0=niski, 1=wysoki)
+  support = 0.50      # poziom wsparcia instytucjonalnego
+  external_shock = 0.0
+
+nodes:
+  fishers:group   | state={cohesion:0.65, trust:0.55, activism:0.30} | adaptability=0.40
+  youth:group     | state={cohesion:0.45, trust:0.40, activism:0.60} | adaptability=0.75
+  city_hall:institution | state={cohesion:0.80, trust:0.50, legitimacy:0.70} | authority=0.80
+
+edges:
+  city_hall->youth:influence    | weight=0.35 | delay=1
+  city_hall->fishers:policy     | weight=0.20 | delay=2
+  fishers->youth:stabilize      | weight=0.25 | delay=1
+  youth->city_hall:feedback     | weight=0.30 | delay=0
+  fishers->city_hall:lobby      | weight=0.15 | delay=1
+
+rules:
+  youth.cohesion => clip(self['cohesion'] + 0.12*sum_influence - 0.10*globals['stress'] + 0.07*globals['support'])
+  youth.trust    => clip(self['trust'] + 0.08*signals.get('w_city_hall',0)*signals.get('sig_city_hall',{}).get('legitimacy',0) - 0.09*globals['stress'])
+  youth.activism => clip(self['activism'] + 0.15*globals['stress'] - 0.10*globals['support'])
+  fishers.cohesion => clip(self['cohesion'] + 0.05*sum_influence - 0.08*globals['stress'])
+  fishers.trust    => clip(self['trust'] + 0.06*globals['support'] - 0.10*globals['stress'] - 0.05*globals['external_shock'])
+  city_hall.trust  => clip(self['trust'] + 0.10*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) - 0.07*globals['stress'] + 0.05*globals['support'])
+  city_hall.legitimacy => clip(self['legitimacy'] + 0.08*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) - 0.12*(1 - globals['support']))
+
+observables:
+  avg_trust = (nodes['fishers']['trust'] + nodes['youth']['trust'] + nodes['city_hall']['trust']) / 3
+  avg_cohesion = (nodes['fishers']['cohesion'] + nodes['youth']['cohesion'] + nodes['city_hall']['cohesion']) / 3
+  social_resilience = (nodes['fishers']['cohesion'] + nodes['youth']['trust'] + nodes['city_hall']['legitimacy']) / 3
+  tension_index = globals['stress'] * (1 - nodes['fishers']['trust']) * nodes['youth']['activism']
