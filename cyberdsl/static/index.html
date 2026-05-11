@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CyberDSL Studio</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<link rel="stylesheet" href="/static/app.css"/>
+</head>
+<body>
+
+<header>
+  <div class="logo">⬡ CyberDSL Studio</div>
+  <div class="header-actions">
+    <select id="fmt-select" title="Format">
+      <option value="dsl">.cyberdsl</option>
+      <option value="yaml">.yaml</option>
+    </select>
+    <select id="example-select" title="Load example">
+      <option value="">— load example —</option>
+    </select>
+    <button id="btn-parse" class="btn btn-secondary" title="Parse model (Ctrl+Enter)">Parse</button>
+    <button id="btn-run" class="btn btn-primary" title="Run simulation (Ctrl+Shift+Enter)">▶ Run</button>
+    <button id="btn-stream" class="btn btn-accent" title="Stream step-by-step">⚡ Stream</button>
+    <span id="status-badge" class="badge"></span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- LEFT: editor -->
+  <aside class="panel-editor">
+    <div class="panel-header">
+      <span>Model source</span>
+      <button class="icon-btn" id="btn-copy-mmd" title="Copy Mermaid source">⎘ .mmd</button>
+    </div>
+    <textarea id="editor" spellcheck="false" placeholder="Paste or type your .cyberdsl / .yaml model here..."></textarea>
+    <div id="parse-error" class="error-box hidden"></div>
+  </aside>
+
+  <!-- RIGHT: tabs -->
+  <main class="panel-main">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-panel="panel-graph">Graph</button>
+      <button class="tab" data-panel="panel-obs">Observables</button>
+      <button class="tab" data-panel="panel-nodes">Nodes</button>
+      <button class="tab" data-panel="panel-info">Model info</button>
+    </div>
+
+    <!-- Graph panel -->
+    <div id="panel-graph" class="tab-panel active">
+      <div class="graph-toolbar">
+        <span class="label">Direction:</span>
+        <button class="dir-btn active" data-dir="TD">TD</button>
+        <button class="dir-btn" data-dir="LR">LR</button>
+        <button class="dir-btn" data-dir="BT">BT</button>
+        <button class="dir-btn" data-dir="RL">RL</button>
+        <span style="flex:1"></span>
+        <span id="graph-steps-label" class="label"></span>
+      </div>
+      <div id="mermaid-container">
+        <div id="mermaid-render" class="mermaid-placeholder">
+          <span>Parse or run a model to see the graph</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observables panel -->
+    <div id="panel-obs" class="tab-panel hidden">
+      <div class="chart-area">
+        <canvas id="chart-obs"></canvas>
+      </div>
+      <div id="stream-progress" class="stream-progress hidden">
+        <div id="stream-bar" class="stream-bar"></div>
+        <span id="stream-label">Step 0</span>
+      </div>
+    </div>
+
+    <!-- Nodes panel -->
+    <div id="panel-nodes" class="tab-panel hidden">
+      <div id="node-charts-grid" class="node-grid"></div>
+    </div>
+
+    <!-- Model info panel -->
+    <div id="panel-info" class="tab-panel hidden">
+      <div id="model-info-content" class="info-content">
+        <p class="muted">Parse a model to see its structure.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

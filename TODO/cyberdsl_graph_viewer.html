@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CyberDSL Graph Visualizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style>
+        body { font-family: system-ui; max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .graph { border: 1px solid #ddd; border-radius: 8px; padding: 2rem; }
+        .scenario { margin-bottom: 2rem; }
+        h1 { color: #01696f; }
+    </style>
+</head>
+<body>
+    <h1>CyberDSL Graph Visualizer</h1>
+    <div class="scenario">
+        <h2>Port Baseline Model</h2>
+        <div class="graph">
+<pre class="mermaid">
+graph TD
+    fishers[fishers\ngroup]
+    youth[youth\ngroup]
+    city_hall[city_hall\ninstitution]
+    city_hall -->|influence\nw=0.35\nd=1| youth
+    city_hall -->|policy\nw=0.2\nd=2| fishers
+    fishers -->|stabilize\nw=0.25\nd=1| youth
+    youth -->|feedback\nw=0.3\nd=0| city_hall
+    fishers -->|lobby\nw=0.15\nd=1| city_hall
+
+    subgraph globals
+        stress[stress: 0.35]
+        support[support: 0.55]
+        external_shock[external_shock: 0.0]
+    end
+
+</pre>
+        </div>
+    </div>
+</body>
+</html>

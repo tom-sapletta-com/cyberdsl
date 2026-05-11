@@ -1,0 +1,39 @@
+model:
+  name: "Company-Restructuring"
+  steps: 18
+
+globals:
+  market_stress: 0.54
+  support: 0.42
+  restructuring: 0.62
+  communication_program: 0.28
+
+nodes:
+  employees:
+    kind: group
+    state: {cohesion: 0.60, trust: 0.48, productivity: 0.64}
+    params: {adaptability: 0.58}
+  managers:
+    kind: group
+    state: {cohesion: 0.62, trust: 0.52, burnout: 0.38}
+    params: {adaptability: 0.50}
+  board:
+    kind: institution
+    state: {legitimacy: 0.58, trust: 0.46, cohesion: 0.70}
+    params: {authority: 0.86}
+
+edges:
+  - {src: board, dst: managers, relation: directives, weight: 0.32, delay: 1}
+  - {src: managers, dst: employees, relation: coordination, weight: 0.30, delay: 0}
+  - {src: employees, dst: managers, relation: feedback, weight: 0.22, delay: 1}
+  - {src: employees, dst: board, relation: morale_signal, weight: 0.18, delay: 1}
+
+rules:
+  - {node: employees, var: trust, expr: "clip(self['trust'] + 0.08*signals.get('w_managers',0)*signals.get('sig_managers',{}).get('trust',0) - 0.10*globals['restructuring'] - 0.06*globals['market_stress'] + 0.07*globals['communication_program'])"}
+  - {node: employees, var: productivity, expr: "clip(self['productivity'] + 0.06*self['cohesion'] + 0.05*self['trust'] - 0.08*globals['market_stress'] - 0.10*globals['restructuring'])"}
+  - {node: managers, var: burnout, expr: "clip(self['burnout'] + 0.10*globals['restructuring'] + 0.08*globals['market_stress'] - 0.05*globals['support'])"}
+  - {node: board, var: legitimacy, expr: "clip(self['legitimacy'] + 0.04*signals.get('w_employees',0)*signals.get('sig_employees',{}).get('trust',0) - 0.08*globals['restructuring'] + 0.05*globals['communication_program'])"}
+
+observables:
+  organization_health: "(nodes['employees']['productivity'] + nodes['employees']['trust'] + nodes['board']['legitimacy']) / 3"
+  restructuring_risk: "globals['restructuring'] * (1 - nodes['employees']['trust']) * (1 - nodes['board']['legitimacy'])"

@@ -11,10 +11,13 @@ Każdy krok:
 from __future__ import annotations
 
 import copy
+import csv
+import io
 import math
+import random
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Optional
 
 from .parser import ModelDef, parse_dsl
 
@@ -72,6 +75,34 @@ class SimulationResult:
             parts = ", ".join(f"{k}={v:.3f}" for k, v in state.items() if isinstance(v, float))
             lines.append(f"  {nid}: {parts}")
         return "\n".join(lines)
+
+    def to_csv(self) -> str:
+        """Export timeline as CSV (step, observable_*, node_*_var columns)."""
+        if not self.timeline:
+            return ""
+        buf = io.StringIO()
+        first = self.timeline[0]
+        obs_keys = sorted(first.get('observables', {}).keys())
+        node_cols: list[tuple[str, str]] = []
+        for nid, state in sorted(first.get('nodes', {}).items()):
+            for var in sorted(state.keys()):
+                node_cols.append((nid, var))
+        header = ['step'] + [f'obs_{k}' for k in obs_keys] + [f'{nid}_{var}' for nid, var in node_cols]
+        writer = csv.writer(buf)
+        writer.writerow(header)
+        for snap in self.timeline:
+            row = [snap['step']]
+            obs = snap.get('observables', {})
+            row += [obs.get(k, '') for k in obs_keys]
+            nodes = snap.get('nodes', {})
+            row += [nodes.get(nid, {}).get(var, '') for nid, var in node_cols]
+            writer.writerow(row)
+        return buf.getvalue()
+
+    def save_csv(self, path: str) -> None:
+        """Write CSV export to file."""
+        with open(path, 'w', encoding='utf-8', newline='') as f:
+            f.write(self.to_csv())
 
 
 def _safe_clip(x: float, lo: float = 0.0, hi: float = 1.0) -> float:
@@ -217,3 +248,112 @@ class Simulation:
     def set_global(self, key: str, value: float) -> None:
         """Override a global parameter mid-simulation."""
         self.model.globals[key] = value
+
+    def run_scenario(
+        self,
+        shock_at: dict[int, list[tuple[str, str, float]]] | None = None,
+        global_at: dict[int, dict[str, float]] | None = None,
+        steps: int | None = None,
+    ) -> SimulationResult:
+        """
+        Run with scheduled interventions.
+
+        shock_at:  {step_no: [(node_id, var, delta), ...]}
+        global_at: {step_no: {key: value}}
+        """
+        n_steps = steps if steps is not None else self.model.steps
+        result = SimulationResult(model_name=self.model.name, steps_run=n_steps)
+        for i in range(1, n_steps + 1):
+            if shock_at and i in shock_at:
+                for nid, var, delta in shock_at[i]:
+                    self.apply_shock(nid, var, delta)
+            if global_at and i in global_at:
+                for k, v in global_at[i].items():
+                    self.set_global(k, v)
+            snap = self.step(i)
+            result.timeline.append(snap)
+        return result
+
+
+# ─── Monte Carlo ──────────────────────────────────────────────────────────────
+
+@dataclass
+class MonteCarloResult:
+    model_name: str
+    n_runs: int
+    steps: int
+    runs: list[SimulationResult] = field(default_factory=list)
+
+    def mean_observable(self, name: str) -> list[float]:
+        """Return step-by-step mean of observable `name` across all runs."""
+        totals = [0.0] * self.steps
+        for r in self.runs:
+            for i, snap in enumerate(r.timeline):
+                v = snap.get('observables', {}).get(name)
+                if isinstance(v, (int, float)):
+                    totals[i] += v
+        return [t / self.n_runs for t in totals]
+
+    def std_observable(self, name: str) -> list[float]:
+        """Return step-by-step std-dev of observable `name` across all runs."""
+        mean = self.mean_observable(name)
+        sq = [0.0] * self.steps
+        for r in self.runs:
+            for i, snap in enumerate(r.timeline):
+                v = snap.get('observables', {}).get(name)
+                if isinstance(v, (int, float)):
+                    sq[i] += (v - mean[i]) ** 2
+        return [math.sqrt(s / self.n_runs) for s in sq]
+
+    def percentile_observable(self, name: str, p: float) -> list[float]:
+        """Return step-by-step p-th percentile (0‥100) of observable."""
+        import statistics
+        result = []
+        for i in range(self.steps):
+            vals = []
+            for r in self.runs:
+                if i < len(r.timeline):
+                    v = r.timeline[i].get('observables', {}).get(name)
+                    if isinstance(v, (int, float)):
+                        vals.append(v)
+            if vals:
+                vals.sort()
+                idx = max(0, min(len(vals) - 1, int(len(vals) * p / 100)))
+                result.append(vals[idx])
+            else:
+                result.append(float('nan'))
+        return result
+
+
+def run_monte_carlo(
+    model: ModelDef,
+    n_runs: int = 100,
+    steps: int | None = None,
+    noise_std: float = 0.02,
+    seed: int | None = None,
+) -> MonteCarloResult:
+    """
+    Run `n_runs` stochastic simulations by adding Gaussian noise to initial states.
+
+    Args:
+        model:     Parsed ModelDef.
+        n_runs:    Number of Monte Carlo trajectories.
+        steps:     Steps per run (defaults to model.steps).
+        noise_std: Std-dev of Gaussian noise applied to each initial state variable.
+        seed:      Optional RNG seed for reproducibility.
+    """
+    rng = random.Random(seed)
+    n = steps or model.steps
+    mc = MonteCarloResult(model_name=model.name, n_runs=n_runs, steps=n)
+
+    for _ in range(n_runs):
+        noisy_model = copy.deepcopy(model)
+        if noise_std > 0:
+            for node in noisy_model.nodes.values():
+                for k in list(node.state.keys()):
+                    delta = rng.gauss(0, noise_std)
+                    node.state[k] = _safe_clip(node.state[k] + delta)
+        sim = Simulation(noisy_model)
+        mc.runs.append(sim.run(steps=n))
+
+    return mc

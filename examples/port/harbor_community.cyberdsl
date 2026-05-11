@@ -1,0 +1,75 @@
+model:
+  name = "Spolecznosc-Portowa"
+  steps = 36  # 36 miesięcy = 3 lata
+
+# ─── Parametry globalne ───────────────────────────────────────────────────────
+globals:
+  economic_crisis     = 0.20   # presja kryzysu gospodarczego
+  state_legitimacy    = 0.55   # legitymizacja władzy w percepcji społeczności
+  media_influence     = 0.40   # wpływ mediów (0=negatywny, 1=pozytywny)
+  external_migration  = 0.10   # napływ/odpływ ludności
+  intervention_policy = 0.00   # aktywna polityka interwencyjna (0=brak)
+
+# ─── Węzły ────────────────────────────────────────────────────────────────────
+nodes:
+  workers:group       | state={trust:0.50, cohesion:0.55, mobilization:0.30, legitimacy:0.45} | size=0.45
+  merchants:group     | state={trust:0.60, cohesion:0.65, mobilization:0.20, legitimacy:0.55} | size=0.25
+  youth:group         | state={trust:0.35, cohesion:0.40, mobilization:0.55, legitimacy:0.30} | size=0.20
+  city_council:institution | state={trust:0.50, authority:0.65, responsiveness:0.45} | mandate=0.70
+  port_authority:institution | state={trust:0.55, authority:0.75, responsiveness:0.40} | mandate=0.80
+  media:institution   | state={credibility:0.50, reach:0.60, bias:0.40}
+
+# ─── Krawędzie wpływu ─────────────────────────────────────────────────────────
+edges:
+  workers->city_council:pressure       | weight=0.35 | delay=1
+  merchants->city_council:lobbying     | weight=0.30 | delay=1
+  youth->city_council:protest          | weight=0.20 | delay=0
+  city_council->workers:policy         | weight=0.30 | delay=2
+  city_council->merchants:policy       | weight=0.25 | delay=2
+  city_council->youth:policy           | weight=0.20 | delay=2
+  port_authority->workers:regulation   | weight=0.25 | delay=1
+  port_authority->merchants:regulation | weight=0.30 | delay=1
+  media->workers:framing               | weight=0.20 | delay=0
+  media->youth:framing                 | weight=0.30 | delay=0
+  media->city_council:scrutiny         | weight=0.15 | delay=1
+  workers->merchants:solidarity        | weight=0.15 | delay=1
+  youth->workers:radicalization        | weight=0.10 | delay=0
+
+# ─── Reguły aktualizacji ─────────────────────────────────────────────────────
+rules:
+  # ── Robotnicy ──
+  workers.trust        => clip(self['trust'] + 0.06*signals.get('sig_city_council',{}).get('responsiveness',0) - 0.08*globals['economic_crisis'] + 0.04*globals['intervention_policy'] - 0.05*(1 - globals['state_legitimacy']))
+  workers.cohesion     => clip(self['cohesion'] + 0.05*self['trust'] - 0.06*globals['economic_crisis'] + 0.03*signals.get('sig_merchants',{}).get('cohesion',0) + 0.04*globals['intervention_policy'])
+  workers.mobilization => clip(self['mobilization'] + 0.10*(1 - self['trust']) - 0.08*self['trust'] + 0.06*signals.get('sig_youth',{}).get('mobilization',0) - 0.04*globals['intervention_policy'])
+  workers.legitimacy   => clip(self['legitimacy'] + 0.08*globals['state_legitimacy'] - 0.06*globals['economic_crisis'] + 0.04*signals.get('sig_city_council',{}).get('responsiveness',0))
+
+  # ── Kupcy ──
+  merchants.trust      => clip(self['trust'] + 0.07*signals.get('sig_city_council',{}).get('responsiveness',0) - 0.06*globals['economic_crisis'] + 0.05*globals['intervention_policy'])
+  merchants.cohesion   => clip(self['cohesion'] + 0.04*self['trust'] - 0.04*globals['economic_crisis'] + 0.03*globals['intervention_policy'])
+  merchants.mobilization => clip(self['mobilization'] + 0.08*(1 - self['trust']) - 0.06*self['trust'])
+  merchants.legitimacy => clip(self['legitimacy'] + 0.07*globals['state_legitimacy'] - 0.04*globals['economic_crisis'])
+
+  # ── Młodzież ──
+  youth.trust          => clip(self['trust'] + 0.05*signals.get('sig_city_council',{}).get('responsiveness',0) - 0.10*globals['economic_crisis'] - 0.06*(1 - globals['state_legitimacy']) + 0.04*globals['media_influence'])
+  youth.cohesion       => clip(self['cohesion'] + 0.06*self['trust'] - 0.05*globals['economic_crisis'] + 0.04*signals.get('sig_workers',{}).get('cohesion',0))
+  youth.mobilization   => clip(self['mobilization'] + 0.12*(1 - self['trust']) - 0.05*self['trust'] + 0.05*(1 - globals['state_legitimacy']) + 0.04*(1 - globals['media_influence']))
+  youth.legitimacy     => clip(self['legitimacy'] + 0.06*globals['state_legitimacy'] - 0.08*globals['economic_crisis'] - 0.05*(1 - globals['media_influence']))
+
+  # ── Rada Miejska ──
+  city_council.trust          => clip(self['trust'] - 0.10*nodes['workers']['mobilization'] - 0.08*nodes['youth']['mobilization'] + 0.06*globals['intervention_policy'] - 0.05*globals['economic_crisis'])
+  city_council.responsiveness => clip(self['responsiveness'] + 0.08*(nodes['workers']['mobilization'] + nodes['youth']['mobilization'])/2 - 0.04*globals['economic_crisis'] + 0.06*globals['intervention_policy'])
+  city_council.authority      => clip(self['authority'] + 0.05*self['trust'] - 0.08*(nodes['workers']['mobilization'] + nodes['youth']['mobilization'])/2 + 0.03*globals['state_legitimacy'])
+
+  # ── Media ──
+  media.credibility => clip(self['credibility'] + 0.04*globals['state_legitimacy'] - 0.05*globals['economic_crisis'] + 0.03*globals['media_influence'])
+  media.bias        => clip(self['bias'] - 0.03*globals['intervention_policy'] + 0.05*globals['economic_crisis'])
+
+# ─── Obserwable ───────────────────────────────────────────────────────────────
+observables:
+  social_trust_avg    = (nodes['workers']['trust'] + nodes['merchants']['trust'] + nodes['youth']['trust']) / 3
+  mobilization_index  = (nodes['workers']['mobilization']*0.45 + nodes['merchants']['mobilization']*0.25 + nodes['youth']['mobilization']*0.30)
+  system_legitimacy   = (nodes['workers']['legitimacy'] + nodes['merchants']['legitimacy'] + nodes['youth']['legitimacy']) / 3
+  social_cohesion     = (nodes['workers']['cohesion'] + nodes['merchants']['cohesion'] + nodes['youth']['cohesion']) / 3
+  council_trust       = nodes['city_council']['trust']
+  instability_risk    = clip((1 - nodes['city_council']['trust']) * (nodes['workers']['mobilization'] + nodes['youth']['mobilization']) / 2)
+  community_health    = (nodes['workers']['trust'] + nodes['merchants']['trust'] + nodes['youth']['trust'] + nodes['city_council']['responsiveness'] + nodes['workers']['cohesion']) / 5

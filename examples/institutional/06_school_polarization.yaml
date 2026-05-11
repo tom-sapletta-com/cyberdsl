@@ -1,0 +1,46 @@
+model:
+  name: "School-Polarization"
+  steps: 18
+
+globals:
+  stress: 0.46
+  support: 0.44
+  online_rumor: 0.58
+  mediation: 0.20
+
+nodes:
+  students:
+    kind: group
+    state: {cohesion: 0.52, trust: 0.48, activism: 0.50}
+    params: {adaptability: 0.80}
+  teachers:
+    kind: group
+    state: {cohesion: 0.64, trust: 0.54, burnout: 0.34}
+    params: {adaptability: 0.52}
+  principal:
+    kind: institution
+    state: {legitimacy: 0.62, trust: 0.50, cohesion: 0.68}
+    params: {authority: 0.78}
+  parents:
+    kind: group
+    state: {trust: 0.46, cohesion: 0.56, mobilization: 0.40}
+    params: {adaptability: 0.48}
+
+edges:
+  - {src: principal, dst: students, relation: policy_signal, weight: 0.20, delay: 1}
+  - {src: principal, dst: teachers, relation: governance, weight: 0.28, delay: 1}
+  - {src: parents, dst: principal, relation: pressure, weight: 0.24, delay: 0}
+  - {src: students, dst: principal, relation: protest, weight: 0.26, delay: 0}
+  - {src: teachers, dst: students, relation: climate, weight: 0.22, delay: 1}
+  - {src: parents, dst: students, relation: narrative, weight: 0.18, delay: 1}
+
+rules:
+  - {node: students, var: trust, expr: "clip(self['trust'] + 0.06*signals.get('w_principal',0)*signals.get('sig_principal',{}).get('legitimacy',0) + 0.04*signals.get('w_teachers',0)*signals.get('sig_teachers',{}).get('trust',0) - 0.10*globals['online_rumor'])"}
+  - {node: students, var: activism, expr: "clip(self['activism'] + 0.12*globals['stress'] + 0.10*globals['online_rumor'] - 0.07*globals['mediation'])"}
+  - {node: teachers, var: burnout, expr: "clip(self['burnout'] + 0.10*globals['stress'] + 0.08*nodes['students']['activism'] - 0.06*globals['support'])"}
+  - {node: principal, var: legitimacy, expr: "clip(self['legitimacy'] + 0.05*globals['support'] - 0.08*nodes['students']['activism'] - 0.06*nodes['parents']['mobilization'])"}
+  - {node: parents, var: mobilization, expr: "clip(self['mobilization'] + 0.08*globals['online_rumor'] + 0.06*(1 - nodes['principal']['legitimacy']) - 0.04*globals['mediation'])"}
+
+observables:
+  school_tension: "(nodes['students']['activism'] + nodes['teachers']['burnout'] + nodes['parents']['mobilization']) / 3"
+  governance_stability: "(nodes['principal']['legitimacy'] + nodes['teachers']['trust'] + nodes['students']['trust']) / 3"

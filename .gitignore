@@ -1,4 +1,10 @@
 # Byte-compiled / optimized / DLL files
+.idea/cyberdsl.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/pyProjectModel.xml
+.idea/vcs.xml
 .env.example
 .idea/inspectionProfiles/Project_Default.xml
 __pycache__/

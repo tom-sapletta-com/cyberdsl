@@ -1,0 +1,48 @@
+model:
+  name: "Port-Crisis"
+  steps: 20
+
+globals:
+  stress: 0.72
+  support: 0.30
+  external_shock: 0.55
+
+nodes:
+  fishers:
+    kind: group
+    state: {cohesion: 0.58, trust: 0.42, activism: 0.46}
+    params: {adaptability: 0.35}
+  youth:
+    kind: group
+    state: {cohesion: 0.40, trust: 0.28, activism: 0.70}
+    params: {adaptability: 0.72}
+  city_hall:
+    kind: institution
+    state: {cohesion: 0.70, trust: 0.38, legitimacy: 0.50}
+    params: {authority: 0.80}
+  media:
+    kind: institution
+    state: {trust: 0.36, amplification: 0.65}
+    params: {reach: 0.78}
+
+edges:
+  - {src: city_hall, dst: youth, relation: influence, weight: 0.22, delay: 1}
+  - {src: fishers, dst: youth, relation: stabilize, weight: 0.15, delay: 1}
+  - {src: youth, dst: city_hall, relation: feedback, weight: 0.34, delay: 0}
+  - {src: media, dst: youth, relation: alarm, weight: 0.30, delay: 0}
+  - {src: media, dst: fishers, relation: alarm, weight: 0.24, delay: 0}
+  - {src: fishers, dst: city_hall, relation: pressure, weight: 0.22, delay: 1}
+
+rules:
+  - {node: youth, var: trust, expr: "clip(self['trust'] + 0.05*signals.get('w_city_hall',0)*signals.get('sig_city_hall',{}).get('legitimacy',0) - 0.12*globals['stress'] - 0.08*globals['external_shock'])"}
+  - {node: youth, var: activism, expr: "clip(self['activism'] + 0.18*globals['stress'] + 0.08*signals.get('w_media',0)*signals.get('sig_media',{}).get('amplification',0) - 0.04*globals['support'])"}
+  - {node: fishers, var: trust, expr: "clip(self['trust'] + 0.04*globals['support'] - 0.10*globals['stress'] - 0.10*globals['external_shock'])"}
+  - {node: fishers, var: cohesion, expr: "clip(self['cohesion'] - 0.05*globals['external_shock'] + 0.03*sum_influence - 0.08*globals['stress'])"}
+  - {node: city_hall, var: legitimacy, expr: "clip(self['legitimacy'] + 0.05*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) - 0.18*globals['external_shock'] - 0.08*(1-globals['support']))"}
+  - {node: city_hall, var: trust, expr: "clip(self['trust'] - 0.08*globals['stress'] + 0.04*globals['support'] - 0.06*signals.get('w_fishers',0)*signals.get('sig_fishers',{}).get('activism',0))"}
+  - {node: media, var: trust, expr: "clip(self['trust'] - 0.05*globals['external_shock'] + 0.03*globals['support'])"}
+
+observables:
+  avg_trust: "(nodes['fishers']['trust'] + nodes['youth']['trust'] + nodes['city_hall']['trust'] + nodes['media']['trust']) / 4"
+  protest_pressure: "nodes['youth']['activism'] * (1 - nodes['city_hall']['legitimacy'])"
+  institutional_fragility: "globals['stress'] * (1 - nodes['city_hall']['legitimacy'])"

@@ -1,0 +1,60 @@
+model:
+  name: "Family-Baseline"
+  steps: 24
+
+globals:
+  external_stress: 0.24
+  economic_pressure: 0.28
+  social_support: 0.64
+  therapy_effect: 0.00
+  crisis_event: 0.00
+
+nodes:
+  mother:
+    kind: actor
+    state: {wellbeing: 0.72, attachment: 0.76, autonomy: 0.64, stress: 0.30}
+    params: {resilience: 0.62}
+  father:
+    kind: actor
+    state: {wellbeing: 0.68, attachment: 0.71, autonomy: 0.69, stress: 0.34}
+    params: {resilience: 0.56}
+  marriage:
+    kind: subsystem
+    state: {cohesion: 0.73, conflict: 0.18, intimacy: 0.66, commitment: 0.82}
+    params: {age_years: 8}
+  child_elder:
+    kind: actor
+    state: {wellbeing: 0.79, security: 0.76, anxiety: 0.16}
+    params: {age: 10, resilience: 0.65}
+  child_younger:
+    kind: actor
+    state: {wellbeing: 0.83, security: 0.79, anxiety: 0.11}
+    params: {age: 6, resilience: 0.52}
+
+edges:
+  - {src: mother, dst: father, relation: emotional_influence, weight: 0.40, delay: 0}
+  - {src: father, dst: mother, relation: emotional_influence, weight: 0.38, delay: 0}
+  - {src: mother, dst: marriage, relation: parental_input, weight: 0.45, delay: 1}
+  - {src: father, dst: marriage, relation: parental_input, weight: 0.45, delay: 1}
+  - {src: marriage, dst: mother, relation: couple_feedback, weight: 0.35, delay: 1}
+  - {src: marriage, dst: father, relation: couple_feedback, weight: 0.35, delay: 1}
+  - {src: mother, dst: child_elder, relation: parenting, weight: 0.40, delay: 1}
+  - {src: father, dst: child_elder, relation: parenting, weight: 0.35, delay: 1}
+  - {src: mother, dst: child_younger, relation: parenting, weight: 0.45, delay: 1}
+  - {src: father, dst: child_younger, relation: parenting, weight: 0.30, delay: 1}
+
+rules:
+  - {node: mother, var: stress, expr: "clip(self['stress'] + 0.07*globals['external_stress'] + 0.08*globals['economic_pressure'] - 0.07*globals['social_support'] - 0.05*signals.get('sig_marriage',{}).get('cohesion',0))"}
+  - {node: mother, var: wellbeing, expr: "clip(self['wellbeing'] - 0.10*self['stress'] + 0.07*signals.get('sig_marriage',{}).get('intimacy',0))"}
+  - {node: father, var: stress, expr: "clip(self['stress'] + 0.07*globals['external_stress'] + 0.08*globals['economic_pressure'] - 0.06*globals['social_support'] - 0.04*signals.get('sig_marriage',{}).get('cohesion',0))"}
+  - {node: father, var: wellbeing, expr: "clip(self['wellbeing'] - 0.10*self['stress'] + 0.06*signals.get('sig_marriage',{}).get('intimacy',0))"}
+  - {node: marriage, var: conflict, expr: "clip(self['conflict'] + 0.08*nodes['mother']['stress'] + 0.08*nodes['father']['stress'])"}
+  - {node: marriage, var: cohesion, expr: "clip(self['cohesion'] - 0.12*self['conflict'] + 0.05*(nodes['mother']['attachment'] + nodes['father']['attachment'])/2)"}
+  - {node: child_elder, var: anxiety, expr: "clip(self['anxiety'] + 0.10*nodes['marriage']['conflict'] - 0.07*nodes['marriage']['cohesion'] - 0.04*globals['social_support'])"}
+  - {node: child_younger, var: anxiety, expr: "clip(self['anxiety'] + 0.09*nodes['marriage']['conflict'] - 0.08*nodes['marriage']['cohesion'] - 0.05*globals['social_support'])"}
+
+observables:
+  family_wellbeing: "(nodes['mother']['wellbeing'] + nodes['father']['wellbeing'] + nodes['child_elder']['wellbeing'] + nodes['child_younger']['wellbeing']) / 4"
+  parental_stress_avg: "(nodes['mother']['stress'] + nodes['father']['stress']) / 2"
+  marriage_health: "(nodes['marriage']['cohesion'] + nodes['marriage']['intimacy'] + nodes['marriage']['commitment'] + (1 - nodes['marriage']['conflict'])) / 4"
+  children_security_avg: "(nodes['child_elder']['security'] + nodes['child_younger']['security']) / 2"

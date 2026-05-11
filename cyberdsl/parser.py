@@ -26,6 +26,7 @@ Gramatyka (liniowa, bez pełnego AST):
 from __future__ import annotations
 
 import re
+import yaml
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -243,3 +244,78 @@ def parse_dsl(text: str) -> ModelDef:
                 model.observables[k.strip()] = v.strip()
 
     return model
+
+
+def parse_yaml(text: str) -> ModelDef:
+    """Parse a CyberDSL YAML representation into a ModelDef."""
+    data = yaml.safe_load(text)
+    model = ModelDef()
+
+    m = data.get('model', {})
+    model.name = str(m.get('name', 'unnamed'))
+    model.steps = int(m.get('steps', 10))
+
+    model.globals = {k: float(v) for k, v in data.get('globals', {}).items()}
+
+    for nid, nd in data.get('nodes', {}).items():
+        state = {k: float(v) for k, v in nd.get('state', {}).items()}
+        params = {k: _parse_value(str(v)) for k, v in nd.get('params', {}).items()}
+        model.nodes[nid] = NodeDef(
+            id=nid,
+            kind=str(nd.get('kind', 'group')),
+            state=state,
+            params=params,
+        )
+
+    for e in data.get('edges', []):
+        model.edges.append(EdgeDef(
+            src=str(e['src']),
+            dst=str(e['dst']),
+            relation=str(e.get('relation', 'influence')),
+            weight=float(e.get('weight', 1.0)),
+            delay=int(e.get('delay', 0)),
+        ))
+
+    for r in data.get('rules', []):
+        model.rules.append(RuleDef(
+            node=str(r['node']),
+            var=str(r['var']),
+            expr=str(r['expr']),
+        ))
+
+    model.observables = {k: str(v) for k, v in data.get('observables', {}).items()}
+
+    return model
+
+
+def dsl_to_yaml(text: str) -> str:
+    """Convert a CyberDSL text model to its YAML representation."""
+    model = parse_dsl(text)
+    data: dict = {
+        'model': {'name': model.name, 'steps': model.steps},
+        'globals': model.globals,
+        'nodes': {
+            nid: {
+                'kind': n.kind,
+                'state': n.state,
+                **({'params': n.params} if n.params else {}),
+            }
+            for nid, n in model.nodes.items()
+        },
+        'edges': [
+            {
+                'src': e.src,
+                'dst': e.dst,
+                'relation': e.relation,
+                'weight': e.weight,
+                'delay': e.delay,
+            }
+            for e in model.edges
+        ],
+        'rules': [
+            {'node': r.node, 'var': r.var, 'expr': r.expr}
+            for r in model.rules
+        ],
+        'observables': model.observables,
+    }
+    return yaml.dump(data, allow_unicode=True, sort_keys=False, default_flow_style=False)

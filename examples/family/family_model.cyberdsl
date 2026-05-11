@@ -1,0 +1,105 @@
+model:
+  name = "Rodzina-Kowalskich"
+  steps = 48  # 48 miesięcy = 4 lata
+
+# ─── Parametry globalne ───────────────────────────────────────────────────────
+globals:
+  external_stress   = 0.25   # zewnętrzny stres (praca, finanse, środowisko)
+  economic_pressure = 0.30   # presja ekonomiczna
+  social_support    = 0.60   # wsparcie społeczne (rodzina, przyjaciele)
+  therapy_effect    = 0.00   # efekt terapii (0=brak, >0=trwa)
+  crisis_event      = 0.00   # nagłe zdarzenie kryzysowe (0=brak)
+
+# ─── Węzły (aktorzy systemu rodzinnego) ──────────────────────────────────────
+nodes:
+  # Rodzice
+  mother:actor | state={wellbeing:0.70, attachment:0.75, autonomy:0.65, stress:0.30} | resilience=0.60 | role=parent
+  father:actor | state={wellbeing:0.65, attachment:0.70, autonomy:0.70, stress:0.35} | resilience=0.55 | role=parent
+
+  # Małżeństwo jako osobny węzeł — subsystem
+  marriage:subsystem | state={cohesion:0.72, conflict:0.20, intimacy:0.65, commitment:0.80} | age_years=8
+
+  # Dzieci
+  child_elder:actor | state={wellbeing:0.80, security:0.75, anxiety:0.15} | age=10 | resilience=0.65
+  child_younger:actor | state={wellbeing:0.82, security:0.78, anxiety:0.10} | age=6  | resilience=0.50
+
+  # Systemy zewnętrzne
+  work_system:institution | state={demand:0.60, satisfaction:0.55, stability:0.65} | sector=private
+  extended_family:group   | state={cohesion:0.70, support:0.65, interference:0.20}
+
+# ─── Krawędzie wpływu ─────────────────────────────────────────────────────────
+edges:
+  # Sprzężenia między rodzicami
+  mother->father:emotional_influence   | weight=0.40 | delay=0
+  father->mother:emotional_influence   | weight=0.38 | delay=0
+
+  # Rodzice → małżeństwo
+  mother->marriage:parental_input      | weight=0.45 | delay=1
+  father->marriage:parental_input      | weight=0.45 | delay=1
+
+  # Małżeństwo → rodzice (sprzężenie zwrotne)
+  marriage->mother:couple_feedback     | weight=0.35 | delay=1
+  marriage->father:couple_feedback     | weight=0.35 | delay=1
+
+  # Rodzice → dzieci
+  mother->child_elder:parenting        | weight=0.40 | delay=1
+  mother->child_younger:parenting      | weight=0.45 | delay=1
+  father->child_elder:parenting        | weight=0.35 | delay=1
+  father->child_younger:parenting      | weight=0.30 | delay=1
+
+  # Dzieci → rodzice (sprzężenie zwrotne)
+  child_elder->mother:child_feedback   | weight=0.20 | delay=2
+  child_elder->father:child_feedback   | weight=0.18 | delay=2
+  child_younger->mother:child_feedback | weight=0.22 | delay=2
+  child_younger->father:child_feedback | weight=0.18 | delay=2
+
+  # Dzieci między sobą
+  child_elder->child_younger:sibling   | weight=0.30 | delay=0
+  child_younger->child_elder:sibling   | weight=0.15 | delay=0
+
+  # Praca → rodzice
+  work_system->mother:work_stress      | weight=0.30 | delay=1
+  work_system->father:work_stress      | weight=0.35 | delay=1
+
+  # Rodzina rozszerzona
+  extended_family->mother:family_support | weight=0.20 | delay=2
+  extended_family->father:family_support | weight=0.15 | delay=2
+  extended_family->marriage:kinship      | weight=0.15 | delay=2
+
+# ─── Reguły aktualizacji ─────────────────────────────────────────────────────
+rules:
+  # ── Matka ──
+  mother.stress    => clip(self['stress'] + 0.08*globals['external_stress'] + 0.10*globals['economic_pressure'] - 0.07*globals['social_support'] - 0.05*signals.get('sig_marriage',{}).get('cohesion',0) - 0.04*globals['therapy_effect'] + 0.15*globals['crisis_event'])
+  mother.wellbeing => clip(self['wellbeing'] - 0.12*self['stress'] + 0.08*signals.get('sig_marriage',{}).get('intimacy',0) + 0.05*globals['social_support'] + 0.06*globals['therapy_effect'] - 0.10*globals['crisis_event'])
+  mother.attachment => clip(self['attachment'] + 0.06*signals.get('sig_marriage',{}).get('cohesion',0) - 0.08*(1 - signals.get('sig_marriage',{}).get('cohesion',0.5))*signals.get('sig_marriage',{}).get('conflict',0) - 0.04*globals['crisis_event'])
+
+  # ── Ojciec ──
+  father.stress    => clip(self['stress'] + 0.10*globals['economic_pressure'] + 0.07*globals['external_stress'] - 0.05*globals['social_support'] - 0.04*signals.get('sig_marriage',{}).get('cohesion',0) + 0.12*globals['crisis_event'])
+  father.wellbeing => clip(self['wellbeing'] - 0.11*self['stress'] + 0.07*signals.get('sig_marriage',{}).get('intimacy',0) + 0.04*globals['social_support'] + 0.05*globals['therapy_effect'] - 0.09*globals['crisis_event'])
+  father.attachment => clip(self['attachment'] + 0.05*signals.get('sig_marriage',{}).get('cohesion',0) - 0.07*(1 - signals.get('sig_marriage',{}).get('cohesion',0.5))*signals.get('sig_marriage',{}).get('conflict',0) - 0.03*globals['crisis_event'])
+
+  # ── Małżeństwo ──
+  marriage.conflict   => clip(self['conflict'] + 0.10*nodes['mother']['stress'] + 0.10*nodes['father']['stress'] - 0.08*globals['social_support'] + 0.20*globals['crisis_event'] - 0.15*globals['therapy_effect'])
+  marriage.cohesion   => clip(self['cohesion'] - 0.15*self['conflict'] + 0.06*(nodes['mother']['attachment'] + nodes['father']['attachment'])/2 + 0.08*globals['therapy_effect'] - 0.12*globals['crisis_event'])
+  marriage.intimacy   => clip(self['intimacy'] - 0.12*self['conflict'] + 0.05*(nodes['mother']['wellbeing'] + nodes['father']['wellbeing'])/2 - 0.08*globals['external_stress'] + 0.10*globals['therapy_effect'])
+  marriage.commitment => clip(self['commitment'] - 0.06*self['conflict'] + 0.04*self['cohesion'] - 0.10*globals['crisis_event'] + 0.06*globals['therapy_effect'])
+
+  # ── Starsze dziecko ──
+  child_elder.wellbeing => clip(self['wellbeing'] + 0.08*(nodes['mother']['wellbeing'] + nodes['father']['wellbeing'])/2 - 0.10*nodes['marriage']['conflict'] + 0.04*nodes['child_younger']['wellbeing'] - 0.08*globals['crisis_event'] - 0.06*self['anxiety'])
+  child_elder.security  => clip(self['security'] + 0.10*nodes['marriage']['cohesion'] - 0.15*nodes['marriage']['conflict'] - 0.12*globals['crisis_event'] + 0.04*globals['social_support'])
+  child_elder.anxiety   => clip(self['anxiety'] + 0.12*nodes['marriage']['conflict'] - 0.08*nodes['marriage']['cohesion'] + 0.10*globals['crisis_event'] - 0.04*globals['social_support'])
+
+  # ── Młodsze dziecko ──
+  child_younger.wellbeing => clip(self['wellbeing'] + 0.10*(nodes['mother']['wellbeing'] + nodes['father']['wellbeing'])/2 - 0.12*nodes['marriage']['conflict'] - 0.08*globals['crisis_event'] - 0.07*self['anxiety'])
+  child_younger.security  => clip(self['security'] + 0.12*nodes['marriage']['cohesion'] - 0.18*nodes['marriage']['conflict'] - 0.15*globals['crisis_event'] + 0.03*globals['social_support'])
+  child_younger.anxiety   => clip(self['anxiety'] + 0.15*nodes['marriage']['conflict'] - 0.10*nodes['marriage']['cohesion'] + 0.12*globals['crisis_event'] - 0.05*globals['social_support'])
+
+# ─── Obserwable ───────────────────────────────────────────────────────────────
+observables:
+  family_wellbeing      = (nodes['mother']['wellbeing'] + nodes['father']['wellbeing'] + nodes['child_elder']['wellbeing'] + nodes['child_younger']['wellbeing']) / 4
+  parental_stress_avg   = (nodes['mother']['stress'] + nodes['father']['stress']) / 2
+  children_security_avg = (nodes['child_elder']['security'] + nodes['child_younger']['security']) / 2
+  children_anxiety_avg  = (nodes['child_elder']['anxiety'] + nodes['child_younger']['anxiety']) / 2
+  marriage_health       = (nodes['marriage']['cohesion'] + nodes['marriage']['intimacy'] + nodes['marriage']['commitment'] + (1 - nodes['marriage']['conflict'])) / 4
+  divorce_risk          = clip((nodes['marriage']['conflict'] - nodes['marriage']['commitment'] * 0.5) * (1 - nodes['marriage']['cohesion']))
+  system_resilience     = (nodes['mother']['wellbeing'] + nodes['father']['wellbeing'] + nodes['marriage']['cohesion'] + nodes['child_elder']['security'] + nodes['child_younger']['security']) / 5

@@ -1,0 +1,48 @@
+model:
+  name: "Port-Recovery"
+  steps: 20
+
+globals:
+  stress: 0.38
+  support: 0.72
+  external_shock: 0.10
+  mediation: 0.60
+
+nodes:
+  fishers:
+    kind: group
+    state: {cohesion: 0.60, trust: 0.48, activism: 0.34}
+    params: {adaptability: 0.45}
+  youth:
+    kind: group
+    state: {cohesion: 0.43, trust: 0.34, activism: 0.62}
+    params: {adaptability: 0.78}
+  city_hall:
+    kind: institution
+    state: {cohesion: 0.73, trust: 0.40, legitimacy: 0.54}
+    params: {authority: 0.80}
+  ngo:
+    kind: institution
+    state: {trust: 0.66, cohesion: 0.61}
+    params: {capacity: 0.70}
+
+edges:
+  - {src: city_hall, dst: youth, relation: influence, weight: 0.26, delay: 1}
+  - {src: ngo, dst: youth, relation: support, weight: 0.28, delay: 0}
+  - {src: ngo, dst: city_hall, relation: mediation, weight: 0.20, delay: 0}
+  - {src: fishers, dst: youth, relation: stabilize, weight: 0.18, delay: 1}
+  - {src: youth, dst: city_hall, relation: feedback, weight: 0.25, delay: 0}
+
+rules:
+  - {node: youth, var: trust, expr: "clip(self['trust'] + 0.08*signals.get('w_city_hall',0)*signals.get('sig_city_hall',{}).get('legitimacy',0) + 0.10*signals.get('w_ngo',0)*signals.get('sig_ngo',{}).get('trust',0) - 0.07*globals['stress'] + 0.06*globals['mediation'])"}
+  - {node: youth, var: cohesion, expr: "clip(self['cohesion'] + 0.10*sum_influence + 0.07*globals['support'] - 0.06*globals['stress'])"}
+  - {node: youth, var: activism, expr: "clip(self['activism'] + 0.08*globals['stress'] - 0.10*globals['support'] - 0.06*globals['mediation'])"}
+  - {node: city_hall, var: legitimacy, expr: "clip(self['legitimacy'] + 0.07*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) + 0.08*signals.get('w_ngo',0)*signals.get('sig_ngo',{}).get('trust',0) + 0.05*globals['support'])"}
+  - {node: city_hall, var: trust, expr: "clip(self['trust'] + 0.06*globals['support'] - 0.05*globals['stress'])"}
+  - {node: fishers, var: trust, expr: "clip(self['trust'] + 0.05*globals['support'] - 0.04*globals['external_shock'])"}
+  - {node: ngo, var: trust, expr: "clip(self['trust'] + 0.04*globals['mediation'] + 0.02*globals['support'])"}
+
+observables:
+  avg_trust: "(nodes['fishers']['trust'] + nodes['youth']['trust'] + nodes['city_hall']['trust'] + nodes['ngo']['trust']) / 4"
+  recovery_index: "(nodes['youth']['trust'] + nodes['city_hall']['legitimacy'] + nodes['fishers']['cohesion']) / 3"
+  protest_pressure: "nodes['youth']['activism'] * (1 - nodes['city_hall']['legitimacy'])"

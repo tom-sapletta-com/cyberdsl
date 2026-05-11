@@ -1,0 +1,44 @@
+model:
+  name: "Disinformation-Network"
+  steps: 20
+
+globals:
+  stress: 0.48
+  support: 0.40
+  rumor_intensity: 0.70
+  counter_campaign: 0.18
+
+nodes:
+  citizens:
+    kind: group
+    state: {trust: 0.46, cohesion: 0.50, anxiety: 0.42}
+    params: {adaptability: 0.46}
+  influencers:
+    kind: group
+    state: {trust: 0.32, amplification: 0.76, cohesion: 0.60}
+    params: {adaptability: 0.82}
+  public_media:
+    kind: institution
+    state: {legitimacy: 0.54, trust: 0.48, cohesion: 0.66}
+    params: {authority: 0.70}
+  fact_checkers:
+    kind: institution
+    state: {trust: 0.58, cohesion: 0.64, capacity: 0.62}
+    params: {authority: 0.52}
+
+edges:
+  - {src: influencers, dst: citizens, relation: rumor, weight: 0.34, delay: 0}
+  - {src: public_media, dst: citizens, relation: information, weight: 0.24, delay: 1}
+  - {src: fact_checkers, dst: citizens, relation: correction, weight: 0.22, delay: 1}
+  - {src: citizens, dst: public_media, relation: trust_feedback, weight: 0.20, delay: 1}
+  - {src: fact_checkers, dst: public_media, relation: audit, weight: 0.12, delay: 1}
+
+rules:
+  - {node: citizens, var: trust, expr: "clip(self['trust'] - 0.12*globals['rumor_intensity']*signals.get('w_influencers',0) + 0.06*signals.get('w_public_media',0)*signals.get('sig_public_media',{}).get('legitimacy',0) + 0.08*signals.get('w_fact_checkers',0)*signals.get('sig_fact_checkers',{}).get('trust',0) + 0.06*globals['counter_campaign'])"}
+  - {node: citizens, var: anxiety, expr: "clip(self['anxiety'] + 0.10*globals['stress'] + 0.12*globals['rumor_intensity'] - 0.06*globals['counter_campaign'])"}
+  - {node: public_media, var: legitimacy, expr: "clip(self['legitimacy'] + 0.04*signals.get('w_citizens',0)*signals.get('sig_citizens',{}).get('trust',0) + 0.05*signals.get('w_fact_checkers',0)*signals.get('sig_fact_checkers',{}).get('capacity',0) - 0.06*globals['rumor_intensity'])"}
+  - {node: fact_checkers, var: trust, expr: "clip(self['trust'] + 0.06*globals['counter_campaign'] + 0.03*globals['support'])"}
+
+observables:
+  information_integrity: "(nodes['citizens']['trust'] + nodes['public_media']['legitimacy'] + nodes['fact_checkers']['trust']) / 3"
+  panic_index: "(nodes['citizens']['anxiety'] + globals['rumor_intensity'] + globals['stress']) / 3"

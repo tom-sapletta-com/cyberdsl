@@ -1,0 +1,45 @@
+model:
+  name: "Municipal-Protest"
+  steps: 22
+
+globals:
+  stress: 0.60
+  support: 0.34
+  policing_pressure: 0.58
+  mediation: 0.16
+
+nodes:
+  residents:
+    kind: group
+    state: {cohesion: 0.58, trust: 0.36, activism: 0.62}
+    params: {adaptability: 0.56}
+  activists:
+    kind: group
+    state: {cohesion: 0.68, trust: 0.28, mobilization: 0.74}
+    params: {adaptability: 0.72}
+  city_hall:
+    kind: institution
+    state: {legitimacy: 0.44, trust: 0.34, cohesion: 0.62}
+    params: {authority: 0.84}
+  police:
+    kind: institution
+    state: {legitimacy: 0.40, trust: 0.30, cohesion: 0.70}
+    params: {authority: 0.88}
+
+edges:
+  - {src: city_hall, dst: residents, relation: policy_signal, weight: 0.18, delay: 1}
+  - {src: activists, dst: residents, relation: mobilization, weight: 0.24, delay: 0}
+  - {src: residents, dst: city_hall, relation: protest_feedback, weight: 0.20, delay: 0}
+  - {src: police, dst: residents, relation: coercion, weight: 0.22, delay: 0}
+  - {src: police, dst: activists, relation: coercion, weight: 0.28, delay: 0}
+
+rules:
+  - {node: residents, var: trust, expr: "clip(self['trust'] + 0.05*signals.get('w_city_hall',0)*signals.get('sig_city_hall',{}).get('legitimacy',0) - 0.10*globals['policing_pressure'] - 0.08*globals['stress'])"}
+  - {node: residents, var: activism, expr: "clip(self['activism'] + 0.10*signals.get('w_activists',0)*signals.get('sig_activists',{}).get('mobilization',0) + 0.08*globals['stress'] - 0.05*globals['mediation'])"}
+  - {node: activists, var: mobilization, expr: "clip(self['mobilization'] + 0.10*globals['policing_pressure'] + 0.06*(1 - nodes['city_hall']['legitimacy']) - 0.04*globals['mediation'])"}
+  - {node: city_hall, var: legitimacy, expr: "clip(self['legitimacy'] - 0.08*nodes['residents']['activism'] - 0.06*nodes['activists']['mobilization'] + 0.04*globals['mediation'])"}
+  - {node: police, var: legitimacy, expr: "clip(self['legitimacy'] - 0.08*globals['policing_pressure'] + 0.03*globals['mediation'])"}
+
+observables:
+  unrest_index: "(nodes['residents']['activism'] + nodes['activists']['mobilization'] + globals['policing_pressure']) / 3"
+  public_legitimacy: "(nodes['city_hall']['legitimacy'] + nodes['police']['legitimacy']) / 2"

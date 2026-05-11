@@ -1,0 +1,45 @@
+model:
+  name: "Hospital-Overload"
+  steps: 20
+
+globals:
+  patient_surge: 0.72
+  support: 0.36
+  burnout_program: 0.18
+  crisis_event: 0.40
+
+nodes:
+  doctors:
+    kind: group
+    state: {cohesion: 0.62, trust: 0.58, burnout: 0.48}
+    params: {adaptability: 0.50}
+  nurses:
+    kind: group
+    state: {cohesion: 0.66, trust: 0.60, burnout: 0.52}
+    params: {adaptability: 0.58}
+  hospital_board:
+    kind: institution
+    state: {legitimacy: 0.56, trust: 0.44, cohesion: 0.64}
+    params: {authority: 0.84}
+  patients:
+    kind: group
+    state: {trust: 0.46, anxiety: 0.58, cohesion: 0.40}
+    params: {adaptability: 0.30}
+
+edges:
+  - {src: hospital_board, dst: doctors, relation: management, weight: 0.25, delay: 1}
+  - {src: hospital_board, dst: nurses, relation: management, weight: 0.25, delay: 1}
+  - {src: doctors, dst: patients, relation: care, weight: 0.30, delay: 0}
+  - {src: nurses, dst: patients, relation: care, weight: 0.34, delay: 0}
+  - {src: patients, dst: hospital_board, relation: feedback, weight: 0.22, delay: 1}
+
+rules:
+  - {node: doctors, var: burnout, expr: "clip(self['burnout'] + 0.16*globals['patient_surge'] + 0.08*globals['crisis_event'] - 0.08*globals['support'] - 0.08*globals['burnout_program'])"}
+  - {node: nurses, var: burnout, expr: "clip(self['burnout'] + 0.18*globals['patient_surge'] + 0.08*globals['crisis_event'] - 0.08*globals['support'] - 0.10*globals['burnout_program'])"}
+  - {node: patients, var: anxiety, expr: "clip(self['anxiety'] + 0.10*globals['patient_surge'] - 0.08*signals.get('w_doctors',0)*signals.get('sig_doctors',{}).get('trust',0) - 0.08*signals.get('w_nurses',0)*signals.get('sig_nurses',{}).get('trust',0))"}
+  - {node: patients, var: trust, expr: "clip(self['trust'] + 0.08*signals.get('w_doctors',0)*signals.get('sig_doctors',{}).get('cohesion',0) + 0.08*signals.get('w_nurses',0)*signals.get('sig_nurses',{}).get('cohesion',0) - 0.10*globals['patient_surge'])"}
+  - {node: hospital_board, var: legitimacy, expr: "clip(self['legitimacy'] + 0.05*globals['support'] + 0.04*signals.get('w_patients',0)*signals.get('sig_patients',{}).get('trust',0) - 0.12*globals['crisis_event'])"}
+
+observables:
+  overload_index: "(nodes['doctors']['burnout'] + nodes['nurses']['burnout'] + nodes['patients']['anxiety']) / 3"
+  care_stability: "(nodes['patients']['trust'] + nodes['hospital_board']['legitimacy'] + (1 - nodes['nurses']['burnout'])) / 3"

@@ -1,0 +1,44 @@
+model:
+  name: "Port-Baseline"
+  steps: 16
+
+globals:
+  stress: 0.35
+  support: 0.55
+  external_shock: 0.00
+
+nodes:
+  fishers:
+    kind: group
+    state: {cohesion: 0.65, trust: 0.56, activism: 0.28}
+    params: {adaptability: 0.40}
+  youth:
+    kind: group
+    state: {cohesion: 0.46, trust: 0.42, activism: 0.58}
+    params: {adaptability: 0.76}
+  city_hall:
+    kind: institution
+    state: {cohesion: 0.79, trust: 0.52, legitimacy: 0.71}
+    params: {authority: 0.82}
+
+edges:
+  - {src: city_hall, dst: youth, relation: influence, weight: 0.35, delay: 1}
+  - {src: city_hall, dst: fishers, relation: policy, weight: 0.20, delay: 2}
+  - {src: fishers, dst: youth, relation: stabilize, weight: 0.25, delay: 1}
+  - {src: youth, dst: city_hall, relation: feedback, weight: 0.30, delay: 0}
+  - {src: fishers, dst: city_hall, relation: lobby, weight: 0.15, delay: 1}
+
+rules:
+  - {node: youth, var: cohesion, expr: "clip(self['cohesion'] + 0.12*sum_influence - 0.09*globals['stress'] + 0.07*globals['support'])"}
+  - {node: youth, var: trust, expr: "clip(self['trust'] + 0.08*signals.get('w_city_hall',0)*signals.get('sig_city_hall',{}).get('legitimacy',0) - 0.08*globals['stress'])"}
+  - {node: youth, var: activism, expr: "clip(self['activism'] + 0.12*globals['stress'] - 0.08*globals['support'])"}
+  - {node: fishers, var: cohesion, expr: "clip(self['cohesion'] + 0.05*sum_influence - 0.06*globals['stress'])"}
+  - {node: fishers, var: trust, expr: "clip(self['trust'] + 0.06*globals['support'] - 0.08*globals['stress'] - 0.04*globals['external_shock'])"}
+  - {node: city_hall, var: trust, expr: "clip(self['trust'] + 0.10*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) - 0.06*globals['stress'] + 0.05*globals['support'])"}
+  - {node: city_hall, var: legitimacy, expr: "clip(self['legitimacy'] + 0.08*signals.get('w_youth',0)*signals.get('sig_youth',{}).get('trust',0) - 0.10*(1 - globals['support']))"}
+
+observables:
+  avg_trust: "(nodes['fishers']['trust'] + nodes['youth']['trust'] + nodes['city_hall']['trust']) / 3"
+  avg_cohesion: "(nodes['fishers']['cohesion'] + nodes['youth']['cohesion'] + nodes['city_hall']['cohesion']) / 3"
+  social_resilience: "(nodes['fishers']['cohesion'] + nodes['youth']['trust'] + nodes['city_hall']['legitimacy']) / 3"
+  tension_index: "globals['stress'] * (1 - nodes['fishers']['trust']) * nodes['youth']['activism']"
