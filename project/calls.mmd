@@ -1,0 +1,182 @@
+flowchart LR
+%% generated in 0.01s
+    subgraph cyberdsl____main__
+        cyberdsl____main_____load_model["_load_model"]
+        cyberdsl____main____cmd_simulate["cmd_simulate"]
+        cyberdsl____main____cmd_monte["cmd_monte"]
+        cyberdsl____main____cmd_serve["cmd_serve"]
+        cyberdsl____main____cmd_csv["cmd_csv"]
+        cyberdsl____main____cmd_visualize["cmd_visualize"]
+        cyberdsl____main____cmd_dashboard["cmd_dashboard"]
+    end
+    subgraph cyberdsl__dashboard
+        cyberdsl__dashboard___obs_datasets["_obs_datasets"]
+        cyberdsl__dashboard___node_datasets["_node_datasets"]
+        cyberdsl__dashboard__save_dashboard["save_dashboard"]
+        cyberdsl__dashboard___steps_labels["_steps_labels"]
+        cyberdsl__dashboard___hex_alpha["_hex_alpha"]
+        cyberdsl__dashboard__build_dashboard["build_dashboard"]
+    end
+    subgraph cyberdsl__graph
+        cyberdsl__graph__build_graph_viewer["build_graph_viewer"]
+        cyberdsl__graph__save_graph_viewer["save_graph_viewer"]
+        cyberdsl__graph__model_to_mermaid["model_to_mermaid"]
+        cyberdsl__graph__save_mermaid["save_mermaid"]
+    end
+    subgraph cyberdsl__models
+        cyberdsl__models__Simulation__run["run"]
+        cyberdsl__models__run_monte_carlo["run_monte_carlo"]
+        cyberdsl__models__Simulation__apply_shock["apply_shock"]
+        cyberdsl__models__ModelCompiler__parse["parse"]
+        cyberdsl__models___safe_clip["_safe_clip"]
+    end
+    subgraph cyberdsl__parser
+        cyberdsl__parser__parse_dsl["parse_dsl"]
+        cyberdsl__parser___parse_dict_literal["_parse_dict_literal"]
+        cyberdsl__parser___parse_value["_parse_value"]
+        cyberdsl__parser__parse_yaml["parse_yaml"]
+        cyberdsl__parser___strip_inline_comment["_strip_inline_comment"]
+        cyberdsl__parser___parse_node_line["_parse_node_line"]
+        cyberdsl__parser__dsl_to_yaml["dsl_to_yaml"]
+    end
+    subgraph cyberdsl__static
+        cyberdsl__static__app__destroyAllCharts["destroyAllCharts"]
+        cyberdsl__static__app__streamSimulation["streamSimulation"]
+        cyberdsl__static__app__obsDatasets["obsDatasets"]
+        cyberdsl__static__app__parts["parts"]
+        cyberdsl__static__app__ds["ds"]
+        cyberdsl__static__app__data["data"]
+        cyberdsl__static__app__renderMermaid["renderMermaid"]
+        cyberdsl__static__app__palA["palA"]
+        cyberdsl__static__app__md["md"]
+        cyberdsl__static__app__clearError["clearError"]
+        cyberdsl__static__app__totalSteps["totalSteps"]
+        cyberdsl__static__app__parseModel["parseModel"]
+        cyberdsl__static__app__decoder["decoder"]
+        cyberdsl__static__app__initStreamCharts["initStreamCharts"]
+        cyberdsl__static__app__showError["showError"]
+        cyberdsl__static__app__clearResults["clearResults"]
+        cyberdsl__static__app__runSimulation["runSimulation"]
+        cyberdsl__static__app__name["name"]
+        cyberdsl__static__app__obsArea["obsArea"]
+        cyberdsl__static__app__setBadge["setBadge"]
+        cyberdsl__static__app__nodeIds["nodeIds"]
+        cyberdsl__static__app__labels["labels"]
+        cyberdsl__static__app__renderModelInfo["renderModelInfo"]
+        cyberdsl__static__app__renderAllCharts["renderAllCharts"]
+        cyberdsl__static__app__setButtons["setButtons"]
+        cyberdsl__static__app__text["text"]
+        cyberdsl__static__app__pal["pal"]
+        cyberdsl__static__app__reader["reader"]
+        cyberdsl__static__app__makeChart["makeChart"]
+    end
+    subgraph cyberdsl__webapp
+        cyberdsl__webapp__handle_parse["handle_parse"]
+        cyberdsl__webapp___parse_model["_parse_model"]
+        cyberdsl__webapp__handle_list_examples["handle_list_examples"]
+        cyberdsl__webapp__create_app["create_app"]
+        cyberdsl__webapp__handle_simulate["handle_simulate"]
+        cyberdsl__webapp__handle_get_example["handle_get_example"]
+        cyberdsl__webapp___snap_to_json["_snap_to_json"]
+        cyberdsl__webapp___list_examples["_list_examples"]
+        cyberdsl__webapp__handle_simulate_stream["handle_simulate_stream"]
+        cyberdsl__webapp__run["run"]
+        cyberdsl__webapp___find_example["_find_example"]
+        cyberdsl__webapp__handle_mermaid["handle_mermaid"]
+    end
+    subgraph examples__family_simulation
+        examples__family_simulation__scenario_stable["scenario_stable"]
+        examples__family_simulation__scenario_divorce["scenario_divorce"]
+        examples__family_simulation__scenario_crisis["scenario_crisis"]
+        examples__family_simulation__print_comparison["print_comparison"]
+        examples__family_simulation___obs_at["_obs_at"]
+        examples__family_simulation__fresh_sim["fresh_sim"]
+    end
+    examples__family_simulation__scenario_stable --> examples__family_simulation__fresh_sim
+    examples__family_simulation__scenario_crisis --> examples__family_simulation__fresh_sim
+    examples__family_simulation__scenario_divorce --> examples__family_simulation__fresh_sim
+    examples__family_simulation__print_comparison --> examples__family_simulation___obs_at
+    cyberdsl__dashboard___obs_datasets --> cyberdsl__dashboard___hex_alpha
+    cyberdsl__dashboard__build_dashboard --> cyberdsl__dashboard___steps_labels
+    cyberdsl__dashboard__build_dashboard --> cyberdsl__dashboard___obs_datasets
+    cyberdsl__dashboard__build_dashboard --> cyberdsl__dashboard___node_datasets
+    cyberdsl__dashboard__build_dashboard --> cyberdsl__graph__model_to_mermaid
+    cyberdsl__dashboard__save_dashboard --> cyberdsl__dashboard__build_dashboard
+    cyberdsl__graph__build_graph_viewer --> cyberdsl__graph__model_to_mermaid
+    cyberdsl__graph__save_mermaid --> cyberdsl__graph__model_to_mermaid
+    cyberdsl__graph__save_graph_viewer --> cyberdsl__graph__build_graph_viewer
+    cyberdsl____main_____load_model --> cyberdsl__parser__parse_yaml
+    cyberdsl____main____cmd_simulate --> cyberdsl____main_____load_model
+    cyberdsl____main____cmd_dashboard --> cyberdsl____main_____load_model
+    cyberdsl____main____cmd_dashboard --> cyberdsl__dashboard__save_dashboard
+    cyberdsl____main____cmd_csv --> cyberdsl____main_____load_model
+    cyberdsl____main____cmd_monte --> cyberdsl____main_____load_model
+    cyberdsl____main____cmd_monte --> cyberdsl__models__run_monte_carlo
+    cyberdsl____main____cmd_monte --> cyberdsl__dashboard__save_dashboard
+    cyberdsl____main____cmd_serve --> cyberdsl__models__Simulation__run
+    cyberdsl____main____cmd_visualize --> cyberdsl____main_____load_model
+    cyberdsl____main____cmd_visualize --> cyberdsl__graph__save_mermaid
+    cyberdsl____main____cmd_visualize --> cyberdsl__graph__save_graph_viewer
+    cyberdsl__parser___parse_value --> cyberdsl__parser___parse_dict_literal
+    cyberdsl__parser___parse_node_line --> cyberdsl__parser___parse_dict_literal
+    cyberdsl__parser__parse_dsl --> cyberdsl__parser___strip_inline_comment
+    cyberdsl__parser__dsl_to_yaml --> cyberdsl__parser__parse_dsl
+    cyberdsl__models__ModelCompiler__parse --> cyberdsl__parser__parse_dsl
+    cyberdsl__models__Simulation__apply_shock --> cyberdsl__models___safe_clip
+    cyberdsl__webapp___parse_model --> cyberdsl__parser__parse_yaml
+    cyberdsl__webapp__handle_parse --> cyberdsl__webapp___parse_model
+    cyberdsl__webapp__handle_simulate --> cyberdsl__webapp___parse_model
+    cyberdsl__webapp__handle_simulate --> cyberdsl__webapp___snap_to_json
+    cyberdsl__webapp__handle_simulate_stream --> cyberdsl__webapp___parse_model
+    cyberdsl__webapp__handle_mermaid --> cyberdsl__webapp___parse_model
+    cyberdsl__webapp__handle_mermaid --> cyberdsl__graph__model_to_mermaid
+    cyberdsl__webapp__handle_list_examples --> cyberdsl__webapp___list_examples
+    cyberdsl__webapp__handle_get_example --> cyberdsl__webapp___find_example
+    cyberdsl__webapp__run --> cyberdsl__webapp__create_app
+    cyberdsl__static__app__data --> cyberdsl__static__app__showError
+    cyberdsl__static__app__data --> cyberdsl__static__app__setBadge
+    cyberdsl__static__app__name --> cyberdsl__static__app__showError
+    cyberdsl__static__app__name --> cyberdsl__static__app__clearResults
+    cyberdsl__static__app__name --> cyberdsl__static__app__parseModel
+    cyberdsl__static__app__parseModel --> cyberdsl__static__app__clearError
+    cyberdsl__static__app__parseModel --> cyberdsl__static__app__setBadge
+    cyberdsl__static__app__parseModel --> cyberdsl__static__app__showError
+    cyberdsl__static__app__parseModel --> cyberdsl__static__app__renderModelInfo
+    cyberdsl__static__app__parseModel --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__text --> cyberdsl__static__app__setBadge
+    cyberdsl__static__app__md --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__md --> cyberdsl__static__app__showError
+    cyberdsl__static__app__runSimulation --> cyberdsl__static__app__setBadge
+    cyberdsl__static__app__runSimulation --> cyberdsl__static__app__clearError
+    cyberdsl__static__app__runSimulation --> cyberdsl__static__app__clearResults
+    cyberdsl__static__app__runSimulation --> cyberdsl__static__app__setButtons
+    cyberdsl__static__app__runSimulation --> cyberdsl__static__app__showError
+    cyberdsl__static__app__streamSimulation --> cyberdsl__static__app__setBadge
+    cyberdsl__static__app__streamSimulation --> cyberdsl__static__app__clearError
+    cyberdsl__static__app__streamSimulation --> cyberdsl__static__app__clearResults
+    cyberdsl__static__app__streamSimulation --> cyberdsl__static__app__setButtons
+    cyberdsl__static__app__reader --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__decoder --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__totalSteps --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__parts --> cyberdsl__static__app__renderMermaid
+    cyberdsl__static__app__parts --> cyberdsl__static__app__renderModelInfo
+    cyberdsl__static__app__parts --> cyberdsl__static__app__initStreamCharts
+    cyberdsl__static__app__renderAllCharts --> cyberdsl__static__app__destroyAllCharts
+    cyberdsl__static__app__renderAllCharts --> cyberdsl__static__app__pal
+    cyberdsl__static__app__renderAllCharts --> cyberdsl__static__app__palA
+    cyberdsl__static__app__renderAllCharts --> cyberdsl__static__app__makeChart
+    cyberdsl__static__app__labels --> cyberdsl__static__app__pal
+    cyberdsl__static__app__labels --> cyberdsl__static__app__palA
+    cyberdsl__static__app__nodeIds --> cyberdsl__static__app__pal
+    cyberdsl__static__app__nodeIds --> cyberdsl__static__app__palA
+    cyberdsl__static__app__obsDatasets --> cyberdsl__static__app__pal
+    cyberdsl__static__app__obsDatasets --> cyberdsl__static__app__palA
+    cyberdsl__static__app__obsArea --> cyberdsl__static__app__pal
+    cyberdsl__static__app__obsArea --> cyberdsl__static__app__palA
+    cyberdsl__static__app__ds --> cyberdsl__static__app__pal
+    cyberdsl__static__app__ds --> cyberdsl__static__app__palA
+    cyberdsl__static__app__initStreamCharts --> cyberdsl__static__app__destroyAllCharts
+    cyberdsl__static__app__initStreamCharts --> cyberdsl__static__app__pal
+    cyberdsl__static__app__initStreamCharts --> cyberdsl__static__app__palA
+    cyberdsl__static__app__initStreamCharts --> cyberdsl__static__app__makeChart
+    cyberdsl__static__app__clearResults --> cyberdsl__static__app__destroyAllCharts

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<!-- generated in 0.01s -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code2llm Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #475569;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --warning: #eab308;
+            --error: #ef4444;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --surface-hover: #f1f5f9;
+                --border: #e2e8f0;
+                --text: #1e293b;
+                --text-muted: #64748b;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .search {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: var(--accent);
+        }
+
+        .search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .file-group {
+            margin-bottom: 1rem;
+        }
+
+        .file-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem;
+            font-weight: 600;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-bottom: 0.125rem;
+        }
+
+        .file-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .file-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .file-item.active .file-meta {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .file-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* Content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .content-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .content-title h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            background: var(--surface-hover);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--border);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .content-body {
+            flex: 1;
+            overflow: auto;
+            padding: 1.5rem;
+        }
+
+        /* Welcome */
+        .welcome {
+            max-width: 800px;
+        }
+
+        .welcome h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .welcome p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Content Display */
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+        }
+
+        .markdown-content {
+            line-height: 1.7;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .markdown-content h1 {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content code {
+            background: var(--surface);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+        }
+
+        .markdown-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.25rem;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin-left: 0;
+            color: var(--text-muted);
+        }
+
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: var(--surface);
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Mermaid */
+        .mermaid-content {
+            background: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .mermaid-content pre {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .sidebar.open {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+            }
+
+            .file-size {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="header">
+                <h1>🔍 code2llm</h1>
+                <p>Analysis Results Browser</p>
+            </div>
+            <div class="search">
+                <input type="text" id="search" placeholder="Search files..." oninput="filterFiles(this.value)">
+            </div>
+            <div class="file-list" id="fileList">
+                <!-- Files will be rendered here -->
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="content-header">
+                <div class="content-title">
+                    <span id="contentIcon">📁</span>
+                    <h2 id="contentTitle">Welcome</h2>
+                </div>
+                <div class="content-actions" id="contentActions">
+                    <!-- Actions will be rendered here -->
+                </div>
+            </div>
+            <div class="content-body" id="contentBody">
+                <div class="welcome">
+                    <h2>Analysis Results</h2>
+                    <p>Select a file from the sidebar to view its contents. This interface works on GitHub Pages without any server required.</p>
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+        const files = [{"name": "calls.png", "rel_path": "calls.png", "path": "calls.png", "size": "330.3KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "compact_flow.png", "rel_path": "compact_flow.png", "path": "compact_flow.png", "size": "33.7KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "flow.png", "rel_path": "flow.png", "path": "flow.png", "size": "18.9KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "README.md", "rel_path": "README.md", "path": "README.md", "size": "9.3KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# code2llm - Generated Analysis Files\n<!-- generated in 0.00s -->\n\nThis directory contains the complete analysis of your project generated by `code2llm`. Each file serves a specific purpose for understanding, refactoring, and documenting your codebase.\n\n## 📁 Generated Files Overview\n\nWhen you run `code2llm ./ -f all`, the following files are created:\n\n### 🎯 Core Analysis Files\n\n| File | Format | Purpose | Key Insights |\n|------|--------|---------|--------------|\n| `evolution.toon.yaml` | **YAML** | **📋 Refactoring queue** - Prioritized improvements | 0 refactoring actions needed |\n| `map.toon.yaml` | **YAML** | **🗺️ Structural map + project header** - Modules, imports, exports, signatures, stats, alerts, hotspots, trend | Project architecture overview |\n\n### 🤖 LLM-Ready Documentation\n\n| File | Format | Purpose | Use Case |\n|------|--------|---------|----------|\n| `prompt.txt` | **Text** | **📝 Ready-to-send prompt** - Lists all files with instructions | Attach to LLM conversation as context guide |\n| `context.md` | **Markdown** | **📖 LLM narrative** - Architecture summary | Paste into ChatGPT/Claude for code analysis |\n\n### 📊 Visualizations\n\n| File | Format | Purpose | Description |\n|------|--------|---------|-------------|\n| `flow.mmd` | **Mermaid** | **🔄 Control flow diagram** | Function call paths with complexity styling |\n| `calls.mmd` | **Mermaid** | **📞 Call graph** | Function dependencies (edges only) |\n| `compact_flow.mmd` | **Mermaid** | **📦 Module overview** | Aggregated module-level view |\n\n## 🚀 Quick Start Commands\n\n### Basic Analysis\n```bash\n# Quick health check (TOON format only)\ncode2llm ./ -f toon\n\n# Generate all formats (what created these files)\ncode2llm ./ -f all\n\n# LLM-ready context only\ncode2llm ./ -f context\n```\n\n### Performance Options\n```bash\n# Fast analysis for large projects\ncode2llm ./ -f toon --strategy quick\n\n# Memory-limited analysis\ncode2llm ./ -f all --max-memory 500\n\n# Skip PNG generation (faster)\ncode2llm ./ -f all --no-png\n```\n\n### Refactoring Focus\n```bash\n# Get refactoring recommendations\ncode2llm ./ -f evolution\n\n# Focus on specific code smells\ncode2llm ./ -f toon --refactor --smell god_function\n\n# Data flow analysis\ncode2llm ./ -f flow --data-flow\n```\n\n## 📖 Understanding Each File\n\n### `analysis.toon` - Health Diagnostics\n**Purpose**: Quick overview of code health issues\n**Key sections**:\n- **HEALTH**: Critical issues (🔴) and warnings (🟡)\n- **REFACTOR**: Prioritized refactoring actions\n- **COUPLING**: Module dependencies and potential cycles\n- **LAYERS**: Package complexity metrics\n- **FUNCTIONS**: High-complexity functions (CC ≥ 10)\n- **CLASSES**: Complex classes needing attention\n\n**Example usage**:\n```bash\n# View health issues\ncat analysis.toon | head -30\n\n# Check refactoring priorities\ngrep \"REFACTOR\" analysis.toon\n```\n\n### `evolution.toon.yaml` - Refactoring Queue\n**Purpose**: Step-by-step refactoring plan\n**Key sections**:\n- **NEXT**: Immediate actions to take\n- **RISKS**: Potential breaking changes\n- **METRICS-TARGET**: Success criteria\n\n**Example usage**:\n```bash\n# Get refactoring plan\ncat evolution.toon.yaml\n\n# Track progress\ngrep \"NEXT\" evolution.toon.yaml\n```\n\n### `flow.toon` - Legacy Data Flow Analysis\n**Purpose**: Understand data movement through the system (legacy / explicit opt-in)\n**Key sections**:\n- **PIPELINES**: Data processing chains\n- **CONTRACTS**: Function input/output contracts\n- **SIDE_EFFECTS**: Functions with external impacts\n\n**Example usage**:\n```bash\n# Find data pipelines\ngrep \"PIPELINES\" flow.toon\n\n# Identify side effects\ngrep \"SIDE_EFFECTS\" flow.toon\n```\n\n### `map.toon.yaml` - Structural Map + Project Header\n**Purpose**: High-level architecture overview plus compact project header\n**Key sections**:\n- **MODULES**: All modules with basic stats\n- **IMPORTS**: Dependency relationships\n- **EXPORTS**: Public API surface and signatures\n- **HEADER**: Stats, alerts, hotspots, evolution trend\n\n**Example usage**:\n```bash\n# See project structure\ncat map.toon.yaml | head -50\n\n# Find public APIs\ngrep \"SIGNATURES\" map.toon.yaml\n```\n\n### `project.toon.yaml` - Compact Analysis View\n**Purpose**: Compact module view generated from project.yaml data\n**Status**: Legacy view generated on demand from unified project.yaml\n\n**Example usage**:\n```bash\n# View compact project structure\ncat project.toon.yaml | head -30\n\n# Find largest files\ngrep -E \"^  .*[0-9]{3,}$\" project.toon.yaml | sort -t',' -k2 -n -r | head -10\n```\n\n### `prompt.txt` - Ready-to-Send LLM Prompt\n**Purpose**: Pre-formatted prompt listing all generated files for LLM conversation\n**Generation**: Written when `code2llm` runs with a source path and requests `-f all` (including `--no-chunk`) or `code2logic`\n**Contents**:\n- **Files section**: Lists all existing generated files with descriptions, including `project.toon.yaml` when generated by `-f all`\n- **Source files section**: Highlights important source files such as `cli_exports/orchestrator.py`\n- **Missing section**: Shows which files weren't generated (if any)\n- **Task section**: Refactoring brief with concrete execution instructions, not just analysis\n- **Priority Order section**: State-dependent refactoring priorities, starting with blockers and then architecture cleanup\n- **Requirements section**: Guidelines for suggested changes\n\n**Example usage**:\n```bash\n# View the prompt\ncat prompt.txt\n\n# Copy to clipboard and paste into ChatGPT/Claude\ncat prompt.txt | pbcopy  # macOS\ncat prompt.txt | xclip -sel clip  # Linux\n```\n\n### `context.md` - LLM Narrative\n**Purpose**: Ready-to-paste context for AI assistants\n**Key sections**:\n- **Overview**: Project statistics\n- **Architecture**: Module breakdown\n- **Entry Points**: Public interfaces\n- **Patterns**: Design patterns detected\n\n**Example usage**:\n```bash\n# Copy to clipboard for LLM\ncat context.md | pbcopy  # macOS\ncat context.md | xclip -sel clip  # Linux\n\n# Use with Claude/ChatGPT for code analysis\n```\n\n### Visualization Files (`*.mmd`, `*.png`)\n**Purpose**: Visual understanding of code structure\n**Files**:\n- `flow.mmd` - Detailed control flow with complexity colors\n- `calls.mmd` - Simple call graph\n- `compact_flow.mmd` - High-level module view\n- `*.png` - Pre-rendered images\n\n**Example usage**:\n```bash\n# View diagrams\nopen flow.png  # macOS\nxdg-open flow.png  # Linux\n\n# Edit in Mermaid Live Editor\n# Copy content of .mmd files to https://mermaid.live\n```\n\n## 🔍 Common Analysis Patterns\n\n### 1. Code Health Assessment\n```bash\n# Quick health check\ncode2llm ./ -f toon\ncat analysis.toon | grep -E \"(HEALTH|REFACTOR)\"\n```\n\n### 2. Refactoring Planning\n```bash\n# Get refactoring queue\ncode2llm ./ -f evolution\ncat evolution.toon.yaml\n\n# Focus on specific issues\ncode2llm ./ -f toon --refactor --smell god_function\n```\n\n### 3. LLM Assistance\n```bash\n# Generate context for AI\ncode2llm ./ -f context\ncat context.md\n\n# Use with Claude: \"Based on this context, help me refactor the god modules\"\n```\n\n### 4. Team Documentation\n```bash\n# Generate all docs for team\ncode2llm ./ -f all -o ./docs/\n\n# Create visual diagrams\nopen docs/flow.png\n```\n\n## 📊 Interpreting Metrics\n\n### Complexity Metrics (CC)\n- **🔴 Critical (≥5.0)**: Immediate refactoring needed\n- **🟠 High (3.0-4.9)**: Consider refactoring\n- **🟡 Medium (1.5-2.9)**: Monitor complexity\n- **🟢 Low (0.1-1.4)**: Acceptable\n- **⚪ Basic (0.0)**: Simple functions\n\n### Module Health\n- **GOD Module**: Too large (>500 lines, >20 methods)\n- **HUB**: High fan-out (calls many modules)\n- **FAN-IN**: High incoming dependencies\n- **CYCLES**: Circular dependencies\n\n### Data Flow Indicators\n- **PIPELINE**: Sequential data processing\n- **CONTRACT**: Clear input/output specification\n- **SIDE_EFFECT**: External state modification\n\n## 🛠️ Integration Examples\n\n### CI/CD Pipeline\n```bash\n#!/bin/bash\n# Analyze code quality in CI\ncode2llm ./ -f toon -o ./analysis\nif grep -q \"🔴 GOD\" ./analysis/analysis.toon; then\n    echo \"❌ God modules detected\"\n    exit 1\nfi\n```\n\n### Pre-commit Hook\n```bash\n#!/bin/sh\n# .git/hooks/pre-commit\ncode2llm ./ -f toon -o ./temp_analysis\nif grep -q \"🔴\" ./temp_analysis/analysis.toon; then\n    echo \"⚠️  Critical issues found. Review before committing.\"\nfi\nrm -rf ./temp_analysis\n```\n\n### Documentation Generation\n```bash\n# Generate docs for README\ncode2llm ./ -f context -o ./docs/\necho \"## Architecture\" >> README.md\ncat docs/context.md >> README.md\n```\n\n## 📚 Next Steps\n\n1. **Review `analysis.toon`** - Identify critical issues\n2. **Check `evolution.toon.yaml`** - Plan refactoring priorities\n3. **Use `context.md`** - Get LLM assistance for complex changes\n4. **Reference visualizations** - Understand system architecture\n5. **Track progress** - Re-run analysis after changes\n\n## 🔧 Advanced Usage\n\n### Custom Analysis\n```bash\n# Deep analysis with all insights\ncode2llm ./ -m hybrid -f all --max-depth 15 -v\n\n# Performance-optimized\ncode2llm ./ -m static -f toon --strategy quick\n\n# Refactoring-focused\ncode2llm ./ -f toon,evolution --refactor\n```\n\n### Output Customization\n```bash\n# Separate output directories\ncode2llm ./ -f all -o ./analysis-$(date +%Y%m%d)\n\n# Split YAML into multiple files\ncode2llm ./ -f yaml --split-output\n\n# Separate orphaned functions\ncode2llm ./ -f yaml --separate-orphans\n```\n\n---\n\n**Generated by**: `code2llm ./ -f all --readme`  \n**Analysis Date**: 2026-05-16  \n**Total Functions**: 134  \n**Total Classes**: 10  \n**Modules**: 27  \n\nFor more information about code2llm, visit: https://github.com/tom-sapletta/code2llm\n", "is_subdir": false}, {"name": "context.md", "rel_path": "context.md", "path": "context.md", "size": "15.6KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# System Architecture Analysis\n<!-- generated in 0.00s -->\n\n## Overview\n\n- **Project**: /home/tom/github/tom-sapletta-com/cyberdsl\n- **Primary Language**: yaml\n- **Languages**: yaml: 15, python: 9, toml: 1, shell: 1, javascript: 1\n- **Analysis Mode**: static\n- **Total Functions**: 134\n- **Total Classes**: 10\n- **Modules**: 27\n- **Entry Points**: 90\n\n## Architecture by Module\n\n### cyberdsl.static.app\n- **Functions**: 78\n- **File**: `app.js`\n\n### cyberdsl.models\n- **Functions**: 22\n- **Classes**: 4\n- **File**: `models.py`\n\n### cyberdsl.webapp\n- **Functions**: 17\n- **File**: `webapp.py`\n\n### cyberdsl.__main__\n- **Functions**: 9\n- **File**: `__main__.py`\n\n### cyberdsl.parser\n- **Functions**: 8\n- **Classes**: 5\n- **File**: `parser.py`\n\n### examples.family_simulation\n- **Functions**: 7\n- **File**: `family_simulation.py`\n\n### cyberdsl.dashboard\n- **Functions**: 6\n- **File**: `dashboard.py`\n\n### cyberdsl.graph\n- **Functions**: 5\n- **File**: `graph.py`\n\n### cyberdsl.litellm_adapter\n- **Functions**: 3\n- **Classes**: 1\n- **File**: `litellm_adapter.py`\n\n## Key Entry Points\n\nMain execution flows into the system:\n\n### cyberdsl.__main__.main\n- **Calls**: argparse.ArgumentParser, parser.add_subparsers, sub.add_parser, p.add_argument, p.add_argument, p.set_defaults, sub.add_parser, p.add_argument\n\n### examples.family_simulation.scenario_divorce\n> Miesiące 1-12:  narastający konflikt (jak scenariusz B).\nMiesiąc 13:     separacja — silny szok systemowy.\nMiesiące 14-30: adaptacja, dzieci w terapii\n- **Calls**: examples.family_simulation.fresh_sim, sim.set_global, sim.set_global, sim.set_global, range, sim.step, timeline.append, sim.apply_shock\n\n### cyberdsl.webapp.handle_simulate_stream\n> SSE endpoint: sends one JSON event per simulation step.\n- **Calls**: web.StreamResponse, Simulation, log.info, json.dumps, range, json.dumps, log.info, None.strip\n\n### cyberdsl.static.app.streamSimulation\n- **Calls**: cyberdsl.static.app.trim, cyberdsl.static.app.setBadge, cyberdsl.static.app.clearError, cyberdsl.static.app.clearResults, cyberdsl.static.app.setButtons, cyberdsl.static.app.remove, cyberdsl.static.app.log, cyberdsl.static.app.fetch\n\n### cyberdsl.models.SimulationResult.to_csv\n> Export timeline as CSV (step, observable_*, node_*_var columns).\n- **Calls**: io.StringIO, sorted, sorted, csv.writer, writer.writerow, buf.getvalue, None.keys, None.items\n\n### cyberdsl.webapp.handle_simulate\n- **Calls**: None.strip, body.get, cyberdsl.webapp._parse_model, None.run, log.info, web.json_response, request.json, body.get\n\n### cyberdsl.static.app.reader\n- **Calls**: cyberdsl.static.app.read, cyberdsl.static.app.decode, cyberdsl.static.app.split, cyberdsl.static.app.pop, cyberdsl.static.app.trim, cyberdsl.static.app.startsWith, cyberdsl.static.app.slice, cyberdsl.static.app.parse\n\n### cyberdsl.static.app.decoder\n- **Calls**: cyberdsl.static.app.read, cyberdsl.static.app.decode, cyberdsl.static.app.split, cyberdsl.static.app.pop, cyberdsl.static.app.trim, cyberdsl.static.app.startsWith, cyberdsl.static.app.slice, cyberdsl.static.app.parse\n\n### cyberdsl.static.app.totalSteps\n- **Calls**: cyberdsl.static.app.read, cyberdsl.static.app.decode, cyberdsl.static.app.split, cyberdsl.static.app.pop, cyberdsl.static.app.trim, cyberdsl.static.app.startsWith, cyberdsl.static.app.slice, cyberdsl.static.app.parse\n\n### examples.family_simulation.scenario_crisis\n> Rosnący stres ekonomiczny, utrata pracy ojca w miesiącu 8.\n- **Calls**: examples.family_simulation.fresh_sim, sim.set_global, sim.set_global, sim.set_global, range, sim.step, timeline.append, sim.set_global\n\n### examples.family_simulation.print_report\n- **Calls**: print, print, print, print, print, OBSERVABLES_LABELS.items, print, print\n\n### cyberdsl.models.MonteCarloResult.percentile_observable\n> Return step-by-step p-th percentile (0‥100) of observable.\n- **Calls**: range, vals.sort, max, result.append, result.append, len, None.get, isinstance\n\n### cyberdsl.static.app.runSimulation\n- **Calls**: cyberdsl.static.app.trim, cyberdsl.static.app.setBadge, cyberdsl.static.app.clearError, cyberdsl.static.app.clearResults, cyberdsl.static.app.setButtons, cyberdsl.static.app.log, cyberdsl.static.app.fetch, cyberdsl.static.app.stringify\n\n### cyberdsl.models.SimulationResult.summary\n- **Calls**: lines.append, None.items, lines.append, None.items, None.join, lines.append, None.join, lines.append\n\n### cyberdsl.litellm_adapter.CommunityDSLTranslator.translate\n> Translate a natural-language description into CyberDSL text.\n\nArgs:\n    description: Free-form description of the social system.\n    schema_hint:  Opt\n- **Calls**: messages.append, completion, None.message.content.strip, raw.startswith, raw.strip, raw.splitlines, None.join, RuntimeError\n\n### cyberdsl.webapp.handle_parse\n- **Calls**: None.strip, body.get, cyberdsl.webapp._parse_model, log.info, web.json_response, request.json, web.json_response, len\n\n### cyberdsl.webapp.handle_mermaid\n- **Calls**: None.strip, body.get, body.get, cyberdsl.webapp._parse_model, cyberdsl.graph.model_to_mermaid, log.info, web.json_response, request.json\n\n### cyberdsl.static.app.parts\n- **Calls**: cyberdsl.static.app.trim, cyberdsl.static.app.startsWith, cyberdsl.static.app.slice, cyberdsl.static.app.parse, cyberdsl.static.app.log, cyberdsl.static.app.renderMermaid, cyberdsl.static.app.renderModelInfo, cyberdsl.static.app.initStreamCharts\n\n### cyberdsl.__main__.cmd_monte\n- **Calls**: cyberdsl.__main__._load_model, cyberdsl.models.run_monte_carlo, cyberdsl.__main__._load_model, None.run, cyberdsl.dashboard.save_dashboard, print, print, print\n\n### cyberdsl.__main__.cmd_translate\n- **Calls**: None.read, CommunityDSLTranslator, t.translate, print, print, print, sys.exit, open\n\n### examples.family_simulation.print_comparison\n> Porównanie końcowych wartości obserwabli między scenariuszami.\n- **Calls**: print, print, print, print, print, OBSERVABLES_LABELS.items, None.join, print\n\n### examples.family_simulation.scenario_stable\n> Niska presja zewnętrzna, sporadyczna terapia, dobre wsparcie społeczne.\n- **Calls**: examples.family_simulation.fresh_sim, sim.set_global, sim.set_global, sim.set_global, range, sim.step, timeline.append, sim.set_global\n\n### cyberdsl.static.app.loadExampleList\n- **Calls**: cyberdsl.static.app.fetch, cyberdsl.static.app.json, cyberdsl.static.app.log, cyberdsl.static.app.forEach, cyberdsl.static.app.push, cyberdsl.static.app.entries, cyberdsl.static.app.createElement, cyberdsl.static.app.appendChild\n\n### cyberdsl.__main__.cmd_dashboard\n- **Calls**: cyberdsl.__main__._load_model, Simulation, sim.run, cyberdsl.dashboard.save_dashboard, print, print, result.summary, args.model.rsplit\n\n### cyberdsl.__main__.cmd_csv\n- **Calls**: cyberdsl.__main__._load_model, Simulation, sim.run, result.save_csv, print, print, result.summary, args.model.rsplit\n\n### cyberdsl.__main__.cmd_visualize\n- **Calls**: cyberdsl.__main__._load_model, cyberdsl.graph.save_mermaid, print, None.read, cyberdsl.graph.save_graph_viewer, print, args.model.rsplit, open\n\n### cyberdsl.static.app._mmdCounter\n- **Calls**: cyberdsl.static.app.replace, cyberdsl.static.app.log, cyberdsl.static.app.remove, cyberdsl.static.app.getElementById, cyberdsl.static.app.render, cyberdsl.static.app.error, cyberdsl.static.app.String, cyberdsl.static.app.slice\n\n### cyberdsl.models.Simulation._eval_rules\n> Calculate new states atomically.\n- **Calls**: copy.deepcopy, self.model.nodes.get, self._states.get, self._build_signals, eval, float, new_states.setdefault\n\n### cyberdsl.models.Simulation.run_scenario\n> Run with scheduled interventions.\n\nshock_at:  {step_no: [(node_id, var, delta), ...]}\nglobal_at: {step_no: {key: value}}\n- **Calls**: SimulationResult, range, self.step, result.timeline.append, None.items, self.apply_shock, self.set_global\n\n### cyberdsl.static.app.name\n- **Calls**: cyberdsl.static.app.fetch, cyberdsl.static.app.encodeURIComponent, cyberdsl.static.app.json, cyberdsl.static.app.showError, cyberdsl.static.app.clearResults, cyberdsl.static.app.parseModel, cyberdsl.static.app.String\n\n## Process Flows\n\nKey execution flows identified:\n\n### Flow 1: main\n```\nmain [cyberdsl.__main__]\n```\n\n### Flow 2: scenario_divorce\n```\nscenario_divorce [examples.family_simulation]\n  └─> fresh_sim\n```\n\n### Flow 3: handle_simulate_stream\n```\nhandle_simulate_stream [cyberdsl.webapp]\n```\n\n### Flow 4: streamSimulation\n```\nstreamSimulation [cyberdsl.static.app]\n  └─> setBadge\n```\n\n### Flow 5: to_csv\n```\nto_csv [cyberdsl.models.SimulationResult]\n```\n\n### Flow 6: handle_simulate\n```\nhandle_simulate [cyberdsl.webapp]\n  └─> _parse_model\n      └─ →> parse_yaml\n```\n\n### Flow 7: reader\n```\nreader [cyberdsl.static.app]\n```\n\n### Flow 8: decoder\n```\ndecoder [cyberdsl.static.app]\n```\n\n### Flow 9: totalSteps\n```\ntotalSteps [cyberdsl.static.app]\n```\n\n### Flow 10: scenario_crisis\n```\nscenario_crisis [examples.family_simulation]\n  └─> fresh_sim\n```\n\n## Key Classes\n\n### cyberdsl.models.Simulation\n- **Methods**: 10\n- **Key Methods**: cyberdsl.models.Simulation.__init__, cyberdsl.models.Simulation._build_signals, cyberdsl.models.Simulation._push_signals, cyberdsl.models.Simulation._eval_rules, cyberdsl.models.Simulation._eval_observables, cyberdsl.models.Simulation.step, cyberdsl.models.Simulation.run, cyberdsl.models.Simulation.apply_shock, cyberdsl.models.Simulation.set_global, cyberdsl.models.Simulation.run_scenario\n\n### cyberdsl.models.SimulationResult\n- **Methods**: 5\n- **Key Methods**: cyberdsl.models.SimulationResult.observables_over_time, cyberdsl.models.SimulationResult.node_state_over_time, cyberdsl.models.SimulationResult.summary, cyberdsl.models.SimulationResult.to_csv, cyberdsl.models.SimulationResult.save_csv\n\n### cyberdsl.models.MonteCarloResult\n- **Methods**: 3\n- **Key Methods**: cyberdsl.models.MonteCarloResult.mean_observable, cyberdsl.models.MonteCarloResult.std_observable, cyberdsl.models.MonteCarloResult.percentile_observable\n\n### cyberdsl.litellm_adapter.CommunityDSLTranslator\n- **Methods**: 3\n- **Key Methods**: cyberdsl.litellm_adapter.CommunityDSLTranslator.__init__, cyberdsl.litellm_adapter.CommunityDSLTranslator.translate, cyberdsl.litellm_adapter.CommunityDSLTranslator.translate_and_compile\n\n### cyberdsl.models.ModelCompiler\n- **Methods**: 2\n- **Key Methods**: cyberdsl.models.ModelCompiler.parse, cyberdsl.models.ModelCompiler._validate\n\n### cyberdsl.parser.NodeDef\n- **Methods**: 0\n\n### cyberdsl.parser.EdgeDef\n- **Methods**: 0\n\n### cyberdsl.parser.RuleDef\n- **Methods**: 0\n\n### cyberdsl.parser.ModelDef\n- **Methods**: 0\n\n### cyberdsl.parser.ParseError\n- **Methods**: 0\n- **Inherits**: Exception\n\n## Data Transformation Functions\n\nKey functions that process and transform data:\n\n### cyberdsl.parser._parse_dict_literal\n> Parse {k:v, k:v} into dict. Values coerced to float.\n- **Output to**: s.strip, s.startswith, s.endswith, s.split, pair.strip\n\n### cyberdsl.parser._parse_value\n- **Output to**: v.strip, v.startswith, v.startswith, cyberdsl.parser._parse_dict_literal, v.strip\n\n### cyberdsl.parser._parse_node_line\n> youth:group | state={cohesion:0.45, trust:0.40} | adaptability=0.70\n- **Output to**: NodeDef, p.strip, id_kind.split, attr.split, line.split\n\n### cyberdsl.parser._parse_edge_line\n> council->youth:influence | weight=0.30 | delay=1\n- **Output to**: re.match, EdgeDef, p.strip, ParseError, m.group\n\n### cyberdsl.parser.parse_dsl\n> Parse CyberDSL text into a ModelDef.\n- **Output to**: ModelDef, text.splitlines, cyberdsl.parser._strip_inline_comment, line.strip, re.match\n\n### cyberdsl.parser.parse_yaml\n> Parse a CyberDSL YAML representation into a ModelDef.\n- **Output to**: yaml.safe_load, ModelDef, data.get, str, int\n\n### cyberdsl.models.ModelCompiler.parse\n- **Output to**: cyberdsl.parser.parse_dsl, self._validate\n\n### cyberdsl.models.ModelCompiler._validate\n- **Output to**: set, ValueError, set, ValueError\n\n### cyberdsl.webapp._parse_model\n> Parse DSL or YAML text, return ModelDef.\n- **Output to**: None.parse, cyberdsl.parser.parse_yaml, ModelCompiler\n\n### cyberdsl.webapp.handle_parse\n- **Output to**: None.strip, body.get, cyberdsl.webapp._parse_model, log.info, web.json_response\n\n### cyberdsl.static.app.parseModel\n- **Output to**: cyberdsl.static.app.clearError, cyberdsl.static.app.trim, cyberdsl.static.app.setBadge, cyberdsl.static.app.log, cyberdsl.static.app.fetch\n\n### cyberdsl.static.app.decoder\n- **Output to**: cyberdsl.static.app.read, cyberdsl.static.app.decode, cyberdsl.static.app.split, cyberdsl.static.app.pop, cyberdsl.static.app.trim\n\n## Public API Surface\n\nFunctions exposed as public API (no underscore prefix):\n\n- `cyberdsl.__main__.main` - 42 calls\n- `cyberdsl.parser.parse_yaml` - 42 calls\n- `examples.family_simulation.scenario_divorce` - 40 calls\n- `cyberdsl.parser.parse_dsl` - 32 calls\n- `cyberdsl.webapp.handle_simulate_stream` - 32 calls\n- `cyberdsl.static.app.streamSimulation` - 29 calls\n- `cyberdsl.models.SimulationResult.to_csv` - 19 calls\n- `cyberdsl.webapp.handle_simulate` - 19 calls\n- `cyberdsl.dashboard.build_dashboard` - 18 calls\n- `cyberdsl.graph.build_graph_viewer` - 18 calls\n- `cyberdsl.static.app.reader` - 16 calls\n- `cyberdsl.static.app.decoder` - 16 calls\n- `cyberdsl.static.app.totalSteps` - 16 calls\n- `examples.family_simulation.scenario_crisis` - 15 calls\n- `examples.family_simulation.print_report` - 15 calls\n- `cyberdsl.models.MonteCarloResult.percentile_observable` - 15 calls\n- `cyberdsl.static.app.runSimulation` - 15 calls\n- `cyberdsl.graph.model_to_mermaid` - 13 calls\n- `cyberdsl.models.SimulationResult.summary` - 13 calls\n- `cyberdsl.litellm_adapter.CommunityDSLTranslator.translate` - 13 calls\n- `cyberdsl.webapp.handle_parse` - 13 calls\n- `cyberdsl.webapp.handle_mermaid` - 13 calls\n- `cyberdsl.static.app.renderAllCharts` - 13 calls\n- `cyberdsl.static.app.initStreamCharts` - 13 calls\n- `cyberdsl.models.run_monte_carlo` - 12 calls\n- `cyberdsl.static.app.parseModel` - 12 calls\n- `cyberdsl.static.app.parts` - 12 calls\n- `cyberdsl.__main__.cmd_monte` - 11 calls\n- `cyberdsl.__main__.cmd_translate` - 11 calls\n- `examples.family_simulation.print_comparison` - 10 calls\n- `cyberdsl.webapp.create_app` - 10 calls\n- `examples.family_simulation.scenario_stable` - 9 calls\n- `cyberdsl.static.app.loadExampleList` - 9 calls\n- `cyberdsl.__main__.cmd_dashboard` - 8 calls\n- `cyberdsl.__main__.cmd_csv` - 8 calls\n- `cyberdsl.__main__.cmd_visualize` - 8 calls\n- `cyberdsl.static.app.renderMermaid` - 8 calls\n- `cyberdsl.static.app.renderModelInfo` - 8 calls\n- `cyberdsl.models.Simulation.run_scenario` - 7 calls\n- `cyberdsl.static.app.name` - 7 calls\n\n## System Interactions\n\nHow components interact:\n\n```mermaid\ngraph TD\n    main --> ArgumentParser\n    main --> add_subparsers\n    main --> add_parser\n    main --> add_argument\n    scenario_divorce --> fresh_sim\n    scenario_divorce --> set_global\n    scenario_divorce --> range\n    handle_simulate_stre --> StreamResponse\n    handle_simulate_stre --> Simulation\n    handle_simulate_stre --> info\n    handle_simulate_stre --> dumps\n    handle_simulate_stre --> range\n    streamSimulation --> trim\n    streamSimulation --> setBadge\n    streamSimulation --> clearError\n    streamSimulation --> clearResults\n    streamSimulation --> setButtons\n    to_csv --> StringIO\n    to_csv --> sorted\n    to_csv --> writer\n    to_csv --> writerow\n    handle_simulate --> strip\n    handle_simulate --> get\n    handle_simulate --> _parse_model\n    handle_simulate --> run\n    handle_simulate --> info\n    reader --> read\n    reader --> decode\n    reader --> split\n    reader --> pop\n```\n\n## Reverse Engineering Guidelines\n\n1. **Entry Points**: Start analysis from the entry points listed above\n2. **Core Logic**: Focus on classes with many methods\n3. **Data Flow**: Follow data transformation functions\n4. **Process Flows**: Use the flow diagrams for execution paths\n5. **API Surface**: Public API functions reveal the interface\n\n## Context for LLM\n\nMaintain the identified architectural patterns and public API surface when suggesting changes.", "is_subdir": false}, {"name": "calls.mmd", "rel_path": "calls.mmd", "path": "calls.mmd", "size": "11.1KB", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart LR\n%% generated in 0.01s\n    subgraph cyberdsl____main__\n        cyberdsl____main_____load_model[&quot;_load_model&quot;]\n        cyberdsl____main____cmd_simulate[&quot;cmd_simulate&quot;]\n        cyberdsl____main____cmd_monte[&quot;cmd_monte&quot;]\n        cyberdsl____main____cmd_serve[&quot;cmd_serve&quot;]\n        cyberdsl____main____cmd_csv[&quot;cmd_csv&quot;]\n        cyberdsl____main____cmd_visualize[&quot;cmd_visualize&quot;]\n        cyberdsl____main____cmd_dashboard[&quot;cmd_dashboard&quot;]\n    end\n    subgraph cyberdsl__dashboard\n        cyberdsl__dashboard___obs_datasets[&quot;_obs_datasets&quot;]\n        cyberdsl__dashboard___node_datasets[&quot;_node_datasets&quot;]\n        cyberdsl__dashboard__save_dashboard[&quot;save_dashboard&quot;]\n        cyberdsl__dashboard___steps_labels[&quot;_steps_labels&quot;]\n        cyberdsl__dashboard___hex_alpha[&quot;_hex_alpha&quot;]\n        cyberdsl__dashboard__build_dashboard[&quot;build_dashboard&quot;]\n    end\n    subgraph cyberdsl__graph\n        cyberdsl__graph__build_graph_viewer[&quot;build_graph_viewer&quot;]\n        cyberdsl__graph__save_graph_viewer[&quot;save_graph_viewer&quot;]\n        cyberdsl__graph__model_to_mermaid[&quot;model_to_mermaid&quot;]\n        cyberdsl__graph__save_mermaid[&quot;save_mermaid&quot;]\n    end\n    subgraph cyberdsl__models\n        cyberdsl__models__Simulation__run[&quot;run&quot;]\n        cyberdsl__models__run_monte_carlo[&quot;run_monte_carlo&quot;]\n        cyberdsl__models__Simulation__apply_shock[&quot;apply_shock&quot;]\n        cyberdsl__models__ModelCompiler__parse[&quot;parse&quot;]\n        cyberdsl__models___safe_clip[&quot;_safe_clip&quot;]\n    end\n    subgraph cyberdsl__parser\n        cyberdsl__parser__parse_dsl[&quot;parse_dsl&quot;]\n        cyberdsl__parser___parse_dict_literal[&quot;_parse_dict_literal&quot;]\n        cyberdsl__parser___parse_value[&quot;_parse_value&quot;]\n        cyberdsl__parser__parse_yaml[&quot;parse_yaml&quot;]\n        cyberdsl__parser___strip_inline_comment[&quot;_strip_inline_comment&quot;]\n        cyberdsl__parser___parse_node_line[&quot;_parse_node_line&quot;]\n        cyberdsl__parser__dsl_to_yaml[&quot;dsl_to_yaml&quot;]\n    end\n    subgraph cyberdsl__static\n        cyberdsl__static__app__destroyAllCharts[&quot;destroyAllCharts&quot;]\n        cyberdsl__static__app__streamSimulation[&quot;streamSimulation&quot;]\n        cyberdsl__static__app__obsDatasets[&quot;obsDatasets&quot;]\n        cyberdsl__static__app__parts[&quot;parts&quot;]\n        cyberdsl__static__app__ds[&quot;ds&quot;]\n        cyberdsl__static__app__data[&quot;data&quot;]\n        cyberdsl__static__app__renderMermaid[&quot;renderMermaid&quot;]\n        cyberdsl__static__app__palA[&quot;palA&quot;]\n        cyberdsl__static__app__md[&quot;md&quot;]\n        cyberdsl__static__app__clearError[&quot;clearError&quot;]\n        cyberdsl__static__app__totalSteps[&quot;totalSteps&quot;]\n        cyberdsl__static__app__parseModel[&quot;parseModel&quot;]\n        cyberdsl__static__app__decoder[&quot;decoder&quot;]\n        cyberdsl__static__app__initStreamCharts[&quot;initStreamCharts&quot;]\n        cyberdsl__static__app__showError[&quot;showError&quot;]\n        cyberdsl__static__app__clearResults[&quot;clearResults&quot;]\n        cyberdsl__static__app__runSimulation[&quot;runSimulation&quot;]\n        cyberdsl__static__app__name[&quot;name&quot;]\n        cyberdsl__static__app__obsArea[&quot;obsArea&quot;]\n        cyberdsl__static__app__setBadge[&quot;setBadge&quot;]\n        cyberdsl__static__app__nodeIds[&quot;nodeIds&quot;]\n        cyberdsl__static__app__labels[&quot;labels&quot;]\n        cyberdsl__static__app__renderModelInfo[&quot;renderModelInfo&quot;]\n        cyberdsl__static__app__renderAllCharts[&quot;renderAllCharts&quot;]\n        cyberdsl__static__app__setButtons[&quot;setButtons&quot;]\n        cyberdsl__static__app__text[&quot;text&quot;]\n        cyberdsl__static__app__pal[&quot;pal&quot;]\n        cyberdsl__static__app__reader[&quot;reader&quot;]\n        cyberdsl__static__app__makeChart[&quot;makeChart&quot;]\n    end\n    subgraph cyberdsl__webapp\n        cyberdsl__webapp__handle_parse[&quot;handle_parse&quot;]\n        cyberdsl__webapp___parse_model[&quot;_parse_model&quot;]\n        cyberdsl__webapp__handle_list_examples[&quot;handle_list_examples&quot;]\n        cyberdsl__webapp__create_app[&quot;create_app&quot;]\n        cyberdsl__webapp__handle_simulate[&quot;handle_simulate&quot;]\n        cyberdsl__webapp__handle_get_example[&quot;handle_get_example&quot;]\n        cyberdsl__webapp___snap_to_json[&quot;_snap_to_json&quot;]\n        cyberdsl__webapp___list_examples[&quot;_list_examples&quot;]\n        cyberdsl__webapp__handle_simulate_stream[&quot;handle_simulate_stream&quot;]\n        cyberdsl__webapp__run[&quot;run&quot;]\n        cyberdsl__webapp___find_example[&quot;_find_example&quot;]\n        cyberdsl__webapp__handle_mermaid[&quot;handle_mermaid&quot;]\n    end\n    subgraph examples__family_simulation\n        examples__family_simulation__scenario_stable[&quot;scenario_stable&quot;]\n        examples__family_simulation__scenario_divorce[&quot;scenario_divorce&quot;]\n        examples__family_simulation__scenario_crisis[&quot;scenario_crisis&quot;]\n        examples__family_simulation__print_comparison[&quot;print_comparison&quot;]\n        examples__family_simulation___obs_at[&quot;_obs_at&quot;]\n        examples__family_simulation__fresh_sim[&quot;fresh_sim&quot;]\n    end\n    examples__family_simulation__scenario_stable --&gt; examples__family_simulation__fresh_sim\n    examples__family_simulation__scenario_crisis --&gt; examples__family_simulation__fresh_sim\n    examples__family_simulation__scenario_divorce --&gt; examples__family_simulation__fresh_sim\n    examples__family_simulation__print_comparison --&gt; examples__family_simulation___obs_at\n    cyberdsl__dashboard___obs_datasets --&gt; cyberdsl__dashboard___hex_alpha\n    cyberdsl__dashboard__build_dashboard --&gt; cyberdsl__dashboard___steps_labels\n    cyberdsl__dashboard__build_dashboard --&gt; cyberdsl__dashboard___obs_datasets\n    cyberdsl__dashboard__build_dashboard --&gt; cyberdsl__dashboard___node_datasets\n    cyberdsl__dashboard__build_dashboard --&gt; cyberdsl__graph__model_to_mermaid\n    cyberdsl__dashboard__save_dashboard --&gt; cyberdsl__dashboard__build_dashboard\n    cyberdsl__graph__build_graph_viewer --&gt; cyberdsl__graph__model_to_mermaid\n    cyberdsl__graph__save_mermaid --&gt; cyberdsl__graph__model_to_mermaid\n    cyberdsl__graph__save_graph_viewer --&gt; cyberdsl__graph__build_graph_viewer\n    cyberdsl____main_____load_model --&gt; cyberdsl__parser__parse_yaml\n    cyberdsl____main____cmd_simulate --&gt; cyberdsl____main_____load_model\n    cyberdsl____main____cmd_dashboard --&gt; cyberdsl____main_____load_model\n    cyberdsl____main____cmd_dashboard --&gt; cyberdsl__dashboard__save_dashboard\n    cyberdsl____main____cmd_csv --&gt; cyberdsl____main_____load_model\n    cyberdsl____main____cmd_monte --&gt; cyberdsl____main_____load_model\n    cyberdsl____main____cmd_monte --&gt; cyberdsl__models__run_monte_carlo\n    cyberdsl____main____cmd_monte --&gt; cyberdsl__dashboard__save_dashboard\n    cyberdsl____main____cmd_serve --&gt; cyberdsl__models__Simulation__run\n    cyberdsl____main____cmd_visualize --&gt; cyberdsl____main_____load_model\n    cyberdsl____main____cmd_visualize --&gt; cyberdsl__graph__save_mermaid\n    cyberdsl____main____cmd_visualize --&gt; cyberdsl__graph__save_graph_viewer\n    cyberdsl__parser___parse_value --&gt; cyberdsl__parser___parse_dict_literal\n    cyberdsl__parser___parse_node_line --&gt; cyberdsl__parser___parse_dict_literal\n    cyberdsl__parser__parse_dsl --&gt; cyberdsl__parser___strip_inline_comment\n    cyberdsl__parser__dsl_to_yaml --&gt; cyberdsl__parser__parse_dsl\n    cyberdsl__models__ModelCompiler__parse --&gt; cyberdsl__parser__parse_dsl\n    cyberdsl__models__Simulation__apply_shock --&gt; cyberdsl__models___safe_clip\n    cyberdsl__webapp___parse_model --&gt; cyberdsl__parser__parse_yaml\n    cyberdsl__webapp__handle_parse --&gt; cyberdsl__webapp___parse_model\n    cyberdsl__webapp__handle_simulate --&gt; cyberdsl__webapp___parse_model\n    cyberdsl__webapp__handle_simulate --&gt; cyberdsl__webapp___snap_to_json\n    cyberdsl__webapp__handle_simulate_stream --&gt; cyberdsl__webapp___parse_model\n    cyberdsl__webapp__handle_mermaid --&gt; cyberdsl__webapp___parse_model\n    cyberdsl__webapp__handle_mermaid --&gt; cyberdsl__graph__model_to_mermaid\n    cyberdsl__webapp__handle_list_examples --&gt; cyberdsl__webapp___list_examples\n    cyberdsl__webapp__handle_get_example --&gt; cyberdsl__webapp___find_example\n    cyberdsl__webapp__run --&gt; cyberdsl__webapp__create_app\n    cyberdsl__static__app__data --&gt; cyberdsl__static__app__showError\n    cyberdsl__static__app__data --&gt; cyberdsl__static__app__setBadge\n    cyberdsl__static__app__name --&gt; cyberdsl__static__app__showError\n    cyberdsl__static__app__name --&gt; cyberdsl__static__app__clearResults\n    cyberdsl__static__app__name --&gt; cyberdsl__static__app__parseModel\n    cyberdsl__static__app__parseModel --&gt; cyberdsl__static__app__clearError\n    cyberdsl__static__app__parseModel --&gt; cyberdsl__static__app__setBadge\n    cyberdsl__static__app__parseModel --&gt; cyberdsl__static__app__showError\n    cyberdsl__static__app__parseModel --&gt; cyberdsl__static__app__renderModelInfo\n    cyberdsl__static__app__parseModel --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__text --&gt; cyberdsl__static__app__setBadge\n    cyberdsl__static__app__md --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__md --&gt; cyberdsl__static__app__showError\n    cyberdsl__static__app__runSimulation --&gt; cyberdsl__static__app__setBadge\n    cyberdsl__static__app__runSimulation --&gt; cyberdsl__static__app__clearError\n    cyberdsl__static__app__runSimulation --&gt; cyberdsl__static__app__clearResults\n    cyberdsl__static__app__runSimulation --&gt; cyberdsl__static__app__setButtons\n    cyberdsl__static__app__runSimulation --&gt; cyberdsl__static__app__showError\n    cyberdsl__static__app__streamSimulation --&gt; cyberdsl__static__app__setBadge\n    cyberdsl__static__app__streamSimulation --&gt; cyberdsl__static__app__clearError\n    cyberdsl__static__app__streamSimulation --&gt; cyberdsl__static__app__clearResults\n    cyberdsl__static__app__streamSimulation --&gt; cyberdsl__static__app__setButtons\n    cyberdsl__static__app__reader --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__decoder --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__totalSteps --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__parts --&gt; cyberdsl__static__app__renderMermaid\n    cyberdsl__static__app__parts --&gt; cyberdsl__static__app__renderModelInfo\n    cyberdsl__static__app__parts --&gt; cyberdsl__static__app__initStreamCharts\n    cyberdsl__static__app__renderAllCharts --&gt; cyberdsl__static__app__destroyAllCharts\n    cyberdsl__static__app__renderAllCharts --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__renderAllCharts --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__renderAllCharts --&gt; cyberdsl__static__app__makeChart\n    cyberdsl__static__app__labels --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__labels --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__nodeIds --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__nodeIds --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__obsDatasets --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__obsDatasets --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__obsArea --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__obsArea --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__ds --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__ds --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__initStreamCharts --&gt; cyberdsl__static__app__destroyAllCharts\n    cyberdsl__static__app__initStreamCharts --&gt; cyberdsl__static__app__pal\n    cyberdsl__static__app__initStreamCharts --&gt; cyberdsl__static__app__palA\n    cyberdsl__static__app__initStreamCharts --&gt; cyberdsl__static__app__makeChart\n    cyberdsl__static__app__clearResults --&gt; cyberdsl__static__app__destroyAllCharts\n", "is_subdir": false}, {"name": "compact_flow.mmd", "rel_path": "compact_flow.mmd", "path": "compact_flow.mmd", "size": "728B", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n%% generated in 0.01s\n    cyberdsl____main__[&quot;cyberdsl.__main__&lt;br/&gt;9 funcs&quot;]\n    cyberdsl__dashboard[&quot;cyberdsl.dashboard&lt;br/&gt;6 funcs&quot;]\n    cyberdsl__graph[&quot;cyberdsl.graph&lt;br/&gt;5 funcs&quot;]\n    cyberdsl__models[&quot;cyberdsl.models&lt;br/&gt;22 funcs&quot;]\n    cyberdsl__parser[&quot;cyberdsl.parser&lt;br/&gt;8 funcs&quot;]\n    cyberdsl__webapp[&quot;cyberdsl.webapp&lt;br/&gt;17 funcs&quot;]\n    cyberdsl__webapp --&gt;|3| cyberdsl__graph\n    cyberdsl____main__ --&gt;|2| cyberdsl__dashboard\n    cyberdsl____main__ --&gt;|2| cyberdsl__models\n    cyberdsl____main__ --&gt;|2| cyberdsl__graph\n    cyberdsl__dashboard --&gt;|1| cyberdsl__graph\n    cyberdsl____main__ --&gt;|1| cyberdsl__parser\n    cyberdsl__models --&gt;|1| cyberdsl__parser\n    cyberdsl__webapp --&gt;|1| cyberdsl__parser\n", "is_subdir": false}, {"name": "flow.mmd", "rel_path": "flow.mmd", "path": "flow.mmd", "size": "1.3KB", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n%% generated in 0.01s\n\n    %% Entry points (blue)\n    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff\n\n    subgraph Core\n        cyberdsl__graph___node_shape[&quot;_node_shape&quot;]\n        cyberdsl____main_____load_model[&quot;_load_model&quot;]\n        cyberdsl____main____cmd_simulate[&quot;cmd_simulate&quot;]\n        cyberdsl____main____cmd_dashboard[&quot;cmd_dashboard&quot;]\n        cyberdsl____main____cmd_csv[&quot;cmd_csv&quot;]\n        cyberdsl____main____cmd_monte[&quot;cmd_monte&quot;]\n        cyberdsl____main____cmd_serve[&quot;cmd_serve&quot;]\n        cyberdsl____main____cmd_visualize[&quot;cmd_visualize&quot;]\n        cyberdsl____main____cmd_translate[&quot;cmd_translate&quot;]\n        cyberdsl____main____main[&quot;main&quot;]\n        cyberdsl__parser___parse_dict_literal[&quot;_parse_dict_literal&quot;]\n        cyberdsl__parser___parse_value[&quot;_parse_value&quot;]\n        cyberdsl__parser__parse_dsl{{parse_dsl CC=19}}\n        cyberdsl__parser__parse_yaml(&quot;parse_yaml CC=8&quot;)\n        cyberdsl__parser__dsl_to_yaml[&quot;dsl_to_yaml&quot;]\n        ...[&quot;+75 more&quot;]\n    end\n\n    class cyberdsl__graph___node_shape,cyberdsl____main____cmd_simulate,cyberdsl____main____cmd_dashboard,cyberdsl____main____cmd_csv,cyberdsl____main____cmd_monte,cyberdsl____main____cmd_serve,cyberdsl____main____cmd_visualize,cyberdsl____main____cmd_translate,cyberdsl____main____main,cyberdsl__parser__dsl_to_yaml entry\n", "is_subdir": false}, {"name": "prompt.txt", "rel_path": "prompt.txt", "path": "prompt.txt", "size": "2.9KB", "icon": "📄", "type": "text", "type_name": "Text", "content": "You are an AI assistant helping me understand and improve a codebase.\n# generated in 0.00s\nUse the attached/generated files as the authoritative context.\nYour goal is to refactor the project based on these files, not just summarize it.\n\nwe are in project path: cyberdsl\n\nFiles for analysis:\n\nNote: project/validation.toon.yaml and project/duplication.toon.yaml are generated by external tools (vallm and redup)\n- analysis.toon.yaml  (Health diagnostics - complexity metrics, god modules, coupling issues, refactoring priorities) [2KB]\n- map.toon.yaml  (Structural map - files, sizes, imports, exports, signatures, project header) [6KB]\n- evolution.toon.yaml  (Refactoring queue - ranked actions by impact/effort, risks, metrics targets, history) [1KB]\n- project.toon.yaml  (Compact project overview - generated from project.yaml data) [2KB]\n- context.md  (LLM narrative - architecture summary and project context) [15KB]\n- README.md  (Generated documentation - overview and usage guide) [9KB]\n\nTask:\n- Treat this prompt as a refactoring brief: identify the highest-priority changes and prepare concrete edits.\n- Use the file set to decide whether the first pass should focus on correctness, duplication, complexity reduction, or architecture cleanup.\n- If you can safely implement the refactor, do it; otherwise give an exact file-by-file change plan and test plan.\n- Use analysis.toon.yaml to locate high-CC functions and god modules that should be split first.\n- Keep module boundaries intact and update imports/exports according to map.toon.yaml.\n- Use evolution.toon.yaml as the execution backlog and work from the top-ranked items.\n- Keep project.toon.yaml aligned with the refactored architecture.\n\nPriority Order:\nP1 — Split or simplify the highest-CC / god modules identified in analysis.toon.yaml.\nP1 — Preserve module boundaries and update imports/exports according to map.toon.yaml.\nP2 — Keep the compact project overview in project.toon.yaml aligned with the refactor.\nP2 — Execute the highest-impact items from evolution.toon.yaml in order of benefit/risk.\n\nFocus Areas for Analysis:\n1. **Code Health Analysis** - Review complexity metrics, god modules, coupling issues from analysis.toon.yaml\n2. **Structural Map** - Use map.toon.yaml to inspect imports, exports, signatures, and the project header\n3. **Refactoring Priorities** - Examine ranked refactoring actions and risk assessment from evolution.toon.yaml\n4. **Project Overview** - Review the compact project overview from project.toon.yaml\n\nAnalysis Strategy:\n- Start with analysis.toon.yaml for health metrics, then map.toon.yaml for structure and signatures\n- Review evolution.toon.yaml for action priorities and next steps\n- Compare the compact project overview in project.toon.yaml with the main analysis files\n\nConstraints:\n- Prefer minimal, incremental changes.\n- Maintain full backward compatibility.\n- Base recommendations on concrete metrics from the provided files.\n- If uncertain, ask clarifying questions.\n", "is_subdir": false}, {"name": "mermaid.export", "rel_path": "mermaid.export", "path": "mermaid.export", "size": "16.7KB", "icon": "📄", "type": "unknown", "type_name": "EXPORT", "content": "[Binary file]", "is_subdir": false}, {"name": "analysis.toon.yaml", "rel_path": "analysis.toon.yaml", "path": "analysis.toon.yaml", "size": "2.9KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm | 27f 4341L | yaml:15,python:9,toml:1,shell:1,javascript:1 | 2026-05-16\n# generated in 0.01s\n# CC̄=3.4 | critical:2/134 | dups:0 | cycles:0\n\nHEALTH[2]:\n  🟡 CC    parse_dsl CC=19 (limit:15)\n  🟡 CC    streamSimulation CC=16 (limit:15)\n\nREFACTOR[1]:\n  1. split 2 high-CC methods  (CC&gt;15)\n\nPIPELINES[84]:\n  [1] Src [scenario_stable]: scenario_stable → fresh_sim\n      PURITY: 100% pure\n  [2] Src [scenario_crisis]: scenario_crisis → fresh_sim\n      PURITY: 100% pure\n  [3] Src [scenario_divorce]: scenario_divorce → fresh_sim\n      PURITY: 100% pure\n  [4] Src [print_report]: print_report → _obs_at\n      PURITY: 100% pure\n  [5] Src [print_comparison]: print_comparison → _obs_at\n      PURITY: 100% pure\n\nLAYERS:\n  examples/                       CC̄=5.0    ←in:0  →out:0\n  │ family_simulation          281L  0C    7m  CC=11     ←0\n  │ 04_family_baseline.yaml     60L  0C    0m  CC=0.0    ←0\n  │ 05_family_crisis_therapy.yaml    58L  0C    0m  CC=0.0    ←0\n  │ 02_port_crisis.yaml         48L  0C    0m  CC=0.0    ←0\n  │ 03_port_recovery.yaml       48L  0C    0m  CC=0.0    ←0\n  │ 06_school_polarization.yaml    46L  0C    0m  CC=0.0    ←0\n  │ 09_municipal_protest.yaml    45L  0C    0m  CC=0.0    ←0\n  │ 07_hospital_overload.yaml    45L  0C    0m  CC=0.0    ←0\n  │ 10_disinformation_network.yaml    44L  0C    0m  CC=0.0    ←0\n  │ 01_port_baseline.yaml       44L  0C    0m  CC=0.0    ←0\n  │ 08_company_restructuring.yaml    39L  0C    0m  CC=0.0    ←0\n  │\n  cyberdsl/                       CC̄=3.4    ←in:0  →out:0\n  │ !! app.js                     509L  0C   57m  CC=16     ←0\n  │ dashboard                  381L  0C    6m  CC=6      ←1\n  │ models                     359L  4C   22m  CC=9      ←1\n  │ !! parser                     321L  5C    8m  CC=19     ←3\n  │ webapp                     292L  0C   17m  CC=7      ←0\n  │ graph                      245L  0C    5m  CC=8      ←3\n  │ __main__                   179L  0C    9m  CC=4      ←0\n  │ litellm_adapter            121L  1C    3m  CC=10     ←0\n  │ __init__                    51L  0C    0m  CC=0.0    ←0\n  │\n  ./                              CC̄=0.0    ←in:0  →out:0\n  │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0\n  │ planfile.yaml              383L  0C    0m  CC=0.0    ←0\n  │ prefact.yaml                91L  0C    0m  CC=0.0    ←0\n  │ pyproject.toml              56L  0C    0m  CC=0.0    ←0\n  │ project.sh                  54L  0C    0m  CC=0.0    ←0\n  │\n  testql-scenarios/               CC̄=0.0    ←in:0  →out:0\n  │ generated-cli-tests.testql.toon.yaml    20L  0C    0m  CC=0.0    ←0\n  │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0\n  │\n\nCOUPLING: no cross-package imports detected\n\nEXTERNAL:\n  validation: run `vallm batch .` → validation.toon\n  duplication: run `redup scan .` → duplication.toon\n", "is_subdir": false}, {"name": "calls.toon.yaml", "rel_path": "calls.toon.yaml", "path": "calls.toon.yaml", "size": "6.8KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm call graph | /home/tom/github/tom-sapletta-com/cyberdsl\n# generated in 0.07s\n# nodes: 76 | edges: 88 | modules: 8\n# CC̄=3.4\n\nHUBS[20]:\n  cyberdsl.parser.parse_yaml\n    CC=8  in:2  out:42  total:44\n  examples.family_simulation.scenario_divorce\n    CC=11  in:0  out:40  total:40\n  cyberdsl.parser.parse_dsl\n    CC=19  in:2  out:32  total:34\n  cyberdsl.webapp.handle_simulate_stream\n    CC=6  in:0  out:32  total:32\n  cyberdsl.static.app.streamSimulation\n    CC=16  in:0  out:29  total:29\n  cyberdsl.dashboard._obs_datasets\n    CC=4  in:1  out:19  total:20\n  cyberdsl.webapp.handle_simulate\n    CC=5  in:0  out:19  total:19\n  cyberdsl.graph.build_graph_viewer\n    CC=7  in:1  out:18  total:19\n  cyberdsl.graph.model_to_mermaid\n    CC=8  in:6  out:13  total:19\n  cyberdsl.dashboard.build_dashboard\n    CC=6  in:1  out:18  total:19\n  cyberdsl.static.app.initStreamCharts\n    CC=2  in:5  out:13  total:18\n  cyberdsl.static.app.renderMermaid\n    CC=5  in:8  out:8  total:16\n  cyberdsl.static.app.totalSteps\n    CC=10  in:0  out:16  total:16\n  cyberdsl.static.app.decoder\n    CC=10  in:0  out:16  total:16\n  cyberdsl.static.app.reader\n    CC=10  in:0  out:16  total:16\n  examples.family_simulation.scenario_crisis\n    CC=6  in:0  out:15  total:15\n  cyberdsl.webapp._snap_to_json\n    CC=6  in:2  out:13  total:15\n  cyberdsl.static.app.runSimulation\n    CC=6  in:0  out:15  total:15\n  cyberdsl.static.app.renderModelInfo\n    CC=2  in:7  out:8  total:15\n  cyberdsl.parser._parse_dict_literal\n    CC=7  in:2  out:12  total:14\n\nMODULES:\n  cyberdsl.__main__  [7 funcs]\n    _load_model  CC=2  out:6\n    cmd_csv  CC=3  out:8\n    cmd_dashboard  CC=3  out:8\n    cmd_monte  CC=4  out:11\n    cmd_serve  CC=1  out:1\n    cmd_simulate  CC=2  out:5\n    cmd_visualize  CC=3  out:8\n  cyberdsl.dashboard  [6 funcs]\n    _hex_alpha  CC=1  out:4\n    _node_datasets  CC=4  out:12\n    _obs_datasets  CC=4  out:19\n    _steps_labels  CC=2  out:0\n    build_dashboard  CC=6  out:18\n    save_dashboard  CC=1  out:3\n  cyberdsl.graph  [4 funcs]\n    build_graph_viewer  CC=7  out:18\n    model_to_mermaid  CC=8  out:13\n    save_graph_viewer  CC=1  out:3\n    save_mermaid  CC=1  out:3\n  cyberdsl.models  [5 funcs]\n    parse  CC=1  out:2\n    apply_shock  CC=3  out:1\n    run  CC=3  out:4\n    _safe_clip  CC=1  out:3\n    run_monte_carlo  CC=6  out:12\n  cyberdsl.parser  [7 funcs]\n    _parse_dict_literal  CC=7  out:12\n    _parse_node_line  CC=6  out:11\n    _parse_value  CC=5  out:7\n    _strip_inline_comment  CC=6  out:2\n    dsl_to_yaml  CC=5  out:3\n    parse_dsl  CC=19  out:32\n    parse_yaml  CC=8  out:42\n  cyberdsl.static.app  [29 funcs]\n    clearError  CC=1  out:1\n    clearResults  CC=2  out:3\n    data  CC=3  out:2\n    decoder  CC=10  out:16\n    destroyAllCharts  CC=1  out:3\n    ds  CC=1  out:3\n    initStreamCharts  CC=2  out:13\n    labels  CC=1  out:3\n    makeChart  CC=3  out:4\n    md  CC=2  out:2\n  cyberdsl.webapp  [12 funcs]\n    _find_example  CC=3  out:1\n    _list_examples  CC=7  out:7\n    _parse_model  CC=2  out:3\n    _snap_to_json  CC=6  out:13\n    create_app  CC=1  out:10\n    handle_get_example  CC=3  out:6\n    handle_list_examples  CC=1  out:2\n    handle_mermaid  CC=3  out:13\n    handle_parse  CC=3  out:13\n    handle_simulate  CC=5  out:19\n  examples.family_simulation  [6 funcs]\n    _obs_at  CC=1  out:0\n    fresh_sim  CC=1  out:2\n    print_comparison  CC=5  out:10\n    scenario_crisis  CC=6  out:15\n    scenario_divorce  CC=11  out:40\n    scenario_stable  CC=4  out:9\n\nEDGES:\n  examples.family_simulation.scenario_stable → examples.family_simulation.fresh_sim\n  examples.family_simulation.scenario_crisis → examples.family_simulation.fresh_sim\n  examples.family_simulation.scenario_divorce → examples.family_simulation.fresh_sim\n  examples.family_simulation.print_comparison → examples.family_simulation._obs_at\n  cyberdsl.dashboard._obs_datasets → cyberdsl.dashboard._hex_alpha\n  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._steps_labels\n  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._obs_datasets\n  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._node_datasets\n  cyberdsl.dashboard.build_dashboard → cyberdsl.graph.model_to_mermaid\n  cyberdsl.dashboard.save_dashboard → cyberdsl.dashboard.build_dashboard\n  cyberdsl.graph.build_graph_viewer → cyberdsl.graph.model_to_mermaid\n  cyberdsl.graph.save_mermaid → cyberdsl.graph.model_to_mermaid\n  cyberdsl.graph.save_graph_viewer → cyberdsl.graph.build_graph_viewer\n  cyberdsl.__main__._load_model → cyberdsl.parser.parse_yaml\n  cyberdsl.__main__.cmd_simulate → cyberdsl.__main__._load_model\n  cyberdsl.__main__.cmd_dashboard → cyberdsl.__main__._load_model\n  cyberdsl.__main__.cmd_dashboard → cyberdsl.dashboard.save_dashboard\n  cyberdsl.__main__.cmd_csv → cyberdsl.__main__._load_model\n  cyberdsl.__main__.cmd_monte → cyberdsl.__main__._load_model\n  cyberdsl.__main__.cmd_monte → cyberdsl.models.run_monte_carlo\n  cyberdsl.__main__.cmd_monte → cyberdsl.dashboard.save_dashboard\n  cyberdsl.__main__.cmd_serve → cyberdsl.models.Simulation.run\n  cyberdsl.__main__.cmd_visualize → cyberdsl.__main__._load_model\n  cyberdsl.__main__.cmd_visualize → cyberdsl.graph.save_mermaid\n  cyberdsl.__main__.cmd_visualize → cyberdsl.graph.save_graph_viewer\n  cyberdsl.parser._parse_value → cyberdsl.parser._parse_dict_literal\n  cyberdsl.parser._parse_node_line → cyberdsl.parser._parse_dict_literal\n  cyberdsl.parser.parse_dsl → cyberdsl.parser._strip_inline_comment\n  cyberdsl.parser.dsl_to_yaml → cyberdsl.parser.parse_dsl\n  cyberdsl.models.ModelCompiler.parse → cyberdsl.parser.parse_dsl\n  cyberdsl.models.Simulation.apply_shock → cyberdsl.models._safe_clip\n  cyberdsl.webapp._parse_model → cyberdsl.parser.parse_yaml\n  cyberdsl.webapp.handle_parse → cyberdsl.webapp._parse_model\n  cyberdsl.webapp.handle_simulate → cyberdsl.webapp._parse_model\n  cyberdsl.webapp.handle_simulate → cyberdsl.webapp._snap_to_json\n  cyberdsl.webapp.handle_simulate_stream → cyberdsl.webapp._parse_model\n  cyberdsl.webapp.handle_mermaid → cyberdsl.webapp._parse_model\n  cyberdsl.webapp.handle_mermaid → cyberdsl.graph.model_to_mermaid\n  cyberdsl.webapp.handle_list_examples → cyberdsl.webapp._list_examples\n  cyberdsl.webapp.handle_get_example → cyberdsl.webapp._find_example\n  cyberdsl.webapp.run → cyberdsl.webapp.create_app\n  cyberdsl.static.app.data → cyberdsl.static.app.showError\n  cyberdsl.static.app.data → cyberdsl.static.app.setBadge\n  cyberdsl.static.app.name → cyberdsl.static.app.showError\n  cyberdsl.static.app.name → cyberdsl.static.app.clearResults\n  cyberdsl.static.app.name → cyberdsl.static.app.parseModel\n  cyberdsl.static.app.parseModel → cyberdsl.static.app.clearError\n  cyberdsl.static.app.parseModel → cyberdsl.static.app.setBadge\n  cyberdsl.static.app.parseModel → cyberdsl.static.app.showError\n  cyberdsl.static.app.parseModel → cyberdsl.static.app.renderModelInfo\n", "is_subdir": false}, {"name": "calls.yaml", "rel_path": "calls.yaml", "path": "calls.yaml", "size": "27.2KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "project: /home/tom/github/tom-sapletta-com/cyberdsl\ngenerated_from: code2llm call graph analysis\nstats:\n  total_nodes: 76\n  total_edges: 88\n  modules_count: 8\nnodes:\n  cyberdsl.static.app.destroyAllCharts:\n    name: destroyAllCharts\n    module: cyberdsl.static.app\n    line: 319\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 3\n  cyberdsl.static.app.streamSimulation:\n    name: streamSimulation\n    module: cyberdsl.static.app\n    line: 196\n    cyclomatic_complexity: 16\n    calls_out: 29\n    calls_in: 0\n  examples.family_simulation.scenario_stable:\n    name: scenario_stable\n    module: examples.family_simulation\n    line: 35\n    cyclomatic_complexity: 4\n    calls_out: 9\n    calls_in: 0\n  cyberdsl.webapp.handle_parse:\n    name: handle_parse\n    module: cyberdsl.webapp\n    line: 145\n    cyclomatic_complexity: 3\n    calls_out: 13\n    calls_in: 0\n  cyberdsl.dashboard._obs_datasets:\n    name: _obs_datasets\n    module: cyberdsl.dashboard\n    line: 42\n    cyclomatic_complexity: 4\n    calls_out: 19\n    calls_in: 1\n  cyberdsl.parser.parse_dsl:\n    name: parse_dsl\n    module: cyberdsl.parser\n    line: 181\n    cyclomatic_complexity: 19\n    calls_out: 32\n    calls_in: 2\n  cyberdsl.webapp._parse_model:\n    name: _parse_model\n    module: cyberdsl.webapp\n    line: 52\n    cyclomatic_complexity: 2\n    calls_out: 3\n    calls_in: 4\n  cyberdsl.webapp.handle_list_examples:\n    name: handle_list_examples\n    module: cyberdsl.webapp\n    line: 246\n    cyclomatic_complexity: 1\n    calls_out: 2\n    calls_in: 0\n  examples.family_simulation.scenario_divorce:\n    name: scenario_divorce\n    module: examples.family_simulation\n    line: 91\n    cyclomatic_complexity: 11\n    calls_out: 40\n    calls_in: 0\n  cyberdsl.webapp.create_app:\n    name: create_app\n    module: cyberdsl.webapp\n    line: 275\n    cyclomatic_complexity: 1\n    calls_out: 10\n    calls_in: 1\n  cyberdsl.webapp.handle_simulate:\n    name: handle_simulate\n    module: cyberdsl.webapp\n    line: 160\n    cyclomatic_complexity: 5\n    calls_out: 19\n    calls_in: 0\n  cyberdsl.static.app.obsDatasets:\n    name: obsDatasets\n    module: cyberdsl.static.app\n    line: 380\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.webapp.handle_get_example:\n    name: handle_get_example\n    module: cyberdsl.webapp\n    line: 250\n    cyclomatic_complexity: 3\n    calls_out: 6\n    calls_in: 0\n  cyberdsl.static.app.parts:\n    name: parts\n    module: cyberdsl.static.app\n    line: 231\n    cyclomatic_complexity: 8\n    calls_out: 12\n    calls_in: 0\n  examples.family_simulation.scenario_crisis:\n    name: scenario_crisis\n    module: examples.family_simulation\n    line: 58\n    cyclomatic_complexity: 6\n    calls_out: 15\n    calls_in: 0\n  cyberdsl.__main__._load_model:\n    name: _load_model\n    module: cyberdsl.__main__\n    line: 17\n    cyclomatic_complexity: 2\n    calls_out: 6\n    calls_in: 6\n  cyberdsl.models.Simulation.run:\n    name: run\n    module: cyberdsl.models\n    line: 232\n    cyclomatic_complexity: 3\n    calls_out: 4\n    calls_in: 1\n  cyberdsl.webapp._snap_to_json:\n    name: _snap_to_json\n    module: cyberdsl.webapp\n    line: 79\n    cyclomatic_complexity: 6\n    calls_out: 13\n    calls_in: 2\n  cyberdsl.static.app.ds:\n    name: ds\n    module: cyberdsl.static.app\n    line: 395\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.graph.build_graph_viewer:\n    name: build_graph_viewer\n    module: cyberdsl.graph\n    line: 177\n    cyclomatic_complexity: 7\n    calls_out: 18\n    calls_in: 1\n  cyberdsl.static.app.data:\n    name: data\n    module: cyberdsl.static.app\n    line: 178\n    cyclomatic_complexity: 3\n    calls_out: 2\n    calls_in: 0\n  cyberdsl.__main__.cmd_simulate:\n    name: cmd_simulate\n    module: cyberdsl.__main__\n    line: 26\n    cyclomatic_complexity: 2\n    calls_out: 5\n    calls_in: 0\n  cyberdsl.dashboard._node_datasets:\n    name: _node_datasets\n    module: cyberdsl.dashboard\n    line: 104\n    cyclomatic_complexity: 4\n    calls_out: 12\n    calls_in: 1\n  cyberdsl.parser._parse_dict_literal:\n    name: _parse_dict_literal\n    module: cyberdsl.parser\n    line: 95\n    cyclomatic_complexity: 7\n    calls_out: 12\n    calls_in: 2\n  cyberdsl.static.app.renderMermaid:\n    name: renderMermaid\n    module: cyberdsl.static.app\n    line: 273\n    cyclomatic_complexity: 5\n    calls_out: 8\n    calls_in: 8\n  cyberdsl.dashboard.save_dashboard:\n    name: save_dashboard\n    module: cyberdsl.dashboard\n    line: 373\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 2\n  cyberdsl.graph.save_graph_viewer:\n    name: save_graph_viewer\n    module: cyberdsl.graph\n    line: 242\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 1\n  cyberdsl.webapp._list_examples:\n    name: _list_examples\n    module: cyberdsl.webapp\n    line: 103\n    cyclomatic_complexity: 7\n    calls_out: 7\n    calls_in: 1\n  cyberdsl.static.app.palA:\n    name: palA\n    module: cyberdsl.static.app\n    line: 8\n    cyclomatic_complexity: 1\n    calls_out: 4\n    calls_in: 7\n  cyberdsl.parser._parse_value:\n    name: _parse_value\n    module: cyberdsl.parser\n    line: 117\n    cyclomatic_complexity: 5\n    calls_out: 7\n    calls_in: 2\n  cyberdsl.static.app.md:\n    name: md\n    module: cyberdsl.static.app\n    line: 151\n    cyclomatic_complexity: 2\n    calls_out: 2\n    calls_in: 0\n  cyberdsl.dashboard._steps_labels:\n    name: _steps_labels\n    module: cyberdsl.dashboard\n    line: 38\n    cyclomatic_complexity: 2\n    calls_out: 0\n    calls_in: 1\n  examples.family_simulation.print_comparison:\n    name: print_comparison\n    module: examples.family_simulation\n    line: 222\n    cyclomatic_complexity: 5\n    calls_out: 10\n    calls_in: 0\n  cyberdsl.__main__.cmd_monte:\n    name: cmd_monte\n    module: cyberdsl.__main__\n    line: 57\n    cyclomatic_complexity: 4\n    calls_out: 11\n    calls_in: 0\n  cyberdsl.static.app.clearError:\n    name: clearError\n    module: cyberdsl.static.app\n    line: 491\n    cyclomatic_complexity: 1\n    calls_out: 1\n    calls_in: 3\n  cyberdsl.webapp.handle_simulate_stream:\n    name: handle_simulate_stream\n    module: cyberdsl.webapp\n    line: 186\n    cyclomatic_complexity: 6\n    calls_out: 32\n    calls_in: 0\n  examples.family_simulation._obs_at:\n    name: _obs_at\n    module: examples.family_simulation\n    line: 194\n    cyclomatic_complexity: 1\n    calls_out: 0\n    calls_in: 4\n  examples.family_simulation.fresh_sim:\n    name: fresh_sim\n    module: examples.family_simulation\n    line: 28\n    cyclomatic_complexity: 1\n    calls_out: 2\n    calls_in: 3\n  cyberdsl.static.app.totalSteps:\n    name: totalSteps\n    module: cyberdsl.static.app\n    line: 225\n    cyclomatic_complexity: 10\n    calls_out: 16\n    calls_in: 0\n  cyberdsl.graph.model_to_mermaid:\n    name: model_to_mermaid\n    module: cyberdsl.graph\n    line: 35\n    cyclomatic_complexity: 8\n    calls_out: 13\n    calls_in: 6\n  cyberdsl.models.run_monte_carlo:\n    name: run_monte_carlo\n    module: cyberdsl.models\n    line: 328\n    cyclomatic_complexity: 6\n    calls_out: 12\n    calls_in: 1\n  cyberdsl.static.app.parseModel:\n    name: parseModel\n    module: cyberdsl.static.app\n    line: 127\n    cyclomatic_complexity: 6\n    calls_out: 12\n    calls_in: 1\n  cyberdsl.static.app.decoder:\n    name: decoder\n    module: cyberdsl.static.app\n    line: 223\n    cyclomatic_complexity: 10\n    calls_out: 16\n    calls_in: 0\n  cyberdsl.static.app.initStreamCharts:\n    name: initStreamCharts\n    module: cyberdsl.static.app\n    line: 369\n    cyclomatic_complexity: 2\n    calls_out: 13\n    calls_in: 5\n  cyberdsl.models.Simulation.apply_shock:\n    name: apply_shock\n    module: cyberdsl.models\n    line: 241\n    cyclomatic_complexity: 3\n    calls_out: 1\n    calls_in: 0\n  cyberdsl.webapp.run:\n    name: run\n    module: cyberdsl.webapp\n    line: 289\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.static.app.showError:\n    name: showError\n    module: cyberdsl.static.app\n    line: 487\n    cyclomatic_complexity: 1\n    calls_out: 1\n    calls_in: 6\n  cyberdsl.static.app.clearResults:\n    name: clearResults\n    module: cyberdsl.static.app\n    line: 495\n    cyclomatic_complexity: 2\n    calls_out: 3\n    calls_in: 3\n  cyberdsl.static.app.runSimulation:\n    name: runSimulation\n    module: cyberdsl.static.app\n    line: 165\n    cyclomatic_complexity: 6\n    calls_out: 15\n    calls_in: 0\n  cyberdsl.parser.parse_yaml:\n    name: parse_yaml\n    module: cyberdsl.parser\n    line: 249\n    cyclomatic_complexity: 8\n    calls_out: 42\n    calls_in: 2\n  cyberdsl.__main__.cmd_serve:\n    name: cmd_serve\n    module: cyberdsl.__main__\n    line: 79\n    cyclomatic_complexity: 1\n    calls_out: 1\n    calls_in: 0\n  cyberdsl.dashboard._hex_alpha:\n    name: _hex_alpha\n    module: cyberdsl.dashboard\n    line: 29\n    cyclomatic_complexity: 1\n    calls_out: 4\n    calls_in: 7\n  cyberdsl.graph.save_mermaid:\n    name: save_mermaid\n    module: cyberdsl.graph\n    line: 236\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 1\n  cyberdsl.parser._strip_inline_comment:\n    name: _strip_inline_comment\n    module: cyberdsl.parser\n    line: 77\n    cyclomatic_complexity: 6\n    calls_out: 2\n    calls_in: 1\n  cyberdsl.__main__.cmd_csv:\n    name: cmd_csv\n    module: cyberdsl.__main__\n    line: 46\n    cyclomatic_complexity: 3\n    calls_out: 8\n    calls_in: 0\n  cyberdsl.webapp._find_example:\n    name: _find_example\n    module: cyberdsl.webapp\n    line: 95\n    cyclomatic_complexity: 3\n    calls_out: 1\n    calls_in: 1\n  cyberdsl.dashboard.build_dashboard:\n    name: build_dashboard\n    module: cyberdsl.dashboard\n    line: 319\n    cyclomatic_complexity: 6\n    calls_out: 18\n    calls_in: 1\n  cyberdsl.parser._parse_node_line:\n    name: _parse_node_line\n    module: cyberdsl.parser\n    line: 134\n    cyclomatic_complexity: 6\n    calls_out: 11\n    calls_in: 1\n  cyberdsl.static.app.name:\n    name: name\n    module: cyberdsl.static.app\n    line: 108\n    cyclomatic_complexity: 3\n    calls_out: 7\n    calls_in: 0\n  cyberdsl.static.app.obsArea:\n    name: obsArea\n    module: cyberdsl.static.app\n    line: 376\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.__main__.cmd_visualize:\n    name: cmd_visualize\n    module: cyberdsl.__main__\n    line: 84\n    cyclomatic_complexity: 3\n    calls_out: 8\n    calls_in: 0\n  cyberdsl.static.app.setBadge:\n    name: setBadge\n    module: cyberdsl.static.app\n    line: 483\n    cyclomatic_complexity: 1\n    calls_out: 0\n    calls_in: 9\n  cyberdsl.webapp.handle_mermaid:\n    name: handle_mermaid\n    module: cyberdsl.webapp\n    line: 229\n    cyclomatic_complexity: 3\n    calls_out: 13\n    calls_in: 0\n  cyberdsl.static.app.nodeIds:\n    name: nodeIds\n    module: cyberdsl.static.app\n    line: 372\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.static.app.labels:\n    name: labels\n    module: cyberdsl.static.app\n    line: 329\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.static.app.renderModelInfo:\n    name: renderModelInfo\n    module: cyberdsl.static.app\n    line: 428\n    cyclomatic_complexity: 2\n    calls_out: 8\n    calls_in: 7\n  cyberdsl.static.app.renderAllCharts:\n    name: renderAllCharts\n    module: cyberdsl.static.app\n    line: 325\n    cyclomatic_complexity: 3\n    calls_out: 13\n    calls_in: 1\n  cyberdsl.static.app.setButtons:\n    name: setButtons\n    module: cyberdsl.static.app\n    line: 501\n    cyclomatic_complexity: 1\n    calls_out: 0\n    calls_in: 2\n  cyberdsl.parser.dsl_to_yaml:\n    name: dsl_to_yaml\n    module: cyberdsl.parser\n    line: 291\n    cyclomatic_complexity: 5\n    calls_out: 3\n    calls_in: 0\n  cyberdsl.__main__.cmd_dashboard:\n    name: cmd_dashboard\n    module: cyberdsl.__main__\n    line: 34\n    cyclomatic_complexity: 3\n    calls_out: 8\n    calls_in: 0\n  cyberdsl.static.app.text:\n    name: text\n    module: cyberdsl.static.app\n    line: 198\n    cyclomatic_complexity: 2\n    calls_out: 1\n    calls_in: 0\n  cyberdsl.models.ModelCompiler.parse:\n    name: parse\n    module: cyberdsl.models\n    line: 28\n    cyclomatic_complexity: 1\n    calls_out: 2\n    calls_in: 0\n  cyberdsl.static.app.pal:\n    name: pal\n    module: cyberdsl.static.app\n    line: 7\n    cyclomatic_complexity: 1\n    calls_out: 0\n    calls_in: 7\n  cyberdsl.static.app.reader:\n    name: reader\n    module: cyberdsl.static.app\n    line: 222\n    cyclomatic_complexity: 10\n    calls_out: 16\n    calls_in: 0\n  cyberdsl.models._safe_clip:\n    name: _safe_clip\n    module: cyberdsl.models\n    line: 108\n    cyclomatic_complexity: 1\n    calls_out: 3\n    calls_in: 2\n  cyberdsl.static.app.makeChart:\n    name: makeChart\n    module: cyberdsl.static.app\n    line: 309\n    cyclomatic_complexity: 3\n    calls_out: 4\n    calls_in: 2\nedges:\n- caller: examples.family_simulation.scenario_stable\n  callee: examples.family_simulation.fresh_sim\n  call_type: resolved\n- caller: examples.family_simulation.scenario_crisis\n  callee: examples.family_simulation.fresh_sim\n  call_type: resolved\n- caller: examples.family_simulation.scenario_divorce\n  callee: examples.family_simulation.fresh_sim\n  call_type: resolved\n- caller: examples.family_simulation.print_comparison\n  callee: examples.family_simulation._obs_at\n  call_type: resolved\n- caller: cyberdsl.dashboard._obs_datasets\n  callee: cyberdsl.dashboard._hex_alpha\n  call_type: resolved\n- caller: cyberdsl.dashboard.build_dashboard\n  callee: cyberdsl.dashboard._steps_labels\n  call_type: resolved\n- caller: cyberdsl.dashboard.build_dashboard\n  callee: cyberdsl.dashboard._obs_datasets\n  call_type: resolved\n- caller: cyberdsl.dashboard.build_dashboard\n  callee: cyberdsl.dashboard._node_datasets\n  call_type: resolved\n- caller: cyberdsl.dashboard.build_dashboard\n  callee: cyberdsl.graph.model_to_mermaid\n  call_type: resolved\n- caller: cyberdsl.dashboard.save_dashboard\n  callee: cyberdsl.dashboard.build_dashboard\n  call_type: resolved\n- caller: cyberdsl.graph.build_graph_viewer\n  callee: cyberdsl.graph.model_to_mermaid\n  call_type: resolved\n- caller: cyberdsl.graph.save_mermaid\n  callee: cyberdsl.graph.model_to_mermaid\n  call_type: resolved\n- caller: cyberdsl.graph.save_graph_viewer\n  callee: cyberdsl.graph.build_graph_viewer\n  call_type: resolved\n- caller: cyberdsl.__main__._load_model\n  callee: cyberdsl.parser.parse_yaml\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_simulate\n  callee: cyberdsl.__main__._load_model\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_dashboard\n  callee: cyberdsl.__main__._load_model\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_dashboard\n  callee: cyberdsl.dashboard.save_dashboard\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_csv\n  callee: cyberdsl.__main__._load_model\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_monte\n  callee: cyberdsl.__main__._load_model\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_monte\n  callee: cyberdsl.models.run_monte_carlo\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_monte\n  callee: cyberdsl.dashboard.save_dashboard\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_serve\n  callee: cyberdsl.models.Simulation.run\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_visualize\n  callee: cyberdsl.__main__._load_model\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_visualize\n  callee: cyberdsl.graph.save_mermaid\n  call_type: resolved\n- caller: cyberdsl.__main__.cmd_visualize\n  callee: cyberdsl.graph.save_graph_viewer\n  call_type: resolved\n- caller: cyberdsl.parser._parse_value\n  callee: cyberdsl.parser._parse_dict_literal\n  call_type: resolved\n- caller: cyberdsl.parser._parse_node_line\n  callee: cyberdsl.parser._parse_dict_literal\n  call_type: resolved\n- caller: cyberdsl.parser.parse_dsl\n  callee: cyberdsl.parser._strip_inline_comment\n  call_type: resolved\n- caller: cyberdsl.parser.dsl_to_yaml\n  callee: cyberdsl.parser.parse_dsl\n  call_type: resolved\n- caller: cyberdsl.models.ModelCompiler.parse\n  callee: cyberdsl.parser.parse_dsl\n  call_type: resolved\n- caller: cyberdsl.models.Simulation.apply_shock\n  callee: cyberdsl.models._safe_clip\n  call_type: resolved\n- caller: cyberdsl.webapp._parse_model\n  callee: cyberdsl.parser.parse_yaml\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_parse\n  callee: cyberdsl.webapp._parse_model\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_simulate\n  callee: cyberdsl.webapp._parse_model\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_simulate\n  callee: cyberdsl.webapp._snap_to_json\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_simulate_stream\n  callee: cyberdsl.webapp._parse_model\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_mermaid\n  callee: cyberdsl.webapp._parse_model\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_mermaid\n  callee: cyberdsl.graph.model_to_mermaid\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_list_examples\n  callee: cyberdsl.webapp._list_examples\n  call_type: resolved\n- caller: cyberdsl.webapp.handle_get_example\n  callee: cyberdsl.webapp._find_example\n  call_type: resolved\n- caller: cyberdsl.webapp.run\n  callee: cyberdsl.webapp.create_app\n  call_type: resolved\n- caller: cyberdsl.static.app.data\n  callee: cyberdsl.static.app.showError\n  call_type: resolved\n- caller: cyberdsl.static.app.data\n  callee: cyberdsl.static.app.setBadge\n  call_type: resolved\n- caller: cyberdsl.static.app.name\n  callee: cyberdsl.static.app.showError\n  call_type: resolved\n- caller: cyberdsl.static.app.name\n  callee: cyberdsl.static.app.clearResults\n  call_type: resolved\n- caller: cyberdsl.static.app.name\n  callee: cyberdsl.static.app.parseModel\n  call_type: resolved\n- caller: cyberdsl.static.app.parseModel\n  callee: cyberdsl.static.app.clearError\n  call_type: resolved\n- caller: cyberdsl.static.app.parseModel\n  callee: cyberdsl.static.app.setBadge\n  call_type: resolved\n- caller: cyberdsl.static.app.parseModel\n  callee: cyberdsl.static.app.showError\n  call_type: resolved\n- caller: cyberdsl.static.app.parseModel\n  callee: cyberdsl.static.app.renderModelInfo\n  call_type: resolved\n- caller: cyberdsl.static.app.parseModel\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.text\n  callee: cyberdsl.static.app.setBadge\n  call_type: resolved\n- caller: cyberdsl.static.app.md\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.md\n  callee: cyberdsl.static.app.showError\n  call_type: resolved\n- caller: cyberdsl.static.app.runSimulation\n  callee: cyberdsl.static.app.setBadge\n  call_type: resolved\n- caller: cyberdsl.static.app.runSimulation\n  callee: cyberdsl.static.app.clearError\n  call_type: resolved\n- caller: cyberdsl.static.app.runSimulation\n  callee: cyberdsl.static.app.clearResults\n  call_type: resolved\n- caller: cyberdsl.static.app.runSimulation\n  callee: cyberdsl.static.app.setButtons\n  call_type: resolved\n- caller: cyberdsl.static.app.runSimulation\n  callee: cyberdsl.static.app.showError\n  call_type: resolved\n- caller: cyberdsl.static.app.streamSimulation\n  callee: cyberdsl.static.app.setBadge\n  call_type: resolved\n- caller: cyberdsl.static.app.streamSimulation\n  callee: cyberdsl.static.app.clearError\n  call_type: resolved\n- caller: cyberdsl.static.app.streamSimulation\n  callee: cyberdsl.static.app.clearResults\n  call_type: resolved\n- caller: cyberdsl.static.app.streamSimulation\n  callee: cyberdsl.static.app.setButtons\n  call_type: resolved\n- caller: cyberdsl.static.app.reader\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.decoder\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.totalSteps\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.parts\n  callee: cyberdsl.static.app.renderMermaid\n  call_type: resolved\n- caller: cyberdsl.static.app.parts\n  callee: cyberdsl.static.app.renderModelInfo\n  call_type: resolved\n- caller: cyberdsl.static.app.parts\n  callee: cyberdsl.static.app.initStreamCharts\n  call_type: resolved\n- caller: cyberdsl.static.app.renderAllCharts\n  callee: cyberdsl.static.app.destroyAllCharts\n  call_type: resolved\n- caller: cyberdsl.static.app.renderAllCharts\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.renderAllCharts\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.renderAllCharts\n  callee: cyberdsl.static.app.makeChart\n  call_type: resolved\n- caller: cyberdsl.static.app.labels\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.labels\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.nodeIds\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.nodeIds\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.obsDatasets\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.obsDatasets\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.obsArea\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.obsArea\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.ds\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.ds\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.initStreamCharts\n  callee: cyberdsl.static.app.destroyAllCharts\n  call_type: resolved\n- caller: cyberdsl.static.app.initStreamCharts\n  callee: cyberdsl.static.app.pal\n  call_type: resolved\n- caller: cyberdsl.static.app.initStreamCharts\n  callee: cyberdsl.static.app.palA\n  call_type: resolved\n- caller: cyberdsl.static.app.initStreamCharts\n  callee: cyberdsl.static.app.makeChart\n  call_type: resolved\n- caller: cyberdsl.static.app.clearResults\n  callee: cyberdsl.static.app.destroyAllCharts\n  call_type: resolved\nmodules:\n  cyberdsl.__main__:\n  - cyberdsl.__main__._load_model\n  - cyberdsl.__main__.cmd_csv\n  - cyberdsl.__main__.cmd_dashboard\n  - cyberdsl.__main__.cmd_monte\n  - cyberdsl.__main__.cmd_serve\n  - cyberdsl.__main__.cmd_simulate\n  - cyberdsl.__main__.cmd_visualize\n  cyberdsl.dashboard:\n  - cyberdsl.dashboard._hex_alpha\n  - cyberdsl.dashboard._node_datasets\n  - cyberdsl.dashboard._obs_datasets\n  - cyberdsl.dashboard._steps_labels\n  - cyberdsl.dashboard.build_dashboard\n  - cyberdsl.dashboard.save_dashboard\n  cyberdsl.graph:\n  - cyberdsl.graph.build_graph_viewer\n  - cyberdsl.graph.model_to_mermaid\n  - cyberdsl.graph.save_graph_viewer\n  - cyberdsl.graph.save_mermaid\n  cyberdsl.models:\n  - cyberdsl.models.ModelCompiler.parse\n  - cyberdsl.models.Simulation.apply_shock\n  - cyberdsl.models.Simulation.run\n  - cyberdsl.models._safe_clip\n  - cyberdsl.models.run_monte_carlo\n  cyberdsl.parser:\n  - cyberdsl.parser._parse_dict_literal\n  - cyberdsl.parser._parse_node_line\n  - cyberdsl.parser._parse_value\n  - cyberdsl.parser._strip_inline_comment\n  - cyberdsl.parser.dsl_to_yaml\n  - cyberdsl.parser.parse_dsl\n  - cyberdsl.parser.parse_yaml\n  cyberdsl.static.app:\n  - cyberdsl.static.app.clearError\n  - cyberdsl.static.app.clearResults\n  - cyberdsl.static.app.data\n  - cyberdsl.static.app.decoder\n  - cyberdsl.static.app.destroyAllCharts\n  - cyberdsl.static.app.ds\n  - cyberdsl.static.app.initStreamCharts\n  - cyberdsl.static.app.labels\n  - cyberdsl.static.app.makeChart\n  - cyberdsl.static.app.md\n  - cyberdsl.static.app.name\n  - cyberdsl.static.app.nodeIds\n  - cyberdsl.static.app.obsArea\n  - cyberdsl.static.app.obsDatasets\n  - cyberdsl.static.app.pal\n  - cyberdsl.static.app.palA\n  - cyberdsl.static.app.parseModel\n  - cyberdsl.static.app.parts\n  - cyberdsl.static.app.reader\n  - cyberdsl.static.app.renderAllCharts\n  - cyberdsl.static.app.renderMermaid\n  - cyberdsl.static.app.renderModelInfo\n  - cyberdsl.static.app.runSimulation\n  - cyberdsl.static.app.setBadge\n  - cyberdsl.static.app.setButtons\n  - cyberdsl.static.app.showError\n  - cyberdsl.static.app.streamSimulation\n  - cyberdsl.static.app.text\n  - cyberdsl.static.app.totalSteps\n  cyberdsl.webapp:\n  - cyberdsl.webapp._find_example\n  - cyberdsl.webapp._list_examples\n  - cyberdsl.webapp._parse_model\n  - cyberdsl.webapp._snap_to_json\n  - cyberdsl.webapp.create_app\n  - cyberdsl.webapp.handle_get_example\n  - cyberdsl.webapp.handle_list_examples\n  - cyberdsl.webapp.handle_mermaid\n  - cyberdsl.webapp.handle_parse\n  - cyberdsl.webapp.handle_simulate\n  - cyberdsl.webapp.handle_simulate_stream\n  - cyberdsl.webapp.run\n  examples.family_simulation:\n  - examples.family_simulation._obs_at\n  - examples.family_simulation.fresh_sim\n  - examples.family_simulation.print_comparison\n  - examples.family_simulation.scenario_crisis\n  - examples.family_simulation.scenario_divorce\n  - examples.family_simulation.scenario_stable\nentry_points:\n- cyberdsl.__main__.cmd_csv\n- cyberdsl.__main__.cmd_dashboard\n- cyberdsl.__main__.cmd_monte\n- cyberdsl.__main__.cmd_serve\n- cyberdsl.__main__.cmd_simulate\n- cyberdsl.__main__.cmd_translate\n- cyberdsl.__main__.cmd_visualize\n- cyberdsl.__main__.main\n- cyberdsl.graph._node_shape\n- cyberdsl.litellm_adapter.CommunityDSLTranslator.__init__\n- cyberdsl.litellm_adapter.CommunityDSLTranslator.translate\n- cyberdsl.litellm_adapter.CommunityDSLTranslator.translate_and_compile\n- cyberdsl.models.ModelCompiler._validate\n- cyberdsl.models.ModelCompiler.parse\n- cyberdsl.models.MonteCarloResult.mean_observable\n- cyberdsl.models.MonteCarloResult.percentile_observable\n- cyberdsl.models.MonteCarloResult.std_observable\n- cyberdsl.models.Simulation.__init__\n- cyberdsl.models.Simulation._build_signals\n- cyberdsl.models.Simulation._eval_observables\n- cyberdsl.models.Simulation._eval_rules\n- cyberdsl.models.Simulation._push_signals\n- cyberdsl.models.Simulation.apply_shock\n- cyberdsl.models.Simulation.run_scenario\n- cyberdsl.models.Simulation.set_global\n- cyberdsl.models.Simulation.step\n- cyberdsl.models.SimulationResult.node_state_over_time\n- cyberdsl.models.SimulationResult.observables_over_time\n- cyberdsl.models.SimulationResult.save_csv\n- cyberdsl.models.SimulationResult.summary\n- cyberdsl.models.SimulationResult.to_csv\n- cyberdsl.parser.dsl_to_yaml\n- cyberdsl.static.app._mmdCounter\n- cyberdsl.static.app.btn\n- cyberdsl.static.app.c\n- cyberdsl.static.app.card\n- cyberdsl.static.app.ctx\n- cyberdsl.static.app.data\n- cyberdsl.static.app.decoder\n- cyberdsl.static.app.diagramSrc\n- cyberdsl.static.app.ds\n- cyberdsl.static.app.ec\n- cyberdsl.static.app.err\n- cyberdsl.static.app.etbl\n- cyberdsl.static.app.gc\n- cyberdsl.static.app.grp\n- cyberdsl.static.app.json_str\n- cyberdsl.static.app.labels\n- cyberdsl.static.app.line\n- cyberdsl.static.app.loadExampleList\n- cyberdsl.static.app.md\n- cyberdsl.static.app.meta\n- cyberdsl.static.app.mr\n- cyberdsl.static.app.name\n- cyberdsl.static.app.nc\n- cyberdsl.static.app.nodeIds\n- cyberdsl.static.app.obsArea\n- cyberdsl.static.app.obsChart\n- cyberdsl.static.app.obsDatasets\n- cyberdsl.static.app.obsKeys\n- cyberdsl.static.app.opt\n- cyberdsl.static.app.parts\n- cyberdsl.static.app.pct\n- cyberdsl.static.app.r\n- cyberdsl.static.app.reader\n- cyberdsl.static.app.runSimulation\n- cyberdsl.static.app.stale\n- cyberdsl.static.app.stateStr\n- cyberdsl.static.app.streamSimulation\n- cyberdsl.static.app.tbl\n- cyberdsl.static.app.text\n- cyberdsl.static.app.totalSteps\n- cyberdsl.static.app.tr\n- cyberdsl.static.app.vars\n- cyberdsl.webapp.access_log_middleware\n- cyberdsl.webapp.handle_favicon\n- cyberdsl.webapp.handle_get_example\n- cyberdsl.webapp.handle_index\n- cyberdsl.webapp.handle_list_examples\n- cyberdsl.webapp.handle_mermaid\n- cyberdsl.webapp.handle_parse\n- cyberdsl.webapp.handle_simulate\n- cyberdsl.webapp.handle_simulate_stream\n- cyberdsl.webapp.handle_static\n- cyberdsl.webapp.run\n- examples.family_simulation.print_comparison\n- examples.family_simulation.print_report\n- examples.family_simulation.scenario_crisis\n- examples.family_simulation.scenario_divorce\n- examples.family_simulation.scenario_stable\n", "is_subdir": false}, {"name": "duplication.toon.yaml", "rel_path": "duplication.toon.yaml", "path": "duplication.toon.yaml", "size": "3.9KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# redup/duplication | 6 groups | 10f 2511L | 2026-05-12\n\nSUMMARY:\n  files_scanned: 10\n  total_lines:   2511\n  dup_groups:    6\n  dup_fragments: 12\n  saved_lines:   166\n  scan_ms:       6053\n\nHOTSPOTS[2] (files with most duplication):\n  examples/family/family_simulation.py  dup=166L  groups=6  frags=6  (6.6%)\n  examples/family_simulation.py  dup=166L  groups=6  frags=6  (6.6%)\n\nDUPLICATES[6] (ranked by impact):\n  [f7167363db6c1e77] ! EXAC  scenario_divorce  L=78 N=2 saved=78 sim=1.00\n      examples/family/family_simulation.py:91-168  (scenario_divorce)\n      examples/family_simulation.py:91-168  (scenario_divorce)\n  [111d409543721b52]   EXAC  scenario_crisis  L=29 N=2 saved=29 sim=1.00\n      examples/family/family_simulation.py:58-86  (scenario_crisis)\n      examples/family_simulation.py:58-86  (scenario_crisis)\n  [41ac043f62d4e8bd]   EXAC  print_report  L=22 N=2 saved=22 sim=1.00\n      examples/family/family_simulation.py:198-219  (print_report)\n      examples/family_simulation.py:198-219  (print_report)\n  [dedefcf0902cc5ff]   EXAC  scenario_stable  L=19 N=2 saved=19 sim=1.00\n      examples/family/family_simulation.py:35-53  (scenario_stable)\n      examples/family_simulation.py:35-53  (scenario_stable)\n  [2154c74232c09632]   EXAC  print_comparison  L=15 N=2 saved=15 sim=1.00\n      examples/family/family_simulation.py:222-236  (print_comparison)\n      examples/family_simulation.py:222-236  (print_comparison)\n  [ce31a6b121912e8a]   EXAC  fresh_sim  L=3 N=2 saved=3 sim=1.00\n      examples/family/family_simulation.py:28-30  (fresh_sim)\n      examples/family_simulation.py:28-30  (fresh_sim)\n\nREFACTOR[6] (ranked by priority):\n  [1] ◐ extract_module     → examples/utils/scenario_divorce.py\n      WHY: 2 occurrences of 78-line block across 2 files — saves 78 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n  [2] ○ extract_function   → examples/utils/scenario_crisis.py\n      WHY: 2 occurrences of 29-line block across 2 files — saves 29 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n  [3] ○ extract_function   → examples/utils/print_report.py\n      WHY: 2 occurrences of 22-line block across 2 files — saves 22 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n  [4] ○ extract_function   → examples/utils/scenario_stable.py\n      WHY: 2 occurrences of 19-line block across 2 files — saves 19 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n  [5] ○ extract_function   → examples/utils/print_comparison.py\n      WHY: 2 occurrences of 15-line block across 2 files — saves 15 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n  [6] ○ extract_function   → examples/utils/fresh_sim.py\n      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines\n      FILES: examples/family/family_simulation.py, examples/family_simulation.py\n\nQUICK_WINS[4] (low risk, high savings — do first):\n  [2] extract_function   saved=29L  → examples/utils/scenario_crisis.py\n      FILES: family_simulation.py, family_simulation.py\n  [3] extract_function   saved=22L  → examples/utils/print_report.py\n      FILES: family_simulation.py, family_simulation.py\n  [4] extract_function   saved=19L  → examples/utils/scenario_stable.py\n      FILES: family_simulation.py, family_simulation.py\n  [5] extract_function   saved=15L  → examples/utils/print_comparison.py\n      FILES: family_simulation.py, family_simulation.py\n\nEFFORT_ESTIMATE (total ≈ 6.8h):\n  hard   scenario_divorce                    saved=78L  ~234min\n  medium scenario_crisis                     saved=29L  ~58min\n  medium print_report                        saved=22L  ~44min\n  medium scenario_stable                     saved=19L  ~38min\n  medium print_comparison                    saved=15L  ~30min\n  easy   fresh_sim                           saved=3L  ~6min\n\nMETRICS-TARGET:\n  dup_groups:  6 → 0\n  saved_lines: 166 lines recoverable\n", "is_subdir": false}, {"name": "evolution.toon.yaml", "rel_path": "evolution.toon.yaml", "path": "evolution.toon.yaml", "size": "1.9KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm/evolution | 127 func | 8f | 2026-05-16\n# generated in 0.00s\n\nNEXT[4] (ranked by impact):\n  [1] !! SPLIT           cyberdsl/static/app.js\n      WHY: 509L, 0 classes, max CC=16\n      EFFORT: ~4h  IMPACT: 8144\n\n  [2] !  SPLIT-FUNC      streamSimulation  CC=16  fan=29\n      WHY: CC=16 exceeds 15\n      EFFORT: ~1h  IMPACT: 464\n\n  [3] !  SPLIT-FUNC      parse_dsl  CC=19  fan=20\n      WHY: CC=19 exceeds 15\n      EFFORT: ~1h  IMPACT: 380\n\n  [4] !! SPLIT           goal.yaml\n      WHY: 511L, 0 classes, max CC=0\n      EFFORT: ~4h  IMPACT: 0\n\n\nRISKS[2]:\n  ⚠ Splitting goal.yaml may break 0 import paths\n  ⚠ Splitting cyberdsl/static/app.js may break 57 import paths\n\nMETRICS-TARGET:\n  CC̄:          3.4 → ≤2.4\n  max-CC:      19 → ≤9\n  god-modules: 2 → 0\n  high-CC(≥15): 2 → ≤1\n  hub-types:   0 → ≤0\n\nPATTERNS (language parser shared logic):\n  _extract_declarations() in base.py — unified extraction for:\n    - TypeScript: interfaces, types, classes, functions, arrow funcs\n    - PHP: namespaces, traits, classes, functions, includes\n    - Ruby: modules, classes, methods, requires\n    - C++: classes, structs, functions, #includes\n    - C#: classes, interfaces, methods, usings\n    - Java: classes, interfaces, methods, imports\n    - Go: packages, functions, structs\n    - Rust: modules, functions, traits, use statements\n\n  Shared regex patterns per language:\n    - import: language-specific import/require/using patterns\n    - class: class/struct/trait declarations with inheritance\n    - function: function/method signatures with visibility\n    - brace_tracking: for C-family languages ({ })\n    - end_keyword_tracking: for Ruby (module/class/def...end)\n\n  Benefits:\n    - Consistent extraction logic across all languages\n    - Reduced code duplication (~70% reduction in parser LOC)\n    - Easier maintenance: fix once, apply everywhere\n    - Standardized FunctionInfo/ClassInfo models\n\nHISTORY:\n  prev CC̄=3.4 → now CC̄=3.4\n", "is_subdir": false}, {"name": "map.toon.yaml", "rel_path": "map.toon.yaml", "path": "map.toon.yaml", "size": "6.9KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# cyberdsl | 27f 4341L | yaml:15,toml:1,shell:1,python:9,javascript:1 | 2026-05-16\n# generated in 0.01s\n# stats: 134 func | 0 cls | 27 mod | CC̄=3.4 | critical:2 | cycles:0\n# alerts[5]: fan-out streamSimulation=29; fan-out handle_simulate_stream=20; fan-out parse_dsl=20; CC parse_dsl=19; CC streamSimulation=16\n# hotspots[5]: streamSimulation fan=29; parse_dsl fan=20; handle_simulate_stream fan=20; parse_yaml fan=16; reader fan=16\n# evolution: CC̄ 3.4→3.4 (flat 0.0)\n# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods\nM[27]:\n  cyberdsl/__init__.py,51\n  cyberdsl/__main__.py,179\n  cyberdsl/dashboard.py,381\n  cyberdsl/graph.py,245\n  cyberdsl/litellm_adapter.py,121\n  cyberdsl/models.py,359\n  cyberdsl/parser.py,321\n  cyberdsl/static/app.js,509\n  cyberdsl/webapp.py,292\n  examples/crisis/10_disinformation_network.yaml,44\n  examples/family/04_family_baseline.yaml,60\n  examples/family/05_family_crisis_therapy.yaml,58\n  examples/family_simulation.py,281\n  examples/institutional/06_school_polarization.yaml,46\n  examples/institutional/07_hospital_overload.yaml,45\n  examples/institutional/08_company_restructuring.yaml,39\n  examples/institutional/09_municipal_protest.yaml,45\n  examples/port/01_port_baseline.yaml,44\n  examples/port/02_port_crisis.yaml,48\n  examples/port/03_port_recovery.yaml,48\n  goal.yaml,511\n  planfile.yaml,383\n  prefact.yaml,91\n  project.sh,54\n  pyproject.toml,56\n  testql-scenarios/generated-cli-tests.testql.toon.yaml,20\n  testql-scenarios/generated-from-pytests.testql.toon.yaml,10\nD:\n  cyberdsl/parser.py:\n    e: NodeDef,EdgeDef,RuleDef,ModelDef,ParseError,_strip_inline_comment,_parse_dict_literal,_parse_value,_parse_node_line,_parse_edge_line,parse_dsl,parse_yaml,dsl_to_yaml\n    NodeDef:\n    EdgeDef:\n    RuleDef:\n    ModelDef:\n    ParseError(Exception):\n    _strip_inline_comment(line)\n    _parse_dict_literal(s)\n    _parse_value(v)\n    _parse_node_line(line)\n    _parse_edge_line(line)\n    parse_dsl(text)\n    parse_yaml(text)\n    dsl_to_yaml(text)\n  cyberdsl/static/app.js:\n    e: pal,palA,c,r,btn,loadExampleList,r,data,grp,opt,name,r,data,parseModel,text,r,data,mr,md,runSimulation,text,r,data,streamSimulation,text,r,err,reader,decoder,totalSteps,parts,line,json_str,pct,_mmdCounter,renderMermaid,diagramSrc,stale,makeChart,ctx,destroyAllCharts,renderAllCharts,labels,obsKeys,nodeIds,obsDatasets,obsArea,vars,card,ds,initStreamCharts,obsKeys,nodeIds,obsArea,obsDatasets,vars,card,ds,appendStreamPoint,obsChart,obsKeys,nc,vars,renderModelInfo,meta,gc,nc,tbl,stateStr,tr,ec,etbl,tr,setBadge,showError,clearError,clearResults,setButtons\n    pal()\n    palA()\n    c()\n    r()\n    btn()\n    loadExampleList()\n    r()\n    data()\n    grp()\n    opt()\n    name()\n    r()\n    data()\n    parseModel()\n    text()\n    r()\n    data()\n    mr()\n    md()\n    runSimulation()\n    text()\n    r()\n    data()\n    streamSimulation()\n    text()\n    r()\n    err()\n    reader()\n    decoder()\n    totalSteps()\n    parts()\n    line()\n    json_str()\n    pct()\n    _mmdCounter()\n    renderMermaid()\n    diagramSrc()\n    stale()\n    makeChart()\n    ctx()\n    destroyAllCharts()\n    renderAllCharts()\n    labels()\n    obsKeys()\n    nodeIds()\n    obsDatasets()\n    obsArea()\n    vars()\n    card()\n    ds()\n    initStreamCharts()\n    obsKeys()\n    nodeIds()\n    obsArea()\n    obsDatasets()\n    vars()\n    card()\n    ds()\n    appendStreamPoint()\n    obsChart()\n    obsKeys()\n    nc()\n    vars()\n    renderModelInfo()\n    meta()\n    gc()\n    nc()\n    tbl()\n    stateStr()\n    tr()\n    ec()\n    etbl()\n    tr()\n    setBadge()\n    showError()\n    clearError()\n    clearResults()\n    setButtons()\n  examples/family_simulation.py:\n    e: fresh_sim,scenario_stable,scenario_crisis,scenario_divorce,_obs_at,print_report,print_comparison\n    fresh_sim()\n    scenario_stable()\n    scenario_crisis()\n    scenario_divorce()\n    _obs_at(timeline;step)\n    print_report(result)\n    print_comparison(results)\n  cyberdsl/litellm_adapter.py:\n    e: CommunityDSLTranslator\n    CommunityDSLTranslator: __init__(4),translate(3),translate_and_compile(1)\n  cyberdsl/models.py:\n    e: ModelCompiler,SimulationResult,Simulation,MonteCarloResult,_safe_clip,run_monte_carlo\n    ModelCompiler: parse(1),_validate(1)\n    SimulationResult: observables_over_time(0),node_state_over_time(2),summary(0),to_csv(0),save_csv(1)\n    Simulation: __init__(1),_build_signals(2),_push_signals(0),_eval_rules(1),_eval_observables(0),step(1),run(1),apply_shock(3),set_global(2),run_scenario(3)\n    MonteCarloResult: mean_observable(1),std_observable(1),percentile_observable(2)\n    _safe_clip(x;lo;hi)\n    run_monte_carlo(model;n_runs;steps;noise_std;seed)\n  cyberdsl/graph.py:\n    e: _node_shape,model_to_mermaid,build_graph_viewer,save_mermaid,save_graph_viewer\n    _node_shape(kind;label)\n    model_to_mermaid(model;direction)\n    build_graph_viewer(model;yaml_source)\n    save_mermaid(model;path;direction)\n    save_graph_viewer(model;path;yaml_source)\n  cyberdsl/webapp.py:\n    e: _parse_model,_model_meta,_snap_to_json,_find_example,_list_examples,handle_favicon,handle_index,handle_static,handle_parse,handle_simulate,handle_simulate_stream,handle_mermaid,handle_list_examples,handle_get_example,access_log_middleware,create_app,run\n    _parse_model(text;fmt)\n    _model_meta(model)\n    _snap_to_json(snap)\n    _find_example(name)\n    _list_examples()\n    handle_favicon(request)\n    handle_index(request)\n    handle_static(request)\n    handle_parse(request)\n    handle_simulate(request)\n    handle_simulate_stream(request)\n    handle_mermaid(request)\n    handle_list_examples(request)\n    handle_get_example(request)\n    access_log_middleware(request;handler)\n    create_app()\n    run(host;port)\n  cyberdsl/dashboard.py:\n    e: _hex_alpha,_steps_labels,_obs_datasets,_node_datasets,build_dashboard,save_dashboard\n    _hex_alpha(hex_color;alpha)\n    _steps_labels(result)\n    _obs_datasets(result;mc)\n    _node_datasets(result)\n    build_dashboard(result;mc;model)\n    save_dashboard(result;path;mc;model)\n  cyberdsl/__main__.py:\n    e: _load_model,cmd_simulate,cmd_dashboard,cmd_csv,cmd_monte,cmd_serve,cmd_visualize,cmd_translate,main\n    _load_model(path)\n    cmd_simulate(args)\n    cmd_dashboard(args)\n    cmd_csv(args)\n    cmd_monte(args)\n    cmd_serve(args)\n    cmd_visualize(args)\n    cmd_translate(args)\n    main()\n  goal.yaml:\n  pyproject.toml:\n  project.sh:\n  examples/crisis/10_disinformation_network.yaml:\n  examples/port/01_port_baseline.yaml:\n  examples/port/02_port_crisis.yaml:\n  examples/port/03_port_recovery.yaml:\n  examples/institutional/06_school_polarization.yaml:\n  examples/institutional/09_municipal_protest.yaml:\n  examples/institutional/08_company_restructuring.yaml:\n  examples/institutional/07_hospital_overload.yaml:\n  examples/family/04_family_baseline.yaml:\n  examples/family/05_family_crisis_therapy.yaml:\n  cyberdsl/__init__.py:\n  planfile.yaml:\n  prefact.yaml:\n  testql-scenarios/generated-from-pytests.testql.toon.yaml:\n  testql-scenarios/generated-cli-tests.testql.toon.yaml:\n", "is_subdir": false}, {"name": "project.toon.yaml", "rel_path": "project.toon.yaml", "path": "project.toon.yaml", "size": "2.3KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# cyberdsl | 134 func | 9f | 4341L | yaml | 2026-05-16\n# generated in 0.00s\n\nHEALTH:\n  CC̄=3.4  critical=7 (limit:10)  dup=0  cycles=0\n\nALERTS[20]:\n  !!! high_fan_out     streamSimulation = 29 (limit:10)\n  !!! high_fan_out     parse_dsl = 20 (limit:10)\n  !!! high_fan_out     handle_simulate_stream = 20 (limit:10)\n  !!  high_fan_out     parse_yaml = 16 (limit:10)\n  !!  high_fan_out     reader = 16 (limit:10)\n  !!  high_fan_out     decoder = 16 (limit:10)\n  !!  high_fan_out     totalSteps = 16 (limit:10)\n  !!  high_fan_out     runSimulation = 15 (limit:10)\n  !   cc_exceeded      parse_dsl = 19 (limit:15)\n  !   cc_exceeded      streamSimulation = 16 (limit:15)\n\nMODULES[27] (top by size):\n  M[goal.yaml] 511L C:0 F:0 CC↑0 D:0 (yaml)\n  M[cyberdsl/static/app.js] 509L C:0 F:57 CC↑16 D:0 (javascript)\n  M[planfile.yaml] 383L C:0 F:0 CC↑0 D:0 (yaml)\n  M[cyberdsl/dashboard.py] 381L C:0 F:6 CC↑6 D:1 (python)\n  M[cyberdsl/models.py] 359L C:4 F:22 CC↑9 D:1 (python)\n  M[cyberdsl/parser.py] 321L C:5 F:8 CC↑19 D:3 (python)\n  M[cyberdsl/webapp.py] 292L C:0 F:17 CC↑7 D:0 (python)\n  M[examples/family_simulation.py] 281L C:0 F:7 CC↑11 D:0 (python)\n  M[cyberdsl/graph.py] 245L C:0 F:5 CC↑8 D:3 (python)\n  M[cyberdsl/__main__.py] 179L C:0 F:9 CC↑4 D:0 (python)\n  M[cyberdsl/litellm_adapter.py] 121L C:1 F:3 CC↑10 D:0 (python)\n  M[prefact.yaml] 91L C:0 F:0 CC↑0 D:0 (yaml)\n  M[examples/family/04_family_baseline.yaml] 60L C:0 F:0 CC↑0 D:0 (yaml)\n  M[examples/family/05_family_crisis_therapy.yaml] 58L C:0 F:0 CC↑0 D:0 (yaml)\n  M[pyproject.toml] 56L C:0 F:0 CC↑0 D:0 (toml)\n  LANGS: yaml:15/python:9/javascript:1/shell:1/toml:1\n\nHOTSPOTS[10]:\n  ★ streamSimulation fan=29  // Orchestrates 29 calls\n  ★ parse_dsl fan=20  // Parse CyberDSL text into a ModelDef.\n  ★ handle_simulate_stream fan=20  // SSE endpoint: sends one JSON event per simulation step.\n  ★ parse_yaml fan=16  // Parse a CyberDSL YAML representation into a ModelDef.\n  ★ reader fan=16  // Orchestrates 16 calls\n\nREFACTOR[7]:\n  [1] H/H Split god module cyberdsl/static/app.js (509L, 0 classes)\n  [2] H/H Split god module goal.yaml (511L, 0 classes)\n  [3] M/L Split parse_dsl (CC=19)\n  [4] M/L Split streamSimulation (CC=16)\n  [5] M/M Reduce streamSimulation fan-out (currently 29)\n\nEVOLUTION:\n  2026-05-16 CC̄=3.4 crit=7 4341L // Automated analysis\n", "is_subdir": false}];
+        let currentFile = null;
+
+        function renderFileList(filter = '') {
+            const list = document.getElementById('fileList');
+            const filtered = files.filter(f =>
+                f.name.toLowerCase().includes(filter.toLowerCase()) ||
+                f.path.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No files found</div>';
+                return;
+            }
+
+            // Group by type
+            const groups = {};
+            for (const file of filtered) {
+                const type = file.type_name;
+                if (!groups[type]) groups[type] = [];
+                groups[type].push(file);
+            }
+
+            let html = '';
+            for (const [typeName, groupFiles] of Object.entries(groups)) {
+                html += `
+                    <div class="file-group">
+                        <div class="file-group-title">${typeName} Files (${groupFiles.length})</div>
+                        ${groupFiles.map(f => `
+                            <div class="file-item ${currentFile?.name === f.name ? 'active' : ''}"
+                                 onclick="selectFile('${f.name}')">
+                                <span class="file-icon">${f.icon}</span>
+                                <div class="file-info">
+                                    <div class="file-name">${f.name}</div>
+                                    <div class="file-meta">${f.path}</div>
+                                </div>
+                                <span class="file-size">${f.size}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            list.innerHTML = html;
+        }
+
+        function selectFile(name) {
+            const file = files.find(f => f.name === name);
+            if (!file) return;
+
+            currentFile = file;
+
+            document.getElementById('contentIcon').textContent = file.icon;
+            document.getElementById('contentTitle').textContent = file.name;
+
+            // Actions
+            const actions = document.getElementById('contentActions');
+            actions.innerHTML = `
+                <a href="${file.rel_path}" download class="btn">⬇ Download</a>
+                <a href="${file.rel_path}" target="_blank" class="btn btn-primary">↗ Open Raw</a>
+            `;
+
+            // Content
+            const body = document.getElementById('contentBody');
+            if (file.type === 'markdown') {
+                // Render markdown as HTML using marked.js
+                body.innerHTML = `<div class="markdown-content">${marked.parse(file.content)}</div>`;
+            } else if (file.type === 'html') {
+                // For HTML files, show in iframe for safety
+                body.innerHTML = `<iframe src="${file.rel_path}" style="width:100%;height:100%;border:none;border-radius:0.5rem;"></iframe>`;
+            } else if (file.type === 'image') {
+                // For images, display the actual image
+                body.innerHTML = `<div class="image-preview"><img src="${file.rel_path}" alt="${file.name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:0.5rem;"></div>`;
+            } else if (file.type === 'mermaid') {
+                // Render mermaid diagram
+                const diagramId = 'mermaid-diagram-' + Date.now();
+                body.innerHTML = `<div class="mermaid-content"><pre class="mermaid" id="${diagramId}">${file.content}</pre></div>`;
+                // Initialize mermaid on the new element
+                setTimeout(() => {
+                    mermaid.init(undefined, document.getElementById(diagramId));
+                }, 0);
+            } else if (file.type === 'json') {
+                try {
+                    const json = JSON.parse(file.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));
+                    const formatted = JSON.stringify(json, null, 2);
+                    body.innerHTML = `<pre><code class="language-json">${formatted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                    hljs.highlightElement(body.querySelector('code'));
+                } catch {
+                    body.innerHTML = `<pre>${file.content}</pre>`;
+                }
+            } else if (file.type === 'yaml') {
+                // YAML with syntax highlighting
+                body.innerHTML = `<pre><code class="language-yaml">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'toon') {
+                // TOON with simple highlighting (use ini as closest match for key: value format)
+                body.innerHTML = `<pre><code class="language-ini">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'code') {
+                // Code files with auto-highlighting
+                body.innerHTML = `<pre><code>${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else {
+                body.innerHTML = `<pre>${file.content}</pre>`;
+            }
+
+            renderFileList(document.getElementById('search').value);
+        }
+
+        function filterFiles(query) {
+            renderFileList(query);
+        }
+
+        function renderStats() {
+            const stats = {};
+            for (const f of files) {
+                stats[f.type_name] = (stats[f.type_name] || 0) + 1;
+            }
+
+            const grid = document.getElementById('statsGrid');
+            grid.innerHTML = Object.entries(stats)
+                .sort((a, b) => b[1] - a[1])
+                .map(([type, count]) => `
+                    <div class="stat-card">
+                        <div class="stat-value">${count}</div>
+                        <div class="stat-label">${type}</div>
+                    </div>
+                `).join('');
+        }
+
+        // Initialize
+        renderStats();
+        renderFileList();
+
+        // Select first file if available
+        if (files.length > 0) {
+            selectFile(files[0].name);
+        }
+    </script>
+</body>
+</html>

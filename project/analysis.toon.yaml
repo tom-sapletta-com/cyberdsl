@@ -1,0 +1,65 @@
+# code2llm | 27f 4341L | yaml:15,python:9,toml:1,shell:1,javascript:1 | 2026-05-16
+# generated in 0.01s
+# CC̄=3.4 | critical:2/134 | dups:0 | cycles:0
+
+HEALTH[2]:
+  🟡 CC    parse_dsl CC=19 (limit:15)
+  🟡 CC    streamSimulation CC=16 (limit:15)
+
+REFACTOR[1]:
+  1. split 2 high-CC methods  (CC>15)
+
+PIPELINES[84]:
+  [1] Src [scenario_stable]: scenario_stable → fresh_sim
+      PURITY: 100% pure
+  [2] Src [scenario_crisis]: scenario_crisis → fresh_sim
+      PURITY: 100% pure
+  [3] Src [scenario_divorce]: scenario_divorce → fresh_sim
+      PURITY: 100% pure
+  [4] Src [print_report]: print_report → _obs_at
+      PURITY: 100% pure
+  [5] Src [print_comparison]: print_comparison → _obs_at
+      PURITY: 100% pure
+
+LAYERS:
+  examples/                       CC̄=5.0    ←in:0  →out:0
+  │ family_simulation          281L  0C    7m  CC=11     ←0
+  │ 04_family_baseline.yaml     60L  0C    0m  CC=0.0    ←0
+  │ 05_family_crisis_therapy.yaml    58L  0C    0m  CC=0.0    ←0
+  │ 02_port_crisis.yaml         48L  0C    0m  CC=0.0    ←0
+  │ 03_port_recovery.yaml       48L  0C    0m  CC=0.0    ←0
+  │ 06_school_polarization.yaml    46L  0C    0m  CC=0.0    ←0
+  │ 09_municipal_protest.yaml    45L  0C    0m  CC=0.0    ←0
+  │ 07_hospital_overload.yaml    45L  0C    0m  CC=0.0    ←0
+  │ 10_disinformation_network.yaml    44L  0C    0m  CC=0.0    ←0
+  │ 01_port_baseline.yaml       44L  0C    0m  CC=0.0    ←0
+  │ 08_company_restructuring.yaml    39L  0C    0m  CC=0.0    ←0
+  │
+  cyberdsl/                       CC̄=3.4    ←in:0  →out:0
+  │ !! app.js                     509L  0C   57m  CC=16     ←0
+  │ dashboard                  381L  0C    6m  CC=6      ←1
+  │ models                     359L  4C   22m  CC=9      ←1
+  │ !! parser                     321L  5C    8m  CC=19     ←3
+  │ webapp                     292L  0C   17m  CC=7      ←0
+  │ graph                      245L  0C    5m  CC=8      ←3
+  │ __main__                   179L  0C    9m  CC=4      ←0
+  │ litellm_adapter            121L  1C    3m  CC=10     ←0
+  │ __init__                    51L  0C    0m  CC=0.0    ←0
+  │
+  ./                              CC̄=0.0    ←in:0  →out:0
+  │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
+  │ planfile.yaml              383L  0C    0m  CC=0.0    ←0
+  │ prefact.yaml                91L  0C    0m  CC=0.0    ←0
+  │ pyproject.toml              56L  0C    0m  CC=0.0    ←0
+  │ project.sh                  54L  0C    0m  CC=0.0    ←0
+  │
+  testql-scenarios/               CC̄=0.0    ←in:0  →out:0
+  │ generated-cli-tests.testql.toon.yaml    20L  0C    0m  CC=0.0    ←0
+  │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0
+  │
+
+COUPLING: no cross-package imports detected
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon

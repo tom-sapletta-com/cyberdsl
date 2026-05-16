@@ -1,0 +1,163 @@
+# code2llm call graph | /home/tom/github/tom-sapletta-com/cyberdsl
+# generated in 0.07s
+# nodes: 76 | edges: 88 | modules: 8
+# CC̄=3.4
+
+HUBS[20]:
+  cyberdsl.parser.parse_yaml
+    CC=8  in:2  out:42  total:44
+  examples.family_simulation.scenario_divorce
+    CC=11  in:0  out:40  total:40
+  cyberdsl.parser.parse_dsl
+    CC=19  in:2  out:32  total:34
+  cyberdsl.webapp.handle_simulate_stream
+    CC=6  in:0  out:32  total:32
+  cyberdsl.static.app.streamSimulation
+    CC=16  in:0  out:29  total:29
+  cyberdsl.dashboard._obs_datasets
+    CC=4  in:1  out:19  total:20
+  cyberdsl.webapp.handle_simulate
+    CC=5  in:0  out:19  total:19
+  cyberdsl.graph.build_graph_viewer
+    CC=7  in:1  out:18  total:19
+  cyberdsl.graph.model_to_mermaid
+    CC=8  in:6  out:13  total:19
+  cyberdsl.dashboard.build_dashboard
+    CC=6  in:1  out:18  total:19
+  cyberdsl.static.app.initStreamCharts
+    CC=2  in:5  out:13  total:18
+  cyberdsl.static.app.renderMermaid
+    CC=5  in:8  out:8  total:16
+  cyberdsl.static.app.totalSteps
+    CC=10  in:0  out:16  total:16
+  cyberdsl.static.app.decoder
+    CC=10  in:0  out:16  total:16
+  cyberdsl.static.app.reader
+    CC=10  in:0  out:16  total:16
+  examples.family_simulation.scenario_crisis
+    CC=6  in:0  out:15  total:15
+  cyberdsl.webapp._snap_to_json
+    CC=6  in:2  out:13  total:15
+  cyberdsl.static.app.runSimulation
+    CC=6  in:0  out:15  total:15
+  cyberdsl.static.app.renderModelInfo
+    CC=2  in:7  out:8  total:15
+  cyberdsl.parser._parse_dict_literal
+    CC=7  in:2  out:12  total:14
+
+MODULES:
+  cyberdsl.__main__  [7 funcs]
+    _load_model  CC=2  out:6
+    cmd_csv  CC=3  out:8
+    cmd_dashboard  CC=3  out:8
+    cmd_monte  CC=4  out:11
+    cmd_serve  CC=1  out:1
+    cmd_simulate  CC=2  out:5
+    cmd_visualize  CC=3  out:8
+  cyberdsl.dashboard  [6 funcs]
+    _hex_alpha  CC=1  out:4
+    _node_datasets  CC=4  out:12
+    _obs_datasets  CC=4  out:19
+    _steps_labels  CC=2  out:0
+    build_dashboard  CC=6  out:18
+    save_dashboard  CC=1  out:3
+  cyberdsl.graph  [4 funcs]
+    build_graph_viewer  CC=7  out:18
+    model_to_mermaid  CC=8  out:13
+    save_graph_viewer  CC=1  out:3
+    save_mermaid  CC=1  out:3
+  cyberdsl.models  [5 funcs]
+    parse  CC=1  out:2
+    apply_shock  CC=3  out:1
+    run  CC=3  out:4
+    _safe_clip  CC=1  out:3
+    run_monte_carlo  CC=6  out:12
+  cyberdsl.parser  [7 funcs]
+    _parse_dict_literal  CC=7  out:12
+    _parse_node_line  CC=6  out:11
+    _parse_value  CC=5  out:7
+    _strip_inline_comment  CC=6  out:2
+    dsl_to_yaml  CC=5  out:3
+    parse_dsl  CC=19  out:32
+    parse_yaml  CC=8  out:42
+  cyberdsl.static.app  [29 funcs]
+    clearError  CC=1  out:1
+    clearResults  CC=2  out:3
+    data  CC=3  out:2
+    decoder  CC=10  out:16
+    destroyAllCharts  CC=1  out:3
+    ds  CC=1  out:3
+    initStreamCharts  CC=2  out:13
+    labels  CC=1  out:3
+    makeChart  CC=3  out:4
+    md  CC=2  out:2
+  cyberdsl.webapp  [12 funcs]
+    _find_example  CC=3  out:1
+    _list_examples  CC=7  out:7
+    _parse_model  CC=2  out:3
+    _snap_to_json  CC=6  out:13
+    create_app  CC=1  out:10
+    handle_get_example  CC=3  out:6
+    handle_list_examples  CC=1  out:2
+    handle_mermaid  CC=3  out:13
+    handle_parse  CC=3  out:13
+    handle_simulate  CC=5  out:19
+  examples.family_simulation  [6 funcs]
+    _obs_at  CC=1  out:0
+    fresh_sim  CC=1  out:2
+    print_comparison  CC=5  out:10
+    scenario_crisis  CC=6  out:15
+    scenario_divorce  CC=11  out:40
+    scenario_stable  CC=4  out:9
+
+EDGES:
+  examples.family_simulation.scenario_stable → examples.family_simulation.fresh_sim
+  examples.family_simulation.scenario_crisis → examples.family_simulation.fresh_sim
+  examples.family_simulation.scenario_divorce → examples.family_simulation.fresh_sim
+  examples.family_simulation.print_comparison → examples.family_simulation._obs_at
+  cyberdsl.dashboard._obs_datasets → cyberdsl.dashboard._hex_alpha
+  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._steps_labels
+  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._obs_datasets
+  cyberdsl.dashboard.build_dashboard → cyberdsl.dashboard._node_datasets
+  cyberdsl.dashboard.build_dashboard → cyberdsl.graph.model_to_mermaid
+  cyberdsl.dashboard.save_dashboard → cyberdsl.dashboard.build_dashboard
+  cyberdsl.graph.build_graph_viewer → cyberdsl.graph.model_to_mermaid
+  cyberdsl.graph.save_mermaid → cyberdsl.graph.model_to_mermaid
+  cyberdsl.graph.save_graph_viewer → cyberdsl.graph.build_graph_viewer
+  cyberdsl.__main__._load_model → cyberdsl.parser.parse_yaml
+  cyberdsl.__main__.cmd_simulate → cyberdsl.__main__._load_model
+  cyberdsl.__main__.cmd_dashboard → cyberdsl.__main__._load_model
+  cyberdsl.__main__.cmd_dashboard → cyberdsl.dashboard.save_dashboard
+  cyberdsl.__main__.cmd_csv → cyberdsl.__main__._load_model
+  cyberdsl.__main__.cmd_monte → cyberdsl.__main__._load_model
+  cyberdsl.__main__.cmd_monte → cyberdsl.models.run_monte_carlo
+  cyberdsl.__main__.cmd_monte → cyberdsl.dashboard.save_dashboard
+  cyberdsl.__main__.cmd_serve → cyberdsl.models.Simulation.run
+  cyberdsl.__main__.cmd_visualize → cyberdsl.__main__._load_model
+  cyberdsl.__main__.cmd_visualize → cyberdsl.graph.save_mermaid
+  cyberdsl.__main__.cmd_visualize → cyberdsl.graph.save_graph_viewer
+  cyberdsl.parser._parse_value → cyberdsl.parser._parse_dict_literal
+  cyberdsl.parser._parse_node_line → cyberdsl.parser._parse_dict_literal
+  cyberdsl.parser.parse_dsl → cyberdsl.parser._strip_inline_comment
+  cyberdsl.parser.dsl_to_yaml → cyberdsl.parser.parse_dsl
+  cyberdsl.models.ModelCompiler.parse → cyberdsl.parser.parse_dsl
+  cyberdsl.models.Simulation.apply_shock → cyberdsl.models._safe_clip
+  cyberdsl.webapp._parse_model → cyberdsl.parser.parse_yaml
+  cyberdsl.webapp.handle_parse → cyberdsl.webapp._parse_model
+  cyberdsl.webapp.handle_simulate → cyberdsl.webapp._parse_model
+  cyberdsl.webapp.handle_simulate → cyberdsl.webapp._snap_to_json
+  cyberdsl.webapp.handle_simulate_stream → cyberdsl.webapp._parse_model
+  cyberdsl.webapp.handle_mermaid → cyberdsl.webapp._parse_model
+  cyberdsl.webapp.handle_mermaid → cyberdsl.graph.model_to_mermaid
+  cyberdsl.webapp.handle_list_examples → cyberdsl.webapp._list_examples
+  cyberdsl.webapp.handle_get_example → cyberdsl.webapp._find_example
+  cyberdsl.webapp.run → cyberdsl.webapp.create_app
+  cyberdsl.static.app.data → cyberdsl.static.app.showError
+  cyberdsl.static.app.data → cyberdsl.static.app.setBadge
+  cyberdsl.static.app.name → cyberdsl.static.app.showError
+  cyberdsl.static.app.name → cyberdsl.static.app.clearResults
+  cyberdsl.static.app.name → cyberdsl.static.app.parseModel
+  cyberdsl.static.app.parseModel → cyberdsl.static.app.clearError
+  cyberdsl.static.app.parseModel → cyberdsl.static.app.setBadge
+  cyberdsl.static.app.parseModel → cyberdsl.static.app.showError
+  cyberdsl.static.app.parseModel → cyberdsl.static.app.renderModelInfo

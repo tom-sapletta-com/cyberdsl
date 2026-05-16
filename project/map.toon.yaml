@@ -1,0 +1,161 @@
+# cyberdsl | 15f 3930L | python:11,less:1,css:1,javascript:1,shell:1 | 2026-05-16
+# stats: 107 func | 10 cls | 15 mod | CC̄=3.9 | critical:3 | cycles:0
+# alerts[5]: CC parse_dsl=19; CC scenario_divorce=11; CC model_to_mermaid=8; CC _parse_edge_line=8; fan-out handle_simulate_stream=20
+# hotspots[5]: handle_simulate_stream fan=20; parse_dsl fan=16; handle_simulate fan=14; run_monte_carlo fan=12; parse_yaml fan=12
+# evolution: baseline
+# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
+M[15]:
+  app.doql.less,29
+  cyberdsl/__init__.py,52
+  cyberdsl/__main__.py,180
+  cyberdsl/dashboard.py,382
+  cyberdsl/graph.py,246
+  cyberdsl/litellm_adapter.py,122
+  cyberdsl/models.py,360
+  cyberdsl/parser.py,322
+  cyberdsl/static/app.css,316
+  cyberdsl/static/app.js,510
+  cyberdsl/webapp.py,293
+  examples/family/family_simulation.py,282
+  examples/family_simulation.py,282
+  project.sh,54
+  tests/test_cyberdsl.py,500
+D:
+  cyberdsl/__init__.py:
+  cyberdsl/__main__.py:
+    e: _load_model,cmd_simulate,cmd_dashboard,cmd_csv,cmd_monte,cmd_serve,cmd_visualize,cmd_translate,main
+    _load_model(path)
+    cmd_simulate(args)
+    cmd_dashboard(args)
+    cmd_csv(args)
+    cmd_monte(args)
+    cmd_serve(args)
+    cmd_visualize(args)
+    cmd_translate(args)
+    main()
+  cyberdsl/dashboard.py:
+    e: _hex_alpha,_steps_labels,_obs_datasets,_node_datasets,build_dashboard,save_dashboard
+    _hex_alpha(hex_color;alpha)
+    _steps_labels(result)
+    _obs_datasets(result;mc)
+    _node_datasets(result)
+    build_dashboard(result;mc;model)
+    save_dashboard(result;path;mc;model)
+  cyberdsl/graph.py:
+    e: _node_shape,model_to_mermaid,build_graph_viewer,save_mermaid,save_graph_viewer
+    _node_shape(kind;label)
+    model_to_mermaid(model;direction)
+    build_graph_viewer(model;yaml_source)
+    save_mermaid(model;path;direction)
+    save_graph_viewer(model;path;yaml_source)
+  cyberdsl/litellm_adapter.py:
+    e: CommunityDSLTranslator
+    CommunityDSLTranslator: __init__(4),translate(3),translate_and_compile(1)
+  cyberdsl/models.py:
+    e: _safe_clip,run_monte_carlo,ModelCompiler,SimulationResult,Simulation,MonteCarloResult
+    ModelCompiler: parse(1),_validate(1)
+    SimulationResult: observables_over_time(0),node_state_over_time(2),summary(0),to_csv(0),save_csv(1)
+    Simulation: __init__(1),_build_signals(2),_push_signals(0),_eval_rules(1),_eval_observables(0),step(1),run(1),apply_shock(3),set_global(2),run_scenario(3)
+    MonteCarloResult: mean_observable(1),std_observable(1),percentile_observable(2)
+    _safe_clip(x;lo;hi)
+    run_monte_carlo(model;n_runs;steps;noise_std;seed)
+  cyberdsl/parser.py:
+    e: _strip_inline_comment,_parse_dict_literal,_parse_value,_parse_node_line,_parse_edge_line,parse_dsl,parse_yaml,dsl_to_yaml,NodeDef,EdgeDef,RuleDef,ModelDef,ParseError
+    NodeDef:
+    EdgeDef:
+    RuleDef:
+    ModelDef:
+    ParseError:
+    _strip_inline_comment(line)
+    _parse_dict_literal(s)
+    _parse_value(v)
+    _parse_node_line(line)
+    _parse_edge_line(line)
+    parse_dsl(text)
+    parse_yaml(text)
+    dsl_to_yaml(text)
+  cyberdsl/webapp.py:
+    e: _parse_model,_model_meta,_snap_to_json,_find_example,_list_examples,handle_favicon,handle_index,handle_static,handle_parse,handle_simulate,handle_simulate_stream,handle_mermaid,handle_list_examples,handle_get_example,access_log_middleware,create_app,run
+    _parse_model(text;fmt)
+    _model_meta(model)
+    _snap_to_json(snap)
+    _find_example(name)
+    _list_examples()
+    handle_favicon(request)
+    handle_index(request)
+    handle_static(request)
+    handle_parse(request)
+    handle_simulate(request)
+    handle_simulate_stream(request)
+    handle_mermaid(request)
+    handle_list_examples(request)
+    handle_get_example(request)
+    access_log_middleware(request;handler)
+    create_app()
+    run(host;port)
+  examples/family/family_simulation.py:
+    e: fresh_sim,scenario_stable,scenario_crisis,scenario_divorce,_obs_at,print_report,print_comparison
+    fresh_sim()
+    scenario_stable()
+    scenario_crisis()
+    scenario_divorce()
+    _obs_at(timeline;step)
+    print_report(result)
+    print_comparison(results)
+  examples/family_simulation.py:
+    e: fresh_sim,scenario_stable,scenario_crisis,scenario_divorce,_obs_at,print_report,print_comparison
+    fresh_sim()
+    scenario_stable()
+    scenario_crisis()
+    scenario_divorce()
+    _obs_at(timeline;step)
+    print_report(result)
+    print_comparison(results)
+  tests/test_cyberdsl.py:
+    e: test_parse_model_meta,test_parse_globals,test_parse_nodes,test_parse_edges,test_parse_rules,test_parse_observables,test_simulation_runs,test_simulation_observables,test_simulation_clip_bounds,test_shock_api,test_observables_over_time,test_example_file,test_parse_yaml_meta,test_parse_yaml_globals,test_parse_yaml_nodes,test_parse_yaml_edges,test_parse_yaml_rules,test_parse_yaml_observables,test_yaml_simulation_runs,test_dsl_to_yaml_roundtrip,test_dsl_to_yaml_is_valid_yaml,test_csv_export_columns,test_csv_export_step_values,test_save_csv,test_build_dashboard_returns_html,test_save_dashboard,test_dashboard_with_mc,test_monte_carlo_run_count,test_monte_carlo_mean_length,test_monte_carlo_bounds,test_monte_carlo_percentiles,test_monte_carlo_reproducible,test_run_scenario_shock,test_run_scenario_global_change,test_harbor_community_example,test_harbor_community_clip_bounds,test_model_to_mermaid_contains_nodes,test_model_to_mermaid_contains_edges,test_model_to_mermaid_contains_globals,test_model_to_mermaid_directions,test_build_graph_viewer_returns_html,test_build_graph_viewer_contains_node_info,test_save_mermaid,test_save_graph_viewer,test_dashboard_graph_tab,test_mermaid_yaml_model
+    test_parse_model_meta()
+    test_parse_globals()
+    test_parse_nodes()
+    test_parse_edges()
+    test_parse_rules()
+    test_parse_observables()
+    test_simulation_runs()
+    test_simulation_observables()
+    test_simulation_clip_bounds()
+    test_shock_api()
+    test_observables_over_time()
+    test_example_file()
+    test_parse_yaml_meta()
+    test_parse_yaml_globals()
+    test_parse_yaml_nodes()
+    test_parse_yaml_edges()
+    test_parse_yaml_rules()
+    test_parse_yaml_observables()
+    test_yaml_simulation_runs()
+    test_dsl_to_yaml_roundtrip()
+    test_dsl_to_yaml_is_valid_yaml()
+    test_csv_export_columns()
+    test_csv_export_step_values()
+    test_save_csv(tmp_path)
+    test_build_dashboard_returns_html()
+    test_save_dashboard(tmp_path)
+    test_dashboard_with_mc(tmp_path)
+    test_monte_carlo_run_count()
+    test_monte_carlo_mean_length()
+    test_monte_carlo_bounds()
+    test_monte_carlo_percentiles()
+    test_monte_carlo_reproducible()
+    test_run_scenario_shock()
+    test_run_scenario_global_change()
+    test_harbor_community_example()
+    test_harbor_community_clip_bounds()
+    test_model_to_mermaid_contains_nodes()
+    test_model_to_mermaid_contains_edges()
+    test_model_to_mermaid_contains_globals()
+    test_model_to_mermaid_directions()
+    test_build_graph_viewer_returns_html()
+    test_build_graph_viewer_contains_node_info()
+    test_save_mermaid(tmp_path)
+    test_save_graph_viewer(tmp_path)
+    test_dashboard_graph_tab(tmp_path)
+    test_mermaid_yaml_model(tmp_path)

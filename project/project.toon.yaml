@@ -1,0 +1,52 @@
+# cyberdsl | 134 func | 9f | 4341L | yaml | 2026-05-16
+# generated in 0.00s
+
+HEALTH:
+  CC̄=3.4  critical=7 (limit:10)  dup=0  cycles=0
+
+ALERTS[20]:
+  !!! high_fan_out     streamSimulation = 29 (limit:10)
+  !!! high_fan_out     parse_dsl = 20 (limit:10)
+  !!! high_fan_out     handle_simulate_stream = 20 (limit:10)
+  !!  high_fan_out     parse_yaml = 16 (limit:10)
+  !!  high_fan_out     reader = 16 (limit:10)
+  !!  high_fan_out     decoder = 16 (limit:10)
+  !!  high_fan_out     totalSteps = 16 (limit:10)
+  !!  high_fan_out     runSimulation = 15 (limit:10)
+  !   cc_exceeded      parse_dsl = 19 (limit:15)
+  !   cc_exceeded      streamSimulation = 16 (limit:15)
+
+MODULES[27] (top by size):
+  M[goal.yaml] 511L C:0 F:0 CC↑0 D:0 (yaml)
+  M[cyberdsl/static/app.js] 509L C:0 F:57 CC↑16 D:0 (javascript)
+  M[planfile.yaml] 383L C:0 F:0 CC↑0 D:0 (yaml)
+  M[cyberdsl/dashboard.py] 381L C:0 F:6 CC↑6 D:1 (python)
+  M[cyberdsl/models.py] 359L C:4 F:22 CC↑9 D:1 (python)
+  M[cyberdsl/parser.py] 321L C:5 F:8 CC↑19 D:3 (python)
+  M[cyberdsl/webapp.py] 292L C:0 F:17 CC↑7 D:0 (python)
+  M[examples/family_simulation.py] 281L C:0 F:7 CC↑11 D:0 (python)
+  M[cyberdsl/graph.py] 245L C:0 F:5 CC↑8 D:3 (python)
+  M[cyberdsl/__main__.py] 179L C:0 F:9 CC↑4 D:0 (python)
+  M[cyberdsl/litellm_adapter.py] 121L C:1 F:3 CC↑10 D:0 (python)
+  M[prefact.yaml] 91L C:0 F:0 CC↑0 D:0 (yaml)
+  M[examples/family/04_family_baseline.yaml] 60L C:0 F:0 CC↑0 D:0 (yaml)
+  M[examples/family/05_family_crisis_therapy.yaml] 58L C:0 F:0 CC↑0 D:0 (yaml)
+  M[pyproject.toml] 56L C:0 F:0 CC↑0 D:0 (toml)
+  LANGS: yaml:15/python:9/javascript:1/shell:1/toml:1
+
+HOTSPOTS[10]:
+  ★ streamSimulation fan=29  // Orchestrates 29 calls
+  ★ parse_dsl fan=20  // Parse CyberDSL text into a ModelDef.
+  ★ handle_simulate_stream fan=20  // SSE endpoint: sends one JSON event per simulation step.
+  ★ parse_yaml fan=16  // Parse a CyberDSL YAML representation into a ModelDef.
+  ★ reader fan=16  // Orchestrates 16 calls
+
+REFACTOR[7]:
+  [1] H/H Split god module cyberdsl/static/app.js (509L, 0 classes)
+  [2] H/H Split god module goal.yaml (511L, 0 classes)
+  [3] M/L Split parse_dsl (CC=19)
+  [4] M/L Split streamSimulation (CC=16)
+  [5] M/M Reduce streamSimulation fan-out (currently 29)
+
+EVOLUTION:
+  2026-05-16 CC̄=3.4 crit=7 4341L // Automated analysis

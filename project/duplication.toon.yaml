@@ -1,0 +1,75 @@
+# redup/duplication | 6 groups | 10f 2511L | 2026-05-16
+
+SUMMARY:
+  files_scanned: 10
+  total_lines:   2511
+  dup_groups:    6
+  dup_fragments: 12
+  saved_lines:   166
+  scan_ms:       4702
+
+HOTSPOTS[2] (files with most duplication):
+  examples/family/family_simulation.py  dup=166L  groups=6  frags=6  (6.6%)
+  examples/family_simulation.py  dup=166L  groups=6  frags=6  (6.6%)
+
+DUPLICATES[6] (ranked by impact):
+  [f7167363db6c1e77] ! EXAC  scenario_divorce  L=78 N=2 saved=78 sim=1.00
+      examples/family/family_simulation.py:91-168  (scenario_divorce)
+      examples/family_simulation.py:91-168  (scenario_divorce)
+  [111d409543721b52]   EXAC  scenario_crisis  L=29 N=2 saved=29 sim=1.00
+      examples/family/family_simulation.py:58-86  (scenario_crisis)
+      examples/family_simulation.py:58-86  (scenario_crisis)
+  [41ac043f62d4e8bd]   EXAC  print_report  L=22 N=2 saved=22 sim=1.00
+      examples/family/family_simulation.py:198-219  (print_report)
+      examples/family_simulation.py:198-219  (print_report)
+  [dedefcf0902cc5ff]   EXAC  scenario_stable  L=19 N=2 saved=19 sim=1.00
+      examples/family/family_simulation.py:35-53  (scenario_stable)
+      examples/family_simulation.py:35-53  (scenario_stable)
+  [2154c74232c09632]   EXAC  print_comparison  L=15 N=2 saved=15 sim=1.00
+      examples/family/family_simulation.py:222-236  (print_comparison)
+      examples/family_simulation.py:222-236  (print_comparison)
+  [ce31a6b121912e8a]   EXAC  fresh_sim  L=3 N=2 saved=3 sim=1.00
+      examples/family/family_simulation.py:28-30  (fresh_sim)
+      examples/family_simulation.py:28-30  (fresh_sim)
+
+REFACTOR[6] (ranked by priority):
+  [1] ◐ extract_module     → examples/utils/scenario_divorce.py
+      WHY: 2 occurrences of 78-line block across 2 files — saves 78 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+  [2] ○ extract_function   → examples/utils/scenario_crisis.py
+      WHY: 2 occurrences of 29-line block across 2 files — saves 29 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+  [3] ○ extract_function   → examples/utils/print_report.py
+      WHY: 2 occurrences of 22-line block across 2 files — saves 22 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+  [4] ○ extract_function   → examples/utils/scenario_stable.py
+      WHY: 2 occurrences of 19-line block across 2 files — saves 19 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+  [5] ○ extract_function   → examples/utils/print_comparison.py
+      WHY: 2 occurrences of 15-line block across 2 files — saves 15 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+  [6] ○ extract_function   → examples/utils/fresh_sim.py
+      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines
+      FILES: examples/family/family_simulation.py, examples/family_simulation.py
+
+QUICK_WINS[4] (low risk, high savings — do first):
+  [2] extract_function   saved=29L  → examples/utils/scenario_crisis.py
+      FILES: family_simulation.py, family_simulation.py
+  [3] extract_function   saved=22L  → examples/utils/print_report.py
+      FILES: family_simulation.py, family_simulation.py
+  [4] extract_function   saved=19L  → examples/utils/scenario_stable.py
+      FILES: family_simulation.py, family_simulation.py
+  [5] extract_function   saved=15L  → examples/utils/print_comparison.py
+      FILES: family_simulation.py, family_simulation.py
+
+EFFORT_ESTIMATE (total ≈ 6.8h):
+  hard   scenario_divorce                    saved=78L  ~234min
+  medium scenario_crisis                     saved=29L  ~58min
+  medium print_report                        saved=22L  ~44min
+  medium scenario_stable                     saved=19L  ~38min
+  medium print_comparison                    saved=15L  ~30min
+  easy   fresh_sim                           saved=3L  ~6min
+
+METRICS-TARGET:
+  dup_groups:  6 → 0
+  saved_lines: 166 lines recoverable

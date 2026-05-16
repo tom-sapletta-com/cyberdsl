@@ -1,0 +1,980 @@
+project: /home/tom/github/tom-sapletta-com/cyberdsl
+generated_from: code2llm call graph analysis
+stats:
+  total_nodes: 76
+  total_edges: 88
+  modules_count: 8
+nodes:
+  cyberdsl.static.app.destroyAllCharts:
+    name: destroyAllCharts
+    module: cyberdsl.static.app
+    line: 319
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 3
+  cyberdsl.static.app.streamSimulation:
+    name: streamSimulation
+    module: cyberdsl.static.app
+    line: 196
+    cyclomatic_complexity: 16
+    calls_out: 29
+    calls_in: 0
+  examples.family_simulation.scenario_stable:
+    name: scenario_stable
+    module: examples.family_simulation
+    line: 35
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 0
+  cyberdsl.webapp.handle_parse:
+    name: handle_parse
+    module: cyberdsl.webapp
+    line: 145
+    cyclomatic_complexity: 3
+    calls_out: 13
+    calls_in: 0
+  cyberdsl.dashboard._obs_datasets:
+    name: _obs_datasets
+    module: cyberdsl.dashboard
+    line: 42
+    cyclomatic_complexity: 4
+    calls_out: 19
+    calls_in: 1
+  cyberdsl.parser.parse_dsl:
+    name: parse_dsl
+    module: cyberdsl.parser
+    line: 181
+    cyclomatic_complexity: 19
+    calls_out: 32
+    calls_in: 2
+  cyberdsl.webapp._parse_model:
+    name: _parse_model
+    module: cyberdsl.webapp
+    line: 52
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 4
+  cyberdsl.webapp.handle_list_examples:
+    name: handle_list_examples
+    module: cyberdsl.webapp
+    line: 246
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 0
+  examples.family_simulation.scenario_divorce:
+    name: scenario_divorce
+    module: examples.family_simulation
+    line: 91
+    cyclomatic_complexity: 11
+    calls_out: 40
+    calls_in: 0
+  cyberdsl.webapp.create_app:
+    name: create_app
+    module: cyberdsl.webapp
+    line: 275
+    cyclomatic_complexity: 1
+    calls_out: 10
+    calls_in: 1
+  cyberdsl.webapp.handle_simulate:
+    name: handle_simulate
+    module: cyberdsl.webapp
+    line: 160
+    cyclomatic_complexity: 5
+    calls_out: 19
+    calls_in: 0
+  cyberdsl.static.app.obsDatasets:
+    name: obsDatasets
+    module: cyberdsl.static.app
+    line: 380
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.webapp.handle_get_example:
+    name: handle_get_example
+    module: cyberdsl.webapp
+    line: 250
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 0
+  cyberdsl.static.app.parts:
+    name: parts
+    module: cyberdsl.static.app
+    line: 231
+    cyclomatic_complexity: 8
+    calls_out: 12
+    calls_in: 0
+  examples.family_simulation.scenario_crisis:
+    name: scenario_crisis
+    module: examples.family_simulation
+    line: 58
+    cyclomatic_complexity: 6
+    calls_out: 15
+    calls_in: 0
+  cyberdsl.__main__._load_model:
+    name: _load_model
+    module: cyberdsl.__main__
+    line: 17
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 6
+  cyberdsl.models.Simulation.run:
+    name: run
+    module: cyberdsl.models
+    line: 232
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  cyberdsl.webapp._snap_to_json:
+    name: _snap_to_json
+    module: cyberdsl.webapp
+    line: 79
+    cyclomatic_complexity: 6
+    calls_out: 13
+    calls_in: 2
+  cyberdsl.static.app.ds:
+    name: ds
+    module: cyberdsl.static.app
+    line: 395
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.graph.build_graph_viewer:
+    name: build_graph_viewer
+    module: cyberdsl.graph
+    line: 177
+    cyclomatic_complexity: 7
+    calls_out: 18
+    calls_in: 1
+  cyberdsl.static.app.data:
+    name: data
+    module: cyberdsl.static.app
+    line: 178
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 0
+  cyberdsl.__main__.cmd_simulate:
+    name: cmd_simulate
+    module: cyberdsl.__main__
+    line: 26
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  cyberdsl.dashboard._node_datasets:
+    name: _node_datasets
+    module: cyberdsl.dashboard
+    line: 104
+    cyclomatic_complexity: 4
+    calls_out: 12
+    calls_in: 1
+  cyberdsl.parser._parse_dict_literal:
+    name: _parse_dict_literal
+    module: cyberdsl.parser
+    line: 95
+    cyclomatic_complexity: 7
+    calls_out: 12
+    calls_in: 2
+  cyberdsl.static.app.renderMermaid:
+    name: renderMermaid
+    module: cyberdsl.static.app
+    line: 273
+    cyclomatic_complexity: 5
+    calls_out: 8
+    calls_in: 8
+  cyberdsl.dashboard.save_dashboard:
+    name: save_dashboard
+    module: cyberdsl.dashboard
+    line: 373
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 2
+  cyberdsl.graph.save_graph_viewer:
+    name: save_graph_viewer
+    module: cyberdsl.graph
+    line: 242
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  cyberdsl.webapp._list_examples:
+    name: _list_examples
+    module: cyberdsl.webapp
+    line: 103
+    cyclomatic_complexity: 7
+    calls_out: 7
+    calls_in: 1
+  cyberdsl.static.app.palA:
+    name: palA
+    module: cyberdsl.static.app
+    line: 8
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 7
+  cyberdsl.parser._parse_value:
+    name: _parse_value
+    module: cyberdsl.parser
+    line: 117
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 2
+  cyberdsl.static.app.md:
+    name: md
+    module: cyberdsl.static.app
+    line: 151
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 0
+  cyberdsl.dashboard._steps_labels:
+    name: _steps_labels
+    module: cyberdsl.dashboard
+    line: 38
+    cyclomatic_complexity: 2
+    calls_out: 0
+    calls_in: 1
+  examples.family_simulation.print_comparison:
+    name: print_comparison
+    module: examples.family_simulation
+    line: 222
+    cyclomatic_complexity: 5
+    calls_out: 10
+    calls_in: 0
+  cyberdsl.__main__.cmd_monte:
+    name: cmd_monte
+    module: cyberdsl.__main__
+    line: 57
+    cyclomatic_complexity: 4
+    calls_out: 11
+    calls_in: 0
+  cyberdsl.static.app.clearError:
+    name: clearError
+    module: cyberdsl.static.app
+    line: 491
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 3
+  cyberdsl.webapp.handle_simulate_stream:
+    name: handle_simulate_stream
+    module: cyberdsl.webapp
+    line: 186
+    cyclomatic_complexity: 6
+    calls_out: 32
+    calls_in: 0
+  examples.family_simulation._obs_at:
+    name: _obs_at
+    module: examples.family_simulation
+    line: 194
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 4
+  examples.family_simulation.fresh_sim:
+    name: fresh_sim
+    module: examples.family_simulation
+    line: 28
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 3
+  cyberdsl.static.app.totalSteps:
+    name: totalSteps
+    module: cyberdsl.static.app
+    line: 225
+    cyclomatic_complexity: 10
+    calls_out: 16
+    calls_in: 0
+  cyberdsl.graph.model_to_mermaid:
+    name: model_to_mermaid
+    module: cyberdsl.graph
+    line: 35
+    cyclomatic_complexity: 8
+    calls_out: 13
+    calls_in: 6
+  cyberdsl.models.run_monte_carlo:
+    name: run_monte_carlo
+    module: cyberdsl.models
+    line: 328
+    cyclomatic_complexity: 6
+    calls_out: 12
+    calls_in: 1
+  cyberdsl.static.app.parseModel:
+    name: parseModel
+    module: cyberdsl.static.app
+    line: 127
+    cyclomatic_complexity: 6
+    calls_out: 12
+    calls_in: 1
+  cyberdsl.static.app.decoder:
+    name: decoder
+    module: cyberdsl.static.app
+    line: 223
+    cyclomatic_complexity: 10
+    calls_out: 16
+    calls_in: 0
+  cyberdsl.static.app.initStreamCharts:
+    name: initStreamCharts
+    module: cyberdsl.static.app
+    line: 369
+    cyclomatic_complexity: 2
+    calls_out: 13
+    calls_in: 5
+  cyberdsl.models.Simulation.apply_shock:
+    name: apply_shock
+    module: cyberdsl.models
+    line: 241
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 0
+  cyberdsl.webapp.run:
+    name: run
+    module: cyberdsl.webapp
+    line: 289
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.static.app.showError:
+    name: showError
+    module: cyberdsl.static.app
+    line: 487
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 6
+  cyberdsl.static.app.clearResults:
+    name: clearResults
+    module: cyberdsl.static.app
+    line: 495
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 3
+  cyberdsl.static.app.runSimulation:
+    name: runSimulation
+    module: cyberdsl.static.app
+    line: 165
+    cyclomatic_complexity: 6
+    calls_out: 15
+    calls_in: 0
+  cyberdsl.parser.parse_yaml:
+    name: parse_yaml
+    module: cyberdsl.parser
+    line: 249
+    cyclomatic_complexity: 8
+    calls_out: 42
+    calls_in: 2
+  cyberdsl.__main__.cmd_serve:
+    name: cmd_serve
+    module: cyberdsl.__main__
+    line: 79
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  cyberdsl.dashboard._hex_alpha:
+    name: _hex_alpha
+    module: cyberdsl.dashboard
+    line: 29
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 7
+  cyberdsl.graph.save_mermaid:
+    name: save_mermaid
+    module: cyberdsl.graph
+    line: 236
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  cyberdsl.parser._strip_inline_comment:
+    name: _strip_inline_comment
+    module: cyberdsl.parser
+    line: 77
+    cyclomatic_complexity: 6
+    calls_out: 2
+    calls_in: 1
+  cyberdsl.__main__.cmd_csv:
+    name: cmd_csv
+    module: cyberdsl.__main__
+    line: 46
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 0
+  cyberdsl.webapp._find_example:
+    name: _find_example
+    module: cyberdsl.webapp
+    line: 95
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  cyberdsl.dashboard.build_dashboard:
+    name: build_dashboard
+    module: cyberdsl.dashboard
+    line: 319
+    cyclomatic_complexity: 6
+    calls_out: 18
+    calls_in: 1
+  cyberdsl.parser._parse_node_line:
+    name: _parse_node_line
+    module: cyberdsl.parser
+    line: 134
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 1
+  cyberdsl.static.app.name:
+    name: name
+    module: cyberdsl.static.app
+    line: 108
+    cyclomatic_complexity: 3
+    calls_out: 7
+    calls_in: 0
+  cyberdsl.static.app.obsArea:
+    name: obsArea
+    module: cyberdsl.static.app
+    line: 376
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.__main__.cmd_visualize:
+    name: cmd_visualize
+    module: cyberdsl.__main__
+    line: 84
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 0
+  cyberdsl.static.app.setBadge:
+    name: setBadge
+    module: cyberdsl.static.app
+    line: 483
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 9
+  cyberdsl.webapp.handle_mermaid:
+    name: handle_mermaid
+    module: cyberdsl.webapp
+    line: 229
+    cyclomatic_complexity: 3
+    calls_out: 13
+    calls_in: 0
+  cyberdsl.static.app.nodeIds:
+    name: nodeIds
+    module: cyberdsl.static.app
+    line: 372
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.static.app.labels:
+    name: labels
+    module: cyberdsl.static.app
+    line: 329
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.static.app.renderModelInfo:
+    name: renderModelInfo
+    module: cyberdsl.static.app
+    line: 428
+    cyclomatic_complexity: 2
+    calls_out: 8
+    calls_in: 7
+  cyberdsl.static.app.renderAllCharts:
+    name: renderAllCharts
+    module: cyberdsl.static.app
+    line: 325
+    cyclomatic_complexity: 3
+    calls_out: 13
+    calls_in: 1
+  cyberdsl.static.app.setButtons:
+    name: setButtons
+    module: cyberdsl.static.app
+    line: 501
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 2
+  cyberdsl.parser.dsl_to_yaml:
+    name: dsl_to_yaml
+    module: cyberdsl.parser
+    line: 291
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 0
+  cyberdsl.__main__.cmd_dashboard:
+    name: cmd_dashboard
+    module: cyberdsl.__main__
+    line: 34
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 0
+  cyberdsl.static.app.text:
+    name: text
+    module: cyberdsl.static.app
+    line: 198
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  cyberdsl.models.ModelCompiler.parse:
+    name: parse
+    module: cyberdsl.models
+    line: 28
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 0
+  cyberdsl.static.app.pal:
+    name: pal
+    module: cyberdsl.static.app
+    line: 7
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 7
+  cyberdsl.static.app.reader:
+    name: reader
+    module: cyberdsl.static.app
+    line: 222
+    cyclomatic_complexity: 10
+    calls_out: 16
+    calls_in: 0
+  cyberdsl.models._safe_clip:
+    name: _safe_clip
+    module: cyberdsl.models
+    line: 108
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 2
+  cyberdsl.static.app.makeChart:
+    name: makeChart
+    module: cyberdsl.static.app
+    line: 309
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 2
+edges:
+- caller: examples.family_simulation.scenario_stable
+  callee: examples.family_simulation.fresh_sim
+  call_type: resolved
+- caller: examples.family_simulation.scenario_crisis
+  callee: examples.family_simulation.fresh_sim
+  call_type: resolved
+- caller: examples.family_simulation.scenario_divorce
+  callee: examples.family_simulation.fresh_sim
+  call_type: resolved
+- caller: examples.family_simulation.print_comparison
+  callee: examples.family_simulation._obs_at
+  call_type: resolved
+- caller: cyberdsl.dashboard._obs_datasets
+  callee: cyberdsl.dashboard._hex_alpha
+  call_type: resolved
+- caller: cyberdsl.dashboard.build_dashboard
+  callee: cyberdsl.dashboard._steps_labels
+  call_type: resolved
+- caller: cyberdsl.dashboard.build_dashboard
+  callee: cyberdsl.dashboard._obs_datasets
+  call_type: resolved
+- caller: cyberdsl.dashboard.build_dashboard
+  callee: cyberdsl.dashboard._node_datasets
+  call_type: resolved
+- caller: cyberdsl.dashboard.build_dashboard
+  callee: cyberdsl.graph.model_to_mermaid
+  call_type: resolved
+- caller: cyberdsl.dashboard.save_dashboard
+  callee: cyberdsl.dashboard.build_dashboard
+  call_type: resolved
+- caller: cyberdsl.graph.build_graph_viewer
+  callee: cyberdsl.graph.model_to_mermaid
+  call_type: resolved
+- caller: cyberdsl.graph.save_mermaid
+  callee: cyberdsl.graph.model_to_mermaid
+  call_type: resolved
+- caller: cyberdsl.graph.save_graph_viewer
+  callee: cyberdsl.graph.build_graph_viewer
+  call_type: resolved
+- caller: cyberdsl.__main__._load_model
+  callee: cyberdsl.parser.parse_yaml
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_simulate
+  callee: cyberdsl.__main__._load_model
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_dashboard
+  callee: cyberdsl.__main__._load_model
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_dashboard
+  callee: cyberdsl.dashboard.save_dashboard
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_csv
+  callee: cyberdsl.__main__._load_model
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_monte
+  callee: cyberdsl.__main__._load_model
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_monte
+  callee: cyberdsl.models.run_monte_carlo
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_monte
+  callee: cyberdsl.dashboard.save_dashboard
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_serve
+  callee: cyberdsl.models.Simulation.run
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_visualize
+  callee: cyberdsl.__main__._load_model
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_visualize
+  callee: cyberdsl.graph.save_mermaid
+  call_type: resolved
+- caller: cyberdsl.__main__.cmd_visualize
+  callee: cyberdsl.graph.save_graph_viewer
+  call_type: resolved
+- caller: cyberdsl.parser._parse_value
+  callee: cyberdsl.parser._parse_dict_literal
+  call_type: resolved
+- caller: cyberdsl.parser._parse_node_line
+  callee: cyberdsl.parser._parse_dict_literal
+  call_type: resolved
+- caller: cyberdsl.parser.parse_dsl
+  callee: cyberdsl.parser._strip_inline_comment
+  call_type: resolved
+- caller: cyberdsl.parser.dsl_to_yaml
+  callee: cyberdsl.parser.parse_dsl
+  call_type: resolved
+- caller: cyberdsl.models.ModelCompiler.parse
+  callee: cyberdsl.parser.parse_dsl
+  call_type: resolved
+- caller: cyberdsl.models.Simulation.apply_shock
+  callee: cyberdsl.models._safe_clip
+  call_type: resolved
+- caller: cyberdsl.webapp._parse_model
+  callee: cyberdsl.parser.parse_yaml
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_parse
+  callee: cyberdsl.webapp._parse_model
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_simulate
+  callee: cyberdsl.webapp._parse_model
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_simulate
+  callee: cyberdsl.webapp._snap_to_json
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_simulate_stream
+  callee: cyberdsl.webapp._parse_model
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_mermaid
+  callee: cyberdsl.webapp._parse_model
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_mermaid
+  callee: cyberdsl.graph.model_to_mermaid
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_list_examples
+  callee: cyberdsl.webapp._list_examples
+  call_type: resolved
+- caller: cyberdsl.webapp.handle_get_example
+  callee: cyberdsl.webapp._find_example
+  call_type: resolved
+- caller: cyberdsl.webapp.run
+  callee: cyberdsl.webapp.create_app
+  call_type: resolved
+- caller: cyberdsl.static.app.data
+  callee: cyberdsl.static.app.showError
+  call_type: resolved
+- caller: cyberdsl.static.app.data
+  callee: cyberdsl.static.app.setBadge
+  call_type: resolved
+- caller: cyberdsl.static.app.name
+  callee: cyberdsl.static.app.showError
+  call_type: resolved
+- caller: cyberdsl.static.app.name
+  callee: cyberdsl.static.app.clearResults
+  call_type: resolved
+- caller: cyberdsl.static.app.name
+  callee: cyberdsl.static.app.parseModel
+  call_type: resolved
+- caller: cyberdsl.static.app.parseModel
+  callee: cyberdsl.static.app.clearError
+  call_type: resolved
+- caller: cyberdsl.static.app.parseModel
+  callee: cyberdsl.static.app.setBadge
+  call_type: resolved
+- caller: cyberdsl.static.app.parseModel
+  callee: cyberdsl.static.app.showError
+  call_type: resolved
+- caller: cyberdsl.static.app.parseModel
+  callee: cyberdsl.static.app.renderModelInfo
+  call_type: resolved
+- caller: cyberdsl.static.app.parseModel
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.text
+  callee: cyberdsl.static.app.setBadge
+  call_type: resolved
+- caller: cyberdsl.static.app.md
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.md
+  callee: cyberdsl.static.app.showError
+  call_type: resolved
+- caller: cyberdsl.static.app.runSimulation
+  callee: cyberdsl.static.app.setBadge
+  call_type: resolved
+- caller: cyberdsl.static.app.runSimulation
+  callee: cyberdsl.static.app.clearError
+  call_type: resolved
+- caller: cyberdsl.static.app.runSimulation
+  callee: cyberdsl.static.app.clearResults
+  call_type: resolved
+- caller: cyberdsl.static.app.runSimulation
+  callee: cyberdsl.static.app.setButtons
+  call_type: resolved
+- caller: cyberdsl.static.app.runSimulation
+  callee: cyberdsl.static.app.showError
+  call_type: resolved
+- caller: cyberdsl.static.app.streamSimulation
+  callee: cyberdsl.static.app.setBadge
+  call_type: resolved
+- caller: cyberdsl.static.app.streamSimulation
+  callee: cyberdsl.static.app.clearError
+  call_type: resolved
+- caller: cyberdsl.static.app.streamSimulation
+  callee: cyberdsl.static.app.clearResults
+  call_type: resolved
+- caller: cyberdsl.static.app.streamSimulation
+  callee: cyberdsl.static.app.setButtons
+  call_type: resolved
+- caller: cyberdsl.static.app.reader
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.decoder
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.totalSteps
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.parts
+  callee: cyberdsl.static.app.renderMermaid
+  call_type: resolved
+- caller: cyberdsl.static.app.parts
+  callee: cyberdsl.static.app.renderModelInfo
+  call_type: resolved
+- caller: cyberdsl.static.app.parts
+  callee: cyberdsl.static.app.initStreamCharts
+  call_type: resolved
+- caller: cyberdsl.static.app.renderAllCharts
+  callee: cyberdsl.static.app.destroyAllCharts
+  call_type: resolved
+- caller: cyberdsl.static.app.renderAllCharts
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.renderAllCharts
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.renderAllCharts
+  callee: cyberdsl.static.app.makeChart
+  call_type: resolved
+- caller: cyberdsl.static.app.labels
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.labels
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.nodeIds
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.nodeIds
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.obsDatasets
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.obsDatasets
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.obsArea
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.obsArea
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.ds
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.ds
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.initStreamCharts
+  callee: cyberdsl.static.app.destroyAllCharts
+  call_type: resolved
+- caller: cyberdsl.static.app.initStreamCharts
+  callee: cyberdsl.static.app.pal
+  call_type: resolved
+- caller: cyberdsl.static.app.initStreamCharts
+  callee: cyberdsl.static.app.palA
+  call_type: resolved
+- caller: cyberdsl.static.app.initStreamCharts
+  callee: cyberdsl.static.app.makeChart
+  call_type: resolved
+- caller: cyberdsl.static.app.clearResults
+  callee: cyberdsl.static.app.destroyAllCharts
+  call_type: resolved
+modules:
+  cyberdsl.__main__:
+  - cyberdsl.__main__._load_model
+  - cyberdsl.__main__.cmd_csv
+  - cyberdsl.__main__.cmd_dashboard
+  - cyberdsl.__main__.cmd_monte
+  - cyberdsl.__main__.cmd_serve
+  - cyberdsl.__main__.cmd_simulate
+  - cyberdsl.__main__.cmd_visualize
+  cyberdsl.dashboard:
+  - cyberdsl.dashboard._hex_alpha
+  - cyberdsl.dashboard._node_datasets
+  - cyberdsl.dashboard._obs_datasets
+  - cyberdsl.dashboard._steps_labels
+  - cyberdsl.dashboard.build_dashboard
+  - cyberdsl.dashboard.save_dashboard
+  cyberdsl.graph:
+  - cyberdsl.graph.build_graph_viewer
+  - cyberdsl.graph.model_to_mermaid
+  - cyberdsl.graph.save_graph_viewer
+  - cyberdsl.graph.save_mermaid
+  cyberdsl.models:
+  - cyberdsl.models.ModelCompiler.parse
+  - cyberdsl.models.Simulation.apply_shock
+  - cyberdsl.models.Simulation.run
+  - cyberdsl.models._safe_clip
+  - cyberdsl.models.run_monte_carlo
+  cyberdsl.parser:
+  - cyberdsl.parser._parse_dict_literal
+  - cyberdsl.parser._parse_node_line
+  - cyberdsl.parser._parse_value
+  - cyberdsl.parser._strip_inline_comment
+  - cyberdsl.parser.dsl_to_yaml
+  - cyberdsl.parser.parse_dsl
+  - cyberdsl.parser.parse_yaml
+  cyberdsl.static.app:
+  - cyberdsl.static.app.clearError
+  - cyberdsl.static.app.clearResults
+  - cyberdsl.static.app.data
+  - cyberdsl.static.app.decoder
+  - cyberdsl.static.app.destroyAllCharts
+  - cyberdsl.static.app.ds
+  - cyberdsl.static.app.initStreamCharts
+  - cyberdsl.static.app.labels
+  - cyberdsl.static.app.makeChart
+  - cyberdsl.static.app.md
+  - cyberdsl.static.app.name
+  - cyberdsl.static.app.nodeIds
+  - cyberdsl.static.app.obsArea
+  - cyberdsl.static.app.obsDatasets
+  - cyberdsl.static.app.pal
+  - cyberdsl.static.app.palA
+  - cyberdsl.static.app.parseModel
+  - cyberdsl.static.app.parts
+  - cyberdsl.static.app.reader
+  - cyberdsl.static.app.renderAllCharts
+  - cyberdsl.static.app.renderMermaid
+  - cyberdsl.static.app.renderModelInfo
+  - cyberdsl.static.app.runSimulation
+  - cyberdsl.static.app.setBadge
+  - cyberdsl.static.app.setButtons
+  - cyberdsl.static.app.showError
+  - cyberdsl.static.app.streamSimulation
+  - cyberdsl.static.app.text
+  - cyberdsl.static.app.totalSteps
+  cyberdsl.webapp:
+  - cyberdsl.webapp._find_example
+  - cyberdsl.webapp._list_examples
+  - cyberdsl.webapp._parse_model
+  - cyberdsl.webapp._snap_to_json
+  - cyberdsl.webapp.create_app
+  - cyberdsl.webapp.handle_get_example
+  - cyberdsl.webapp.handle_list_examples
+  - cyberdsl.webapp.handle_mermaid
+  - cyberdsl.webapp.handle_parse
+  - cyberdsl.webapp.handle_simulate
+  - cyberdsl.webapp.handle_simulate_stream
+  - cyberdsl.webapp.run
+  examples.family_simulation:
+  - examples.family_simulation._obs_at
+  - examples.family_simulation.fresh_sim
+  - examples.family_simulation.print_comparison
+  - examples.family_simulation.scenario_crisis
+  - examples.family_simulation.scenario_divorce
+  - examples.family_simulation.scenario_stable
+entry_points:
+- cyberdsl.__main__.cmd_csv
+- cyberdsl.__main__.cmd_dashboard
+- cyberdsl.__main__.cmd_monte
+- cyberdsl.__main__.cmd_serve
+- cyberdsl.__main__.cmd_simulate
+- cyberdsl.__main__.cmd_translate
+- cyberdsl.__main__.cmd_visualize
+- cyberdsl.__main__.main
+- cyberdsl.graph._node_shape
+- cyberdsl.litellm_adapter.CommunityDSLTranslator.__init__
+- cyberdsl.litellm_adapter.CommunityDSLTranslator.translate
+- cyberdsl.litellm_adapter.CommunityDSLTranslator.translate_and_compile
+- cyberdsl.models.ModelCompiler._validate
+- cyberdsl.models.ModelCompiler.parse
+- cyberdsl.models.MonteCarloResult.mean_observable
+- cyberdsl.models.MonteCarloResult.percentile_observable
+- cyberdsl.models.MonteCarloResult.std_observable
+- cyberdsl.models.Simulation.__init__
+- cyberdsl.models.Simulation._build_signals
+- cyberdsl.models.Simulation._eval_observables
+- cyberdsl.models.Simulation._eval_rules
+- cyberdsl.models.Simulation._push_signals
+- cyberdsl.models.Simulation.apply_shock
+- cyberdsl.models.Simulation.run_scenario
+- cyberdsl.models.Simulation.set_global
+- cyberdsl.models.Simulation.step
+- cyberdsl.models.SimulationResult.node_state_over_time
+- cyberdsl.models.SimulationResult.observables_over_time
+- cyberdsl.models.SimulationResult.save_csv
+- cyberdsl.models.SimulationResult.summary
+- cyberdsl.models.SimulationResult.to_csv
+- cyberdsl.parser.dsl_to_yaml
+- cyberdsl.static.app._mmdCounter
+- cyberdsl.static.app.btn
+- cyberdsl.static.app.c
+- cyberdsl.static.app.card
+- cyberdsl.static.app.ctx
+- cyberdsl.static.app.data
+- cyberdsl.static.app.decoder
+- cyberdsl.static.app.diagramSrc
+- cyberdsl.static.app.ds
+- cyberdsl.static.app.ec
+- cyberdsl.static.app.err
+- cyberdsl.static.app.etbl
+- cyberdsl.static.app.gc
+- cyberdsl.static.app.grp
+- cyberdsl.static.app.json_str
+- cyberdsl.static.app.labels
+- cyberdsl.static.app.line
+- cyberdsl.static.app.loadExampleList
+- cyberdsl.static.app.md
+- cyberdsl.static.app.meta
+- cyberdsl.static.app.mr
+- cyberdsl.static.app.name
+- cyberdsl.static.app.nc
+- cyberdsl.static.app.nodeIds
+- cyberdsl.static.app.obsArea
+- cyberdsl.static.app.obsChart
+- cyberdsl.static.app.obsDatasets
+- cyberdsl.static.app.obsKeys
+- cyberdsl.static.app.opt
+- cyberdsl.static.app.parts
+- cyberdsl.static.app.pct
+- cyberdsl.static.app.r
+- cyberdsl.static.app.reader
+- cyberdsl.static.app.runSimulation
+- cyberdsl.static.app.stale
+- cyberdsl.static.app.stateStr
+- cyberdsl.static.app.streamSimulation
+- cyberdsl.static.app.tbl
+- cyberdsl.static.app.text
+- cyberdsl.static.app.totalSteps
+- cyberdsl.static.app.tr
+- cyberdsl.static.app.vars
+- cyberdsl.webapp.access_log_middleware
+- cyberdsl.webapp.handle_favicon
+- cyberdsl.webapp.handle_get_example
+- cyberdsl.webapp.handle_index
+- cyberdsl.webapp.handle_list_examples
+- cyberdsl.webapp.handle_mermaid
+- cyberdsl.webapp.handle_parse
+- cyberdsl.webapp.handle_simulate
+- cyberdsl.webapp.handle_simulate_stream
+- cyberdsl.webapp.handle_static
+- cyberdsl.webapp.run
+- examples.family_simulation.print_comparison
+- examples.family_simulation.print_report
+- examples.family_simulation.scenario_crisis
+- examples.family_simulation.scenario_divorce
+- examples.family_simulation.scenario_stable

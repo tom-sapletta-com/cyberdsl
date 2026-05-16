@@ -1,4 +1,8 @@
 # Byte-compiled / optimized / DLL files
+.code2llm_cache/generated-cli-tests.testql.toon_1778596205640450774_444.pkl
+.code2llm_cache/generated-from-pytests.testql.toon_1778596205640386193_328.pkl
+.code2llm_cache/planfile_1778596182917254342_10264.pkl
+.code2llm_cache/prefact_1778596109825607355_1664.pkl
 .idea/cyberdsl.iml
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/misc.xml

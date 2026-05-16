@@ -1,0 +1,26 @@
+flowchart TD
+%% generated in 0.01s
+
+    %% Entry points (blue)
+    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
+
+    subgraph Core
+        cyberdsl__graph___node_shape["_node_shape"]
+        cyberdsl____main_____load_model["_load_model"]
+        cyberdsl____main____cmd_simulate["cmd_simulate"]
+        cyberdsl____main____cmd_dashboard["cmd_dashboard"]
+        cyberdsl____main____cmd_csv["cmd_csv"]
+        cyberdsl____main____cmd_monte["cmd_monte"]
+        cyberdsl____main____cmd_serve["cmd_serve"]
+        cyberdsl____main____cmd_visualize["cmd_visualize"]
+        cyberdsl____main____cmd_translate["cmd_translate"]
+        cyberdsl____main____main["main"]
+        cyberdsl__parser___parse_dict_literal["_parse_dict_literal"]
+        cyberdsl__parser___parse_value["_parse_value"]
+        cyberdsl__parser__parse_dsl{{parse_dsl CC=19}}
+        cyberdsl__parser__parse_yaml("parse_yaml CC=8")
+        cyberdsl__parser__dsl_to_yaml["dsl_to_yaml"]
+        ...["+75 more"]
+    end
+
+    class cyberdsl__graph___node_shape,cyberdsl____main____cmd_simulate,cyberdsl____main____cmd_dashboard,cyberdsl____main____cmd_csv,cyberdsl____main____cmd_monte,cyberdsl____main____cmd_serve,cyberdsl____main____cmd_visualize,cyberdsl____main____cmd_translate,cyberdsl____main____main,cyberdsl__parser__dsl_to_yaml entry

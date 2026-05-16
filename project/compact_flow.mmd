@@ -1,0 +1,16 @@
+flowchart TD
+%% generated in 0.01s
+    cyberdsl____main__["cyberdsl.__main__<br/>9 funcs"]
+    cyberdsl__dashboard["cyberdsl.dashboard<br/>6 funcs"]
+    cyberdsl__graph["cyberdsl.graph<br/>5 funcs"]
+    cyberdsl__models["cyberdsl.models<br/>22 funcs"]
+    cyberdsl__parser["cyberdsl.parser<br/>8 funcs"]
+    cyberdsl__webapp["cyberdsl.webapp<br/>17 funcs"]
+    cyberdsl__webapp -->|3| cyberdsl__graph
+    cyberdsl____main__ -->|2| cyberdsl__dashboard
+    cyberdsl____main__ -->|2| cyberdsl__models
+    cyberdsl____main__ -->|2| cyberdsl__graph
+    cyberdsl__dashboard -->|1| cyberdsl__graph
+    cyberdsl____main__ -->|1| cyberdsl__parser
+    cyberdsl__models -->|1| cyberdsl__parser
+    cyberdsl__webapp -->|1| cyberdsl__parser

@@ -1,0 +1,383 @@
+name: Code Quality Improvement
+project_name: ''
+project_type: prefactoring
+domain: dev-tools
+goal: Improve code quality using prefact
+goals:
+- Fix all prefact-detected issues
+- Improve code maintainability
+- Ensure consistent code style
+quality_gates:
+- metric: Prefact Issues
+  threshold: '0'
+sprints:
+- id: sprint-1
+  name: Code Quality Improvements
+  duration: 2 weeks
+  objectives:
+  - Fix code quality issues
+  task_patterns:
+  - id: ticket-9c98ed2f
+    name: Fix relative-imports issues
+    description: Resolve 10 relative-imports issues in cyberdsl/__init__.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/__init__.py
+    rule_id: relative-imports
+    count: 10
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c57a93d2
+    name: Fix relative-imports issues
+    description: Resolve 4 relative-imports issues in cyberdsl/dashboard.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - cyberdsl/dashboard.py
+    rule_id: relative-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-a2b51c3d
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in cyberdsl/dashboard.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/dashboard.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d0257d54
+    name: Fix magic-numbers issues
+    description: Resolve 1 magic-numbers issues in cyberdsl/dashboard.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/dashboard.py
+    rule_id: magic-numbers
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bc820373
+    name: Fix llm-generated-code issues
+    description: Resolve 1 llm-generated-code issues in cyberdsl/dashboard.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/dashboard.py
+    rule_id: llm-generated-code
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-452960fd
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in cyberdsl/graph.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/graph.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0e57544f
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in cyberdsl/graph.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/graph.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b9629ad7
+    name: Fix llm-generated-code issues
+    description: Resolve 2 llm-generated-code issues in cyberdsl/graph.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/graph.py
+    rule_id: llm-generated-code
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bd9cceba
+    name: Fix smart-return-type issues
+    description: Resolve 8 smart-return-type issues in cyberdsl/__main__.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/__main__.py
+    rule_id: smart-return-type
+    count: 8
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f7cccc41
+    name: Fix string-concat issues
+    description: Resolve 6 string-concat issues in cyberdsl/__main__.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/__main__.py
+    rule_id: string-concat
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-52ea7ac5
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in cyberdsl/__main__.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/__main__.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-171cae40
+    name: Fix magic-numbers issues
+    description: Resolve 3 magic-numbers issues in cyberdsl/__main__.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/__main__.py
+    rule_id: magic-numbers
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-e78a5301
+    name: Fix ai-boilerplate issues
+    description: Resolve 2 ai-boilerplate issues in cyberdsl/__main__.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/__main__.py
+    rule_id: ai-boilerplate
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-98ee07e8
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in cyberdsl/litellm_adapter.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/litellm_adapter.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d48601be
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in cyberdsl/litellm_adapter.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/litellm_adapter.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-54e4b912
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in cyberdsl/litellm_adapter.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/litellm_adapter.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-3a9fb711
+    name: Fix llm-generated-code issues
+    description: Resolve 1 llm-generated-code issues in cyberdsl/litellm_adapter.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/litellm_adapter.py
+    rule_id: llm-generated-code
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7ac6c1cf
+    name: Fix relative-imports issues
+    description: Resolve 6 relative-imports issues in cyberdsl/webapp.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/webapp.py
+    rule_id: relative-imports
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-faed55d0
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in cyberdsl/webapp.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/webapp.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b7c51409
+    name: Fix unused-imports issues
+    description: Resolve 10 unused-imports issues in cyberdsl/webapp.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/webapp.py
+    rule_id: unused-imports
+    count: 10
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-224334df
+    name: Fix magic-numbers issues
+    description: Resolve 10 magic-numbers issues in cyberdsl/webapp.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/webapp.py
+    rule_id: magic-numbers
+    count: 10
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0253b8a4
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in cyberdsl/models.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/models.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d67462b1
+    name: Fix string-concat issues
+    description: Resolve 8 string-concat issues in cyberdsl/models.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/models.py
+    rule_id: string-concat
+    count: 8
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-82f49606
+    name: Fix unused-imports issues
+    description: Resolve 6 unused-imports issues in cyberdsl/models.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - cyberdsl/models.py
+    rule_id: unused-imports
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-9c407799
+    name: Fix llm-generated-code issues
+    description: Resolve 1 llm-generated-code issues in cyberdsl/models.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/models.py
+    rule_id: llm-generated-code
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d57a02b5
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in cyberdsl/parser.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - cyberdsl/parser.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-3a99b15b
+    name: Fix smart-return-type issues
+    description: Resolve 46 smart-return-type issues in tests/test_cyberdsl.py
+    task_type: prefactor
+    priority: high
+    estimate: 3d
+    files:
+    - tests/test_cyberdsl.py
+    rule_id: smart-return-type
+    count: 46
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-37c15d4c
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in tests/test_cyberdsl.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - tests/test_cyberdsl.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced

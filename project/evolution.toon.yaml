@@ -1,0 +1,58 @@
+# code2llm/evolution | 127 func | 8f | 2026-05-16
+# generated in 0.00s
+
+NEXT[4] (ranked by impact):
+  [1] !! SPLIT           cyberdsl/static/app.js
+      WHY: 509L, 0 classes, max CC=16
+      EFFORT: ~4h  IMPACT: 8144
+
+  [2] !  SPLIT-FUNC      streamSimulation  CC=16  fan=29
+      WHY: CC=16 exceeds 15
+      EFFORT: ~1h  IMPACT: 464
+
+  [3] !  SPLIT-FUNC      parse_dsl  CC=19  fan=20
+      WHY: CC=19 exceeds 15
+      EFFORT: ~1h  IMPACT: 380
+
+  [4] !! SPLIT           goal.yaml
+      WHY: 511L, 0 classes, max CC=0
+      EFFORT: ~4h  IMPACT: 0
+
+
+RISKS[2]:
+  ⚠ Splitting goal.yaml may break 0 import paths
+  ⚠ Splitting cyberdsl/static/app.js may break 57 import paths
+
+METRICS-TARGET:
+  CC̄:          3.4 → ≤2.4
+  max-CC:      19 → ≤9
+  god-modules: 2 → 0
+  high-CC(≥15): 2 → ≤1
+  hub-types:   0 → ≤0
+
+PATTERNS (language parser shared logic):
+  _extract_declarations() in base.py — unified extraction for:
+    - TypeScript: interfaces, types, classes, functions, arrow funcs
+    - PHP: namespaces, traits, classes, functions, includes
+    - Ruby: modules, classes, methods, requires
+    - C++: classes, structs, functions, #includes
+    - C#: classes, interfaces, methods, usings
+    - Java: classes, interfaces, methods, imports
+    - Go: packages, functions, structs
+    - Rust: modules, functions, traits, use statements
+
+  Shared regex patterns per language:
+    - import: language-specific import/require/using patterns
+    - class: class/struct/trait declarations with inheritance
+    - function: function/method signatures with visibility
+    - brace_tracking: for C-family languages ({ })
+    - end_keyword_tracking: for Ruby (module/class/def...end)
+
+  Benefits:
+    - Consistent extraction logic across all languages
+    - Reduced code duplication (~70% reduction in parser LOC)
+    - Easier maintenance: fix once, apply everywhere
+    - Standardized FunctionInfo/ClassInfo models
+
+HISTORY:
+  prev CC̄=3.4 → now CC̄=3.4
